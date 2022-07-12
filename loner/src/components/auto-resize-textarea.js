@@ -54,8 +54,7 @@ const AutoHeightTextarea = ({  value, onStickerClick, onMediaClick, ...props }) 
 
             { showEmojiPicker ? 
                 <EmojiPicker onEmojiClick={null} 
-                        pickerStyle={EMOJIPICKER_STYLE}
-                        searchPlaceholder="searcj emoji"
+                        placeholder="search emoji"
                 />
                 
                 :

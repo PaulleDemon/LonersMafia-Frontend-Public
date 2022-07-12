@@ -3,6 +3,7 @@
 	--chat-header: #fff;
     --chat-text-area-color: #fff;
     --chat-background: #F2EEEE;
+    --emoji-picker-background: #fff;
 }
 
 *{
@@ -160,11 +161,21 @@ a{
 .emoji-picker{
     display: flex;
     flex-direction: column;
+    z-index: 3;
+    height: 300px;
+    max-width: 30%;
+    background-color: var(--emoji-picker-background);
 }
 
 .emoji-container{
     display: grid;
-    grid-template-rows: repeat(3, 50px);
+    grid-template-columns: repeat(5, 50px);
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: black;
+    list-style: none;
+    overflow-y: auto;
 }
 
 /* --------------------- cropper ------------------ */
