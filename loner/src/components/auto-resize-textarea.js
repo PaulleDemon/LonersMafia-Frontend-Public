@@ -1,4 +1,18 @@
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useRef, useState } from "react"
+
+import EmojiPicker from "../components/emoji-component"
+
+import {ReactComponent as MEDIA} from "../icons/media.svg"
+import {ReactComponent as STICKERS} from "../icons/stickers.svg"
+import {ReactComponent as EMOJI} from "../icons/emoji.svg"
+
+
+const EMOJIPICKER_STYLE = {
+                            zIndex: 3,
+                            position: "fixed",
+                            top: "30%",
+                            left: "30%"
+                    }
 
 
 /**
@@ -6,24 +20,54 @@ import React, { useEffect, useRef } from "react"
  * Used to take input for chat app.
  * includes all the props available for textarea jsx(html) element
  */
-const AutoHeightTextarea = ({  ...props }) => {
+const AutoHeightTextarea = ({  value, onStickerClick, onMediaClick, ...props }) => {
+    
     const textareaRef = useRef(null)
 
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false)
+    const [chosenEmoji, setChosenEmoji] = useState(null);
+    
+
     useEffect(() => {
+
         textareaRef.current.style.height = "0px"
         const scrollHeight = textareaRef.current.scrollHeight
         textareaRef.current.style.height = scrollHeight + "px"
-    }, [props.value])
+
+    }, [value])
+
+    // const onEmojiClick = (e, emojiObject) => {
+    //     console.log("Clicked: ", emojiObject.emoji)
+    //     value += emojiObject?.emoji
+    // }
 
     return (
         <div className="autoresize-container">
+            
             <textarea
                 className="autoresize"
                 ref={textareaRef}
                 {...props}
-                value={props.value}
+                value={value}
                 onChange={props.onChange}
             />
+
+            { showEmojiPicker ? 
+                <EmojiPicker onEmojiClick={null} 
+                        pickerStyle={EMOJIPICKER_STYLE}
+                        searchPlaceholder="searcj emoji"
+                />
+                
+                :
+                null
+            }   
+            
+            <div className="media-options row">
+                <EMOJI fill="#E9D415" onClick={() => setShowEmojiPicker(true)}/>
+                <STICKERS fill="#00F470"/>
+                <MEDIA fill="#6134C1"/>
+            </div>
+        
         </div>
     )
 }

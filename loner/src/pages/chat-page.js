@@ -1,17 +1,15 @@
-import React from "react"
+import React, {useState} from "react"
 
 import AutoHeightTextarea from "../components/auto-resize-textarea"
 
 import {ReactComponent as BACK} from "../icons/back.svg"
 import {ReactComponent as SHARE} from "../icons/share.svg"
 import {ReactComponent as SEND} from "../icons/send.svg"
-import {ReactComponent as MEDIA} from "../icons/media.svg"
-import {ReactComponent as STICKERS} from "../icons/stickers.svg"
-import {ReactComponent as EMOJI} from "../icons/emoji.svg"
 
 
+function ChatHeader({icon, name, tag_line, rules=[]}){
 
-function ChatHeader({icon, name="Funny", tag_line="coolest", rules}){
+    const [showRules, setShowRules] = useState(false)
 
     return (
         <div className="chat-header">
@@ -47,14 +45,21 @@ function ChatHeader({icon, name="Funny", tag_line="coolest", rules}){
 
 export default function Chat(){
 
+    const [text, setText] = useState("")
+
     return (
-        <div>
+        <div className="chat-page">
             <ChatHeader />
 
-            <div class="chat-body">
+            <div className="chat-body">
+                we
 
             </div>
-            <AutoHeightTextarea />
+
+            <div className="row center">
+                <AutoHeightTextarea value={text} onChange={e => setText(e.target.value)}/>
+            </div>
+        
         </div>
     )
 

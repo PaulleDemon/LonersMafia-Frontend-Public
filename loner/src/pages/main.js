@@ -8,7 +8,7 @@ function Main(){
 		<Routes>
 			<Route path="/" exact element={<Navigate to="/spaces" replace />} />
 
-			<Route path="/chat"
+			<Route path="/space"
 				element={<Chat />}
 			>
 			</Route>

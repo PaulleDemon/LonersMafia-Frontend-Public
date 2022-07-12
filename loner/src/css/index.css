@@ -1,8 +1,15 @@
 :root{
 
 	--chat-header: #fff;
-	--body-color: #F2EEEE;
+    --chat-text-area-color: #fff;
+    --chat-background: #F2EEEE;
 }
+
+*{
+    outline: none;
+    box-sizing: border-box;
+}
+
 body {
 	margin: 0;
 	padding: 0px;
@@ -10,8 +17,16 @@ body {
 	'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue';
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	background-color: var(--body-color);
 	font-size: 22px;
+    /* min-height: calc(100vh -10px); */
+}
+
+.root, .App{
+    display: flex;
+    flex-direction: column;
+    background-color: #08a14d;
+    height: 100vh;
+    width: 100%;
 }
 
 a{
@@ -51,6 +66,16 @@ a{
 }
 
 /* ---------------- chat space ------------- */
+
+.chat-page{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--chat-background);
+}
+
 .space-name{
 	font-weight: 400;
 }
@@ -85,35 +110,59 @@ a{
 }
 
 
+.chat-body{
+    height: 100%;
+    overflow-y: auto;
+}
+
 /* ------------- auto resize text box -------------------------- */
 .autoresize-container{
     position: relative;
     display: flex;
     flex-direction: column;
     padding: 10px;
-    min-width: 100%;
+    width: 100%;
     /* max-height: 100%; */
+}
+
+.media-options{
+    background-color: transparent;
+    z-index: 3;
+    position: absolute;
+    bottom: 20px;
+    right: 5%;
+    display: flex;
+    align-items: center;
+}
+
+.media-options > * + *{
+    margin: 8px;
 }
 
 .autoresize{
     z-index: 2;
     position: absolute;
     top: auto;
-    /* NOTE: The botttom should be fixed but also dynamic*/
-    bottom: 0px;
+    bottom: 20px;
     border: 0px;
     color: var(--default-font-color);
-    background-color: #434242;
-    border: 1px solid #7a7979c2;
     border-radius: 5px;
-    /* margin: 4px; */
-    overflow: scroll;
+    overflow: auto;
     resize: none;
     width: 95%;
     min-height: 40px;
-    max-height: 100px;
+    max-height: 150px;
     padding: 8px;
 }
+
+/* --------------------- emoji-picker -------------- */
+
+.emoji-picker{
+
+    display: grid;
+    grid-template-rows: repeat(3, 50px);
+}
+
 
 /* --------------------- cropper ------------------ */
 
