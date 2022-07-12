@@ -158,11 +158,14 @@ a{
 /* --------------------- emoji-picker -------------- */
 
 .emoji-picker{
+    display: flex;
+    flex-direction: column;
+}
 
+.emoji-container{
     display: grid;
     grid-template-rows: repeat(3, 50px);
 }
-
 
 /* --------------------- cropper ------------------ */
 
