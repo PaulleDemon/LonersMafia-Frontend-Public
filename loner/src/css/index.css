@@ -1,0 +1,238 @@
+:root{
+
+	--chat-header: #fff;
+	--body-color: #F2EEEE;
+}
+body {
+	margin: 0;
+	padding: 0px;
+	font-family: sans-serif, 'Segoe UI', 'Roboto', 'Oxygen',
+	'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue';
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background-color: var(--body-color);
+	font-size: 22px;
+}
+
+a{
+	color: #08a14d;
+	text-decoration: none;
+}
+
+.icon{
+	max-height: 30px;
+	max-width: 30px;
+}
+
+.column{
+	display: flex;
+	flex-direction: column;
+}
+
+.row{
+	display: flex;
+}
+
+.margin-10px{
+	margin: 10px;
+}
+
+.center{
+	justify-content: center;
+	align-items: center;
+}
+
+.font-18px{
+	font-size: 18px;
+}
+
+.font-14px{
+	font-size: 14px;
+}
+
+/* ---------------- chat space ------------- */
+.space-name{
+	font-weight: 400;
+}
+
+.space-tag{
+	color: #878585;
+}
+
+.space-icon{
+	width: 50px;
+	height: 50px;
+	clip-path: circle(50%);
+	background-color: #878585;
+}
+
+.chat-header{
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 2;
+	width: 100%;
+	display: flex;
+	background-color: var(--chat-header);
+	min-height: 50px;
+	max-height: 60px;
+	align-items: center;
+}
+
+.peckspace-promo{
+	display: block;
+	font-size: 18px;
+}
+
+
+/* ------------- auto resize text box -------------------------- */
+.autoresize-container{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    min-width: 100%;
+    /* max-height: 100%; */
+}
+
+.autoresize{
+    z-index: 2;
+    position: absolute;
+    top: auto;
+    /* NOTE: The botttom should be fixed but also dynamic*/
+    bottom: 0px;
+    border: 0px;
+    color: var(--default-font-color);
+    background-color: #434242;
+    border: 1px solid #7a7979c2;
+    border-radius: 5px;
+    /* margin: 4px; */
+    overflow: scroll;
+    resize: none;
+    width: 95%;
+    min-height: 40px;
+    max-height: 100px;
+    padding: 8px;
+}
+
+/* --------------------- cropper ------------------ */
+
+.cropper{
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    /* margin: 10px; */
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    height: 70%;
+    border-radius: 5px;
+    background-color: #858484;
+    box-shadow: 0 0 5px #a19f9f;
+    z-index: 6;
+}   
+
+    .cropper canvas{
+        display: none;
+    }
+
+    .crop-container{
+        position: relative;
+        height: 80%;
+        display: flex;
+        border-radius: inherit;
+    }
+        .crop{
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0px;
+
+        }
+    
+    .crop-container .slider-container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .cropper__controls{
+        background-color: #474646;
+        height: 20%;
+    }
+
+    .cropper__btns__container{
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .cropper__btns__container .btn{
+        height: 40px;
+        width: 20%;
+        border-radius: 25px;
+    }
+
+    .cropper__controls .btn{
+        /* margin */
+        min-width: 60px;
+    }
+
+
+/* ---------------------- slider -------------- */
+
+.slider__container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+/* ----------------------- zoomable image ------------------------ */
+.zoomable-image-container{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: #e77247b9;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    z-index: 6;
+}
+
+    .zoomable-image-container #close-btn{
+        position: fixed;
+        top: 30px;
+        left: 30px;
+        width: 50px;
+        height: 50px;
+        z-index: 2;
+        cursor: pointer;
+        background-color: #3e3b3b76;
+        border-radius: 50%;
+        padding: 4px;
+    }
+
+    .zoomable-img-container{
+        margin: 5px;
+        max-height: 90%;
+        min-height: 40%;
+        width: 98%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+    }
+
+    .zoomable-img-container img{
+        width: 100%;
+        height: auto;
+        min-height: 250px;
+        max-height: calc(100vh - 20px);
+        /* object-fit: cover; */
+    }
