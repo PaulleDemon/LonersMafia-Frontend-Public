@@ -5,6 +5,7 @@ import AutoHeightTextarea from "../components/auto-resize-textarea"
 import {ReactComponent as BACK} from "../icons/back.svg"
 import {ReactComponent as SHARE} from "../icons/share.svg"
 import {ReactComponent as SEND} from "../icons/send.svg"
+import ChatCard from "../components/message-component"
 
 
 function ChatHeader({icon, name, tag_line, rules=[]}){
@@ -43,6 +44,35 @@ function ChatHeader({icon, name, tag_line, rules=[]}){
 }
 
 
+export function ChatSpace(){
+
+
+    return (
+        <div className="chat-body">
+                
+            <ChatCard />
+            <ChatCard />
+            <ChatCard />
+            <ChatCard />
+            <ChatCard />
+            <ChatCard />
+            <ChatCard />
+            <ChatCard />
+            <ChatCard />
+            <ChatCard />
+            <ChatCard />
+            <ChatCard />
+            <ChatCard />
+            <ChatCard />
+            <ChatCard />
+            <ChatCard />
+            <ChatCard />
+        </div>
+    )
+
+}
+
+
 export default function Chat(){
 
     const [text, setText] = useState("")
@@ -51,10 +81,7 @@ export default function Chat(){
         <div className="chat-page">
             <ChatHeader />
 
-            <div className="chat-body">
-                we
-
-            </div>
+            <ChatSpace />
 
             <div className="row center">
                 <AutoHeightTextarea value={text} onChange={e => setText(e.target.value)}/>

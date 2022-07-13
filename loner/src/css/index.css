@@ -66,6 +66,14 @@ a{
 	font-size: 14px;
 }
 
+.right-end{
+    margin-left: auto;
+}
+
+.left-end{
+    margin-right: auto;
+}
+
 /* ---------------- chat space ------------- */
 
 .chat-page{
@@ -99,9 +107,9 @@ a{
 	z-index: 2;
 	width: 100%;
 	display: flex;
-	background-color: var(--chat-header);
-	min-height: 50px;
-	max-height: 60px;
+	/* background-color: var(--chat-header); */
+	background-color: transparent;
+	height: 60px;
 	align-items: center;
 }
 
@@ -112,13 +120,66 @@ a{
 
 
 .chat-body{
-    height: 100%;
+    position: relative;
+    top: 60px;
+    height: calc(100% - 120px);
+    padding: 20px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    gap: 20px;
+    /* background-color: #08a14d; */
+}
+
+/* ------------------ chat card --------------------- */
+
+.chat-card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    padding: 5px;
+    max-width: max-content;
+}
+
+.chat-card .message-body{
+    min-height: 50px;
+    padding: 10px;
+    border-radius: 20px;
+    display: flex;
+    word-wrap: break-word;
+    font-size: 20px;
+    max-width: 80%;
+    width: fit-content;
+    align-items: center;
+    white-space: pre-wrap;
+}
+
+.chat-card .user-icon{
+    width: 40px;
+    height: 40px;
+    clip-path: circle(50%);
+	background-color: #000000;
+}
+
+.receiver{
+    background-color: #b4b4b4;
+}
+
+.sender{
+    background-color: #26b3ef;
+}
+
+.chat-card .username-time{
+    color: #858484;
+    font-size: 14px;
 }
 
 /* ------------- auto resize text box -------------------------- */
 .autoresize-container{
-    position: relative;
+    position: fixed;
+    bottom: 0px;
     display: flex;
     flex-direction: column;
     padding: 10px;
@@ -199,6 +260,7 @@ a{
     background-color: #8c8a8a77;
     cursor: pointer;
 }
+
 
 /* --------------------- cropper ------------------ */
 
