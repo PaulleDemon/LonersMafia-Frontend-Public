@@ -1,11 +1,32 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+
+import { useVisible } from '../utils/hooks'
+
 import emojiJson from './emoji-list.json'
 
 
-const EmojiPicker = React.memo(({...props}) => {
+const EmojiPicker = React.memo(({onClickOutside, onEmojiClick}) => {
 
     const [searchValue, setSearchValue] = useState("")
     const [emojiList, setEmojiList] = useState(Object.entries(emojiJson))
+
+    const pickerRef = useRef()
+    const isVisible = useVisible(pickerRef)
+
+    useEffect(() => {
+
+        const checkClickOutSide = (e) => {
+            if(isVisible && onClickOutside && !pickerRef.current.contains(e.target)){
+                onClickOutside()
+            }
+        }
+
+        if (pickerRef.current)
+            window.addEventListener("click", checkClickOutSide, {passive: true})
+
+        return () => window.removeEventListener("click", checkClickOutSide)
+
+    }, [pickerRef, isVisible])
 
     useEffect(() => {
 
@@ -24,18 +45,23 @@ const EmojiPicker = React.memo(({...props}) => {
         setSearchValue(e.target.value)
     }
 
-    console.log(emojiList.length)
+    
     return (
-        <div className="emoji-picker">
+        <div className="emoji-picker" ref={pickerRef}>
             
-            <input type="search" value={searchValue} onChange={onSearchChange}/>
+            <input type="search" value={searchValue} 
+                    onChange={onSearchChange}
+                    placeholder="search emoji"
+                    autoFocus
+                    />
 
             <div className="emoji-container">
                 {
                     emojiList.map((val) => {
+                        let unicode = val[1].map((val) => String.fromCodePoint(parseInt(val, 16)))
                         return(
-                            <li key={val[0]}>
-                                {val[1].map((val) => String.fromCodePoint(parseInt(val, 16)))}
+                            <li key={val[0]} className="row center" onClick={(e) => onEmojiClick(e, unicode.join(''))}>
+                                {unicode}
                             </li>
                         )
                     })

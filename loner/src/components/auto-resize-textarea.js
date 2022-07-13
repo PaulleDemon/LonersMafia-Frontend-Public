@@ -27,6 +27,11 @@ const AutoHeightTextarea = ({  value, onStickerClick, onMediaClick, ...props }) 
     const [showEmojiPicker, setShowEmojiPicker] = useState(false)
     const [chosenEmoji, setChosenEmoji] = useState(null);
     
+    const [text, setText] = useState(value)
+
+    useEffect(() => {
+        setText(value)
+    }, [value])
 
     useEffect(() => {
 
@@ -34,7 +39,8 @@ const AutoHeightTextarea = ({  value, onStickerClick, onMediaClick, ...props }) 
         const scrollHeight = textareaRef.current.scrollHeight
         textareaRef.current.style.height = scrollHeight + "px"
 
-    }, [value])
+
+    }, [value, text])
 
     // const onEmojiClick = (e, emojiObject) => {
     //     console.log("Clicked: ", emojiObject.emoji)
@@ -48,13 +54,13 @@ const AutoHeightTextarea = ({  value, onStickerClick, onMediaClick, ...props }) 
                 className="autoresize"
                 ref={textareaRef}
                 {...props}
-                value={value}
+                value={text}
                 onChange={props.onChange}
             />
 
             { showEmojiPicker ? 
-                <EmojiPicker onEmojiClick={null} 
-                        placeholder="search emoji"
+                <EmojiPicker onEmojiClick={(e, unicode) => {setText(text+`${unicode}`)}} 
+                    onClickOutside={() => setShowEmojiPicker(false)}
                 />
                 
                 :
