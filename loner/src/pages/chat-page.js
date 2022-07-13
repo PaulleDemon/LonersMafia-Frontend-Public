@@ -6,6 +6,7 @@ import {ReactComponent as BACK} from "../icons/back.svg"
 import {ReactComponent as SHARE} from "../icons/share.svg"
 import {ReactComponent as SEND} from "../icons/send.svg"
 import ChatCard from "../components/message-component"
+import { RegistrationModal } from "../modals/modals"
 
 
 function ChatHeader({icon, name, tag_line, rules=[]}){
@@ -50,7 +51,7 @@ export function ChatSpace(){
     return (
         <div className="chat-body">
                 
-            <ChatCard message="Hello"/>
+            <RegistrationModal />
         </div>
     )
 

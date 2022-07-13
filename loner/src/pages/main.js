@@ -6,7 +6,7 @@ function Main(){
 
 	return (
 		<Routes>
-			<Route path="/" exact element={<Navigate to="/spaces" replace />} />
+			<Route path="/" exact element={<Navigate to="/loner" replace />} />
 
 			<Route path="/space"
 				element={<Chat />}
