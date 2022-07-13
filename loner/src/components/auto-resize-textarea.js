@@ -25,7 +25,6 @@ const AutoHeightTextarea = ({  value, onStickerClick, onMediaClick, ...props }) 
     const textareaRef = useRef(null)
 
     const [showEmojiPicker, setShowEmojiPicker] = useState(false)
-    const [chosenEmoji, setChosenEmoji] = useState(null);
     
     const [text, setText] = useState(value)
 

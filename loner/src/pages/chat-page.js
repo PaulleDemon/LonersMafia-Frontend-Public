@@ -50,23 +50,7 @@ export function ChatSpace(){
     return (
         <div className="chat-body">
                 
-            <ChatCard />
-            <ChatCard />
-            <ChatCard />
-            <ChatCard />
-            <ChatCard />
-            <ChatCard />
-            <ChatCard />
-            <ChatCard />
-            <ChatCard />
-            <ChatCard />
-            <ChatCard />
-            <ChatCard />
-            <ChatCard />
-            <ChatCard />
-            <ChatCard />
-            <ChatCard />
-            <ChatCard />
+            <ChatCard message="Hello"/>
         </div>
     )
 
@@ -83,8 +67,11 @@ export default function Chat(){
 
             <ChatSpace />
 
-            <div className="row center">
+            <div className="message-container">
                 <AutoHeightTextarea value={text} onChange={e => setText(e.target.value)}/>
+                <button className="send-btn"> 
+                    <SEND fill="#fff"/>
+                </button>
             </div>
         
         </div>
