@@ -1,7 +1,7 @@
 import { memo, useState, useEffect } from "react";
 
 
-const ChatCard = memo(({message, user={}, media, datetime, is_moderator=false, is_sender=false}) => {
+const ChatCard = memo(({message, user={}, media, datetime, is_moderator=false, is_staff=false, is_sender=false}) => {
 
     const {username, icon} = user
 
@@ -27,6 +27,9 @@ const ChatCard = memo(({message, user={}, media, datetime, is_moderator=false, i
                         </div>
                     </>
                 }
+                <p class="more">
+                    ...
+                </p>
             </div>
 
             <div className="row">
