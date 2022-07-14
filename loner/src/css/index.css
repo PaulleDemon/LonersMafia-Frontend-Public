@@ -26,7 +26,6 @@ body {
 .root, .App{
     display: flex;
     flex-direction: column;
-    background-color: #08a14d;
     height: 100vh;
     width: 100%;
 }
@@ -59,12 +58,26 @@ a{
 	align-items: center;
 }
 
+.error{
+    color: #f60303;
+}
+
 .font-18px{
 	font-size: 18px;
 }
 
 .font-14px{
 	font-size: 14px;
+}
+
+.title-22px{
+    font-size: 22px;
+    font-weight: 400;
+}
+
+.title-18px{
+    font-size: 18px;
+    font-weight: 555;
 }
 
 .right-end{
@@ -75,11 +88,27 @@ a{
     margin-right: auto;
 }
 
+
+.input{
+    background-color: transparent;
+    border-radius: 4px;
+    padding: 4px;
+    border: 3px solid #878585;
+}
+
+.input:hover{
+    border: 3px solid #0ec3ec;
+}
+
+.input:active, .input:focus{
+    border: 3px solid #079cbd;
+}
+
 .avatar{
     width: 250px;
     height: 250px;
     clip-path: circle(50%);
-    /* background-color: #19adf8; */
+    background-color: #19adf8;
 }
 
 /* ---------------- chat space ------------- */
@@ -193,7 +222,6 @@ a{
     align-items: center;
     position: fixed;
     bottom: 0px;
-    background-color: #08a14d;
 }
 
 .send-btn{
@@ -420,16 +448,48 @@ a{
 /* -------------------------- modals ----------------------- */
 
 .modal{
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
     justify-content: center;
     background-color: var(--modal-bg-color);
     max-width: 80%;
     padding: 5px;
-    gap: 20px;
+    z-index: 5;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #adadad;
 }
 
 .registration-modal{
+    max-width: 450px;
+    width: fit-content;
+    text-align: center;
+}
+
+.registration-modal .btn{
+    height: 40px;
+    width: 40px;
+    border: 0px;
+    background-color: #1e9adde5;
+    border-radius: 50%;
+}
+
+.registration-modal .btn:hover{
+    background-color: #106784e5;
+}
+
+.registration-modal .btn:disabled{
+    background-color: #858484c4;
+}
+
+.registration-modal .input{
+    width: 80%;
+}
 
 
+.hidden{
+    visibility: hidden;
 }

@@ -67,7 +67,7 @@ const AutoHeightTextarea = ({  value, onStickerClick, onMediaClick, ...props }) 
             }   
             
             <div className="media-options row">
-                <EMOJI fill="#E9D415" onClick={() => setShowEmojiPicker(true)}/>
+                <EMOJI onClick={() => setShowEmojiPicker(true)}/>
                 <STICKERS fill="#00F470"/>
                 <MEDIA fill="#6134C1"/>
             </div>

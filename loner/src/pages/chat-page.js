@@ -51,7 +51,7 @@ export function ChatSpace(){
     return (
         <div className="chat-body">
                 
-            <RegistrationModal />
+            <ChatCard message="wed"/>
         </div>
     )
 
