@@ -4,7 +4,8 @@
     --chat-text-area-color: #fff;
     --chat-background: #F2EEEE;
     --emoji-picker-background: #fff;
-}
+    --modal-bg-color: #fff;
+}   
 
 *{
     outline: none;
@@ -72,6 +73,13 @@ a{
 
 .left-end{
     margin-right: auto;
+}
+
+.avatar{
+    width: 250px;
+    height: 250px;
+    clip-path: circle(50%);
+    /* background-color: #19adf8; */
 }
 
 /* ---------------- chat space ------------- */
@@ -213,7 +221,7 @@ a{
     background-color: transparent;
     z-index: 3;
     position: absolute;
-    bottom: 10px;
+    bottom: 5px;
     right: 5%;
     display: flex;
     align-items: center;
@@ -408,3 +416,20 @@ a{
         max-height: calc(100vh - 20px);
         /* object-fit: cover; */
     }
+
+/* -------------------------- modals ----------------------- */
+
+.modal{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: var(--modal-bg-color);
+    max-width: 80%;
+    padding: 5px;
+    gap: 20px;
+}
+
+.registration-modal{
+
+
+}

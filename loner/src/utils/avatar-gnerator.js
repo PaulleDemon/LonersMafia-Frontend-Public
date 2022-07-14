@@ -5,13 +5,13 @@ import { randInt, getRandomColor} from "./random-generator"
  */
 
 const AVATAR_APIS = {
-    "Joe Schmoe": (seed) => `https://joeschmoe.io/api/v1/${seed}`,
+    // "Joe Schmoe": (seed) => `https://joeschmoe.io/api/v1/${seed}`,
     "dicebear": (sprites, seed, bg) => `https://avatars.dicebear.com/api/${sprites}/${seed}.svg?background=${encodeURIComponent(bg)}`,
 }
+const config = { responseType: 'blob' }
 
-
-const AttrFreeLicensedAvatars = ["Avataaars", "Bottts", "Identicon", 
-                                    "Initials", "Open Peeps", "Pixel Art", "Pixel Art - Neutral"] // this are attribute free licensed 
+const AttrFreeLicensedAvatars = ["avataaars", "bottts", "identicon", 
+                                    "initials", "open-peeps", "pixel-art", "pixel-art-neutral"] // this are attribute free licensed 
 
 
 const avatar_api_keys = Object.keys(AVATAR_APIS)
@@ -24,19 +24,19 @@ let axiosConfig = {
  * providing a seed(name) will return an avatar
  */
 
-export default function randomAvatarGenerator(seed, showBgColor=true){
+export default async function randomAvatarGenerator(seed, showBgColor=true){
 
     const random_avatar_api = avatar_api_keys[randInt(0, avatar_api_keys.length - 1)]
 
-    console.log("Avatar: ", seed)
     if (random_avatar_api === "dicebear"){
         
         const random_sprite = AttrFreeLicensedAvatars[randInt(0, AttrFreeLicensedAvatars.length - 1)]
 
-        return axios.get(AVATAR_APIS[random_avatar_api](random_sprite, seed, (showBgColor ? getRandomColor() : "#ffffff00") ))
+        return await axios.get(AVATAR_APIS[random_avatar_api](random_sprite, seed, (showBgColor ? getRandomColor() : "#ffffff00") ), config)
+                .then(res =>  res.data).catch((e) => e)
     }
     else{
-        return axios.get(AVATAR_APIS[random_avatar_api](seed), axiosConfig)
+        return await axios.get(AVATAR_APIS[random_avatar_api](seed), axiosConfig)
     }
 
 
