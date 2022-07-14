@@ -27,7 +27,7 @@ const ChatCard = memo(({message, user={}, media, datetime, is_moderator=false, i
                         </div>
                     </>
                 }
-                <p class="more">
+                <p className="more">
                     ...
                 </p>
             </div>
@@ -39,7 +39,7 @@ const ChatCard = memo(({message, user={}, media, datetime, is_moderator=false, i
                 </div>
 
                 <div className="username-time right-end">
-                    @{username}
+                    l\{username}
                 </div>
 
             </div>

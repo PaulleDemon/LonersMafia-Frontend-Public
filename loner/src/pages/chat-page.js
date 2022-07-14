@@ -1,10 +1,15 @@
-import React, {useState} from "react"
+import React, {useEffect, useRef, useState} from "react"
+import { useParams } from "react-router-dom"
+
+import useWebSocket from "react-use-websocket"
 
 import AutoHeightTextarea from "../components/auto-resize-textarea"
+
 
 import {ReactComponent as BACK} from "../icons/back.svg"
 import {ReactComponent as SHARE} from "../icons/share.svg"
 import {ReactComponent as SEND} from "../icons/send.svg"
+
 import ChatCard from "../components/message-component"
 import { RegistrationModal } from "../modals/modals"
 
@@ -45,32 +50,43 @@ function ChatHeader({icon, name, tag_line, rules=[]}){
 }
 
 
-export function ChatSpace(){
-
-
-    return (
-        <div className="chat-body">
-                
-            <ChatCard message="wed"/>
-        </div>
-    )
-
-}
-
 
 export default function Chat(){
 
     const [text, setText] = useState("")
+    const {space} = useParams() 
+    const socketUrl = `ws://127.0.0.1:8000/ws/space/${space}/`
+
+    const {sendJsonMessage, lastJsonMessage, readyState,} = useWebSocket(socketUrl, {
+                                                                onOpen: () => console.log('opened'),
+                                                                onClose: () => console.log('closed'),
+                                                                //Will attempt to reconnect on all close events, such as server shutting down
+                                                                shouldReconnect: (closeEvent) => {
+                                                                    
+                                                                },
+                                                                })
+
+    const sumbitMessage = () => {
+
+        if (!text)
+            return
+
+        sendJsonMessage({
+            "message": text.trim()
+        })
+    }
 
     return (
         <div className="chat-page">
             <ChatHeader />
 
-            <ChatSpace />
+            <div className="chat-body">
+                <ChatCard message="wed"/>
+            </div>
 
             <div className="message-container">
                 <AutoHeightTextarea value={text} onChange={e => setText(e.target.value)}/>
-                <button className="send-btn"> 
+                <button className="send-btn" onClick={sumbitMessage}> 
                     <SEND fill="#fff"/>
                 </button>
             </div>
