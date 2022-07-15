@@ -71,6 +71,17 @@ export const RegistrationModal = () => {
 } 
 
 
+export const TimedMessageModal = () => {
+
+    return (
+        <div>
+            
+        </div>
+    )
+
+}
+
+
 export const RulesModal = () => {
 
     return (

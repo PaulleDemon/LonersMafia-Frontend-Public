@@ -1,4 +1,5 @@
 import {Routes, Route, Navigate} from "react-router-dom";
+import { Error404 } from "../error-pages/errors";
 
 import Chat from "./chat-page"
 
@@ -8,10 +9,10 @@ function Main(){
 		<Routes>
 			<Route path="/" exact element={<Navigate to="/loner" replace />} />
 
-			<Route path="/space"
-				element={<Chat />}
-			>
-			</Route>
+			<Route path="/space" element={<Chat />}/>
+			<Route path="/loner" element={<Chat />}/>
+
+			<Route path="*" element={<Error404 />} />
 
 		</Routes>
 	)

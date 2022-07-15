@@ -12,6 +12,7 @@ import {ReactComponent as SEND} from "../icons/send.svg"
 
 import ChatCard from "../components/message-component"
 import { RegistrationModal } from "../modals/modals"
+import { randInt } from "../utils/random-generator"
 
 
 function ChatHeader({icon, name, tag_line, rules=[]}){
@@ -50,10 +51,26 @@ function ChatHeader({icon, name, tag_line, rules=[]}){
 }
 
 
+const randomTexts = [
+    "I am a memer and will send memes now to all the loners 🚀",
+    "I am an artist and will show you my best works now!",
+    "I am going to speak my mind out!",
+    "I love you ❤️‍🔥",
+    "I liked fried 🐔 please",
+    "I prefer to show you the best of who I am ;)",
+    "sending memes to all the loners out there ",
+    "I love Mars 🌑",
+    "I am going to the moon 🚀",
+    "A fried chicken here pless....",
+    "Hushhh! keep the noise down", 
+    "Party at my house!!!",
+    "Invade the Universe"
+]
+
 
 export default function Chat(){
 
-    const [text, setText] = useState("")
+    const [text, setText] = useState(randomTexts[randInt(0, randomTexts.length-1)])
     const {space} = useParams() 
     const socketUrl = `ws://127.0.0.1:8000/ws/space/${space}/`
 
