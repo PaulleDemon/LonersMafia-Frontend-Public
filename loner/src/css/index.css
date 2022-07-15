@@ -496,6 +496,29 @@ a{
     width: 80%;
 }
 
+.cookie-modal{
+    padding: 10px;
+    bottom: 100px;
+    left: auto;
+    transform: unset;
+    max-width: 450px;
+    background-color: #ffff5f;
+    max-height: max-content;
+}
+
+.cookie-modal img{
+    max-width: 250px;
+    max-height: 250px;
+}
+
+.cookie-modal .btn{
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 300px;
+    color: #fff;
+    cursor: pointer;
+    background-color: #b41c1ce3;
+}
 
 /* --------------------------- error page ------------------------- */
 

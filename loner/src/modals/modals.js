@@ -1,3 +1,4 @@
+import Cookies from "js-cookie"
 import { useEffect, useState } from "react"
 import randomAvatarGenerator from "../utils/avatar-gnerator"
 
@@ -100,3 +101,32 @@ export const TermsModal = () => {
         </div>
     )
 } 
+
+
+// used to ask for consent to store cookies
+export const CookieConsentModal = ({onCookieAccept}) => {
+
+
+    return (
+        <div className="modal cookie-modal center margin-10px">
+            
+            <div className="row center">
+                Your lonely browser needs some Cookies, and I am giving it some.
+            </div>
+
+            <div className="row center margin-10px">
+                <img src={require("../icons/illustrations/cookies.png")} alt="cookie" />
+            </div>
+
+            <div className="maring-10px row center font-18px">
+                loner website stores necessary cookies for the functioning of the website. It may additionally 
+                make use of 3rd party cookies.
+            </div>
+
+            <div className="btn margin-10px" onClick={onCookieAccept}>
+                Sure Go go ahead
+            </div>
+        </div>
+    )
+
+}

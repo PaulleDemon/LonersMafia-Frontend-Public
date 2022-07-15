@@ -56,7 +56,7 @@ const randomTexts = [
     "I am an artist and will show you my best works now!",
     "I am going to speak my mind out!",
     "I love you ❤️‍🔥",
-    "I liked fried 🐔 please",
+    "I would like fried 🐔 please",
     "I prefer to show you the best of who I am ;)",
     "sending memes to all the loners out there ",
     "I love Mars 🌑",

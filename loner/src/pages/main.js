@@ -1,6 +1,7 @@
 import {Routes, Route, Navigate} from "react-router-dom";
 import { Error404 } from "../error-pages/errors";
 
+
 import Chat from "./chat-page"
 
 function Main(){
