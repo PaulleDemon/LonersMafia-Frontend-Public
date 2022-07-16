@@ -13,7 +13,10 @@ export function toLocalTime(utc){
     hours = hours ? hours : 12 // the hour '0' should be '12'
     minutes = minutes < 10 ? '0'+minutes : minutes
     var strTime = hours + ':' + minutes + ' ' + ampm
-    
-    return (date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear() + "  " + strTime
 
+    const options = {year: 'numeric', month: 'short', day: 'numeric',  hour: 'numeric', minute: 'numeric' }
+    // const options = { hour: 'numeric', minute: 'numeric' }
+    
+    // return date.getDate() + " "  + (date.getMonth()+1) + " " + date.getFullYear() + "  " + strTime
+    return new Intl.DateTimeFormat('en-US', options).format(date)
 }

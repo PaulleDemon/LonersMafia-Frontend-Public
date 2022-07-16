@@ -74,12 +74,15 @@ export default function Chat(){
     const [text, setText] = useState("")
     const {space} = useParams() 
     // const socketUrl = `ws://127.0.0.1:8000/ws/space/${space}/`
-    const socketUrl = `ws://127.0.0.1:8000/ws/space/Cool/`
-
+    const [socketUrl, setSocketUrl] = useState(`ws://127.0.0.1:8000/ws/space/Cool/`)
     const [timedMesage, setTimedMessage] = useState("")
     const [isBanned, setIsBanned] = useState(false)
 
     const [messages, setMessages] = useState([])
+
+    const [scrollToEnd, setScrollToEnd] = useState(false)
+    const scrollRef = useRef() // refernce to chat body
+    const lastMessageRef = useRef() //reference to the last message div
 
     const {sendJsonMessage, lastJsonMessage, readyState,} = useWebSocket(socketUrl, {
                                                                 onOpen: () => console.log('opend connection'),
@@ -120,9 +123,8 @@ export default function Chat(){
 
     useEffect(() => {
 
-        if (lastJsonMessage){
+        if (!messages.includes(lastJsonMessage) && lastJsonMessage !== null){
             console.log("Last message: ", lastJsonMessage)
-            
             setMessages([...messages, lastJsonMessage])
         } 
 
@@ -163,6 +165,21 @@ export default function Chat(){
         setText("")
         // Cookies.set("sent-first-message", "true") // once the user has sent his/her first message stop setting random text to text box
     }
+    console.log("MEssages: ", messages)
+
+    const handleChatScroll = (e) => {
+        
+        const scrollTop = e.target?.scrollTop
+        const scrollHeight = e.target?.scrollHeight
+        const elementHeight = e.target?.offsetHeight
+        console.log("scroll: ", elementHeight, ((e.target.scrollTop+e.target.scrollHeight)- elementHeight))
+        // check if the user is already at bottom, if user is already at bottom when new messages,
+        // is pushed scorll to the new message
+        if((e.target.scrollTop+e.target.scrollHeight) > 100){ 
+            console.log("True")
+        }
+    
+    }
 
 
     return (
@@ -176,12 +193,15 @@ export default function Chat(){
                 null
             }
 
-            <div className="chat-body">
+            <div className="chat-body" ref={scrollRef} onScroll={handleChatScroll}>
 
                 {
-                    messages.map((msg) => {
+                    messages.map((msg, index) => {
                         console.log("Msg: ", msg)
-                        return (<li>
+                        if (index === messages.length-1 && scrollRef?.current?.scrollBottom <= 100){
+                            setTimeout(() => lastMessageRef?.current?.scrollIntoView(), 2)
+                        }
+                        return (<li key={msg.id} ref={(index === messages.length-1)? lastMessageRef : null}>
                                     <ChatCard props={msg}/>
                                 </li>)  
                     })

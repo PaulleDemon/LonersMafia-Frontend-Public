@@ -1,4 +1,5 @@
 import { memo, useState, useEffect } from "react";
+import { toLocalTime } from "../utils/datetime";
 
 
 /**
@@ -11,11 +12,11 @@ import { memo, useState, useEffect } from "react";
  * user: object - user who sent the message
  */
 
-const ChatCard = memo((props) => {
+const ChatCard = memo(({props}) => {
 
-    const {message, user={}, media, datetime, is_mod=false, is_staff=false, is_sender=false} = props
-    const {name, avatar} = user
     console.log("Props: ", props)
+    const {message, user, media, datetime, is_mod=false, is_staff=false, is_sender=false} = props
+    const {name, avatar} = user
     return (
         <div className={`chat-card ${is_sender ? "right-end" : "left-end"}`}>
             
@@ -24,7 +25,7 @@ const ChatCard = memo((props) => {
                 {is_sender ?
 
                     <>
-                        <div className={`message-body ${is_sender ? "sender" : "receiver"}`}>
+                        <div className={`message-body ${is_sender ? "sender right-end" : "receiver left-end"}`}>
                             {message}  
                         </div>
                         <img className="user-icon" src={avatar} alt="" />
@@ -43,10 +44,10 @@ const ChatCard = memo((props) => {
                 </p>
             </div>
 
-            <div className="row">
+            <div className="row center">
 
                 <div className="username-time left-end">
-                    {datetime}
+                    {toLocalTime(datetime)}
                 </div>
 
                 <div className="username-time right-end">

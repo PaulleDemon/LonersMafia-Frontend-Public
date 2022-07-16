@@ -165,6 +165,7 @@ a{
     flex-direction: column;
     overflow-y: auto;
     gap: 20px;
+    list-style: none;
     /* background-color: #08a14d; */
 }
 
@@ -210,6 +211,7 @@ a{
 .chat-card .username-time{
     color: #858484;
     font-size: 14px;
+    margin: 5px;
 }
 
 .message-container{
