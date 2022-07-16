@@ -141,7 +141,7 @@ export default function Chat(){
         if (!text.trim())
             return
 
-        if (!navigator.onLine){
+        if (!navigator.onLine && process.env === "production"){
             setTimedMessage("You are offline :(")
             return 
         }
@@ -181,13 +181,11 @@ export default function Chat(){
                 {
                     messages.map((msg) => {
                         console.log("Msg: ", msg)
-                        return null
+                        return (<li>
+                                    <ChatCard props={msg}/>
+                                </li>)  
                     })
                 }
-                <ChatCard message="wed"/>
-                <ChatCard message="wed"/>
-                <ChatCard message="wed"/>
-                <ChatCard message="wed"/>
             </div>
 
             {    

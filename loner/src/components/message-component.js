@@ -1,10 +1,21 @@
 import { memo, useState, useEffect } from "react";
 
 
-const ChatCard = memo(({message, user={}, media, datetime, is_moderator=false, is_staff=false, is_sender=false}) => {
+/**
+ * message: str - message to be displayed
+ * datetime: str - datetime when the message was sent
+ * media: url | null - media if available
+ * is_mod: bool - allows previlages
+ * is_staff: bool - allows previlages
+ * is_sender: bool - is the user the sender of the message
+ * user: object - user who sent the message
+ */
 
-    const {username, icon} = user
+const ChatCard = memo((props) => {
 
+    const {message, user={}, media, datetime, is_mod=false, is_staff=false, is_sender=false} = props
+    const {name, avatar} = user
+    console.log("Props: ", props)
     return (
         <div className={`chat-card ${is_sender ? "right-end" : "left-end"}`}>
             
@@ -16,12 +27,12 @@ const ChatCard = memo(({message, user={}, media, datetime, is_moderator=false, i
                         <div className={`message-body ${is_sender ? "sender" : "receiver"}`}>
                             {message}  
                         </div>
-                        <img className="user-icon" src={icon} alt="" />
+                        <img className="user-icon" src={avatar} alt="" />
                     </>
 
                     :
                     <>
-                        <img className="user-icon" src={icon} alt="" />
+                        <img className="user-icon" src={avatar} alt="" />
                         <div className={`message-body ${is_sender ? "sender" : "receiver"}`}>
                             {message}  
                         </div>
@@ -39,7 +50,7 @@ const ChatCard = memo(({message, user={}, media, datetime, is_moderator=false, i
                 </div>
 
                 <div className="username-time right-end">
-                    l\{username}
+                    l\{name}
                 </div>
 
             </div>
