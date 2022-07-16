@@ -46,11 +46,11 @@ const ChatCard = memo(({props}) => {
 
             <div className="row center">
 
-                <div className="username-time left-end">
+                <div className="left-end username-time">
                     {toLocalTime(datetime)}
                 </div>
 
-                <div className="username-time right-end">
+                <div className="right-end username-time">
                     l\{name}
                 </div>
 

@@ -72,6 +72,27 @@ export const RegistrationModal = () => {
 } 
 
 
+
+export const SpaceCreateModal = () => {
+
+
+    return (
+        <div className="modal registration-modal">
+
+            <div className="row center">
+                Create Space
+            </div>
+
+            <div className="">
+                <img src={""} alt="avatar" className="avatar margin-10px"/>
+            </div>
+
+        </div>
+    )
+
+}
+
+
 export const TermsModal = () => {
 
     return (

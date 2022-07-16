@@ -12,7 +12,7 @@ import {ReactComponent as SHARE} from "../icons/share.svg"
 import {ReactComponent as SEND} from "../icons/send.svg"
 
 import ChatCard from "../components/message-component"
-import { RegistrationModal, TimedMessageModal } from "../modals/modals"
+import { RegistrationModal, SpaceCreateModal, TimedMessageModal } from "../modals/modals"
 import { randInt } from "../utils/random-generator"
 
 
@@ -123,13 +123,32 @@ export default function Chat(){
 
     useEffect(() => {
 
-        if (!messages.includes(lastJsonMessage) && lastJsonMessage !== null){
-            console.log("Last message: ", lastJsonMessage)
+        console.log("ID: ", lastJsonMessage)
+
+        if (lastJsonMessage && !messages.some(msg => lastJsonMessage.id === msg.id)){
+            // console.log("Last message: ", lastJsonMessage)
             setMessages([...messages, lastJsonMessage])
+            
+            console.log("scling", scrollRef.current?.scrollHeight - scrollRef.current?.scrollTop === scrollRef.current?.clientHeight)
+            if((scrollRef.current?.scrollHeight - scrollRef.current?.scrollTop) - scrollRef.current?.clientHeight < 100){ 
+                console.log("scrolling2")
+                scrollToBottom() // if the scroll is at the bottom the scroll to the end
+            }
+
         } 
 
     }, [lastJsonMessage])
 
+
+    useEffect(() => {
+        // when there is a new message scroll to the bottom if the scrollbar is already at bottom
+
+        if (scrollToEnd )
+            scrollToBottom()
+
+        // markReadMutate.mutateAsync(roomid)
+    }, [messages])
+    
     useEffect(() => {
 
         if (!navigator.onLine){
@@ -165,20 +184,38 @@ export default function Chat(){
         setText("")
         // Cookies.set("sent-first-message", "true") // once the user has sent his/her first message stop setting random text to text box
     }
-    console.log("MEssages: ", messages)
 
-    const handleChatScroll = (e) => {
-        
-        const scrollTop = e.target?.scrollTop
-        const scrollHeight = e.target?.scrollHeight
-        const elementHeight = e.target?.offsetHeight
-        console.log("scroll: ", elementHeight, ((e.target.scrollTop+e.target.scrollHeight)- elementHeight))
-        // check if the user is already at bottom, if user is already at bottom when new messages,
-        // is pushed scorll to the new message
-        if((e.target.scrollTop+e.target.scrollHeight) > 100){ 
-            console.log("True")
+    const scrollToBottom = () => {
+        // scroll to the bottom
+        lastMessageRef.current?.scrollIntoView()
+    }
+
+    const handleChatScroll = (e) =>{
+        const bottom = e.target.scrollHeight - e.target.scrollTop <= (e.target.clientHeight + 50)
+  
+        if (!bottom && scrollToEnd){
+            setScrollToEnd(false)
         }
+
+        else if(!scrollToEnd && bottom){
+            setScrollToEnd(true)
+        }
+
+        // If the scroll-bar is at the top then fetch old messages from the database
+        // note: we may also have to check if scroll bar is scrolling to the top
+        // if (scrollRef.current && (20 >= scrollRef.current.scrollTop 
+        //     || scrollRef.current.clientHeight === scrollRef.current.scrollHeight) 
+        //     && (chatQuery.hasNextPage === undefined || chatQuery.hasNextPage === true)) {
+        //     chatQuery.fetchNextPage({cancelRefetch: false})
+            
+        //     if (messages.length !== 0){
+
+        //         setLastRefId(messages[0].id)
+        //         // scrollRef?.current?.scrollIntoView()
+        //     }
     
+
+        // }        
     }
 
 
@@ -197,16 +234,19 @@ export default function Chat(){
 
                 {
                     messages.map((msg, index) => {
-                        console.log("Msg: ", msg)
-                        if (index === messages.length-1 && scrollRef?.current?.scrollBottom <= 100){
-                            setTimeout(() => lastMessageRef?.current?.scrollIntoView(), 2)
+                       
+                        if((scrollRef.current?.scrollHeight - scrollRef.current?.scrollTop) - scrollRef.current?.clientHeight < 100){ 
+                            lastMessageRef.current?.scrollIntoView() // if the scroll is at the bottom the scroll to the end
                         }
+                
                         return (<li key={msg.id} ref={(index === messages.length-1)? lastMessageRef : null}>
                                     <ChatCard props={msg}/>
                                 </li>)  
                     })
                 }
             </div>
+            
+            <SpaceCreateModal />
 
             {    
                 
