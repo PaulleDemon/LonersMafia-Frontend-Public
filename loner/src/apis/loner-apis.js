@@ -79,6 +79,14 @@ export const banUser = async (id) => {
 
 }
 
+/* ----------------------------------- login ----------------------------------- */
+
+export const Login = async () => {
+
+    const config = getConfig()
+    return await api.get(`/user/login/`, config)
+}
+
 /* ----------------------------------- space endpoints --------------------------  */
 
 export const createSpace = async (data) => {

@@ -1,7 +1,8 @@
+import Cookies from "js-cookie"
 import React, {useEffect, useRef, useState} from "react"
 import { useParams } from "react-router-dom"
 
-import useWebSocket from "react-use-websocket"
+import useWebSocket, {ReadyState} from "react-use-websocket"
 
 import AutoHeightTextarea from "../components/auto-resize-textarea"
 
@@ -11,7 +12,7 @@ import {ReactComponent as SHARE} from "../icons/share.svg"
 import {ReactComponent as SEND} from "../icons/send.svg"
 
 import ChatCard from "../components/message-component"
-import { RegistrationModal } from "../modals/modals"
+import { RegistrationModal, TimedMessageModal } from "../modals/modals"
 import { randInt } from "../utils/random-generator"
 
 
@@ -50,7 +51,7 @@ function ChatHeader({icon, name, tag_line, rules=[]}){
 
 }
 
-
+// random texts to be filled for first time users.
 const randomTexts = [
     "I am a memer and will send memes now to all the loners 🚀",
     "I am an artist and will show you my best works now!",
@@ -70,44 +71,139 @@ const randomTexts = [
 
 export default function Chat(){
 
-    const [text, setText] = useState(randomTexts[randInt(0, randomTexts.length-1)])
+    const [text, setText] = useState("")
     const {space} = useParams() 
-    const socketUrl = `ws://127.0.0.1:8000/ws/space/${space}/`
+    // const socketUrl = `ws://127.0.0.1:8000/ws/space/${space}/`
+    const socketUrl = `ws://127.0.0.1:8000/ws/space/Cool/`
+
+    const [timedMesage, setTimedMessage] = useState("")
+    const [isBanned, setIsBanned] = useState(false)
+
+    const [messages, setMessages] = useState([])
 
     const {sendJsonMessage, lastJsonMessage, readyState,} = useWebSocket(socketUrl, {
-                                                                onOpen: () => console.log('opened'),
-                                                                onClose: () => console.log('closed'),
+                                                                onOpen: () => console.log('opend connection'),
+                                                                onClose: (closeEvent) => {
+                                                                    // console.log("Close Event: ", closeEvent)
+                                                                    if (closeEvent.code === 3401 || closeEvent.code === 3404){
+                                                                        setTimedMessage("You cannot connect to the socket")
+                                                                        setIsBanned(true)
+                                                                        
+                                                                    }
+                                                                        
+                                                                    else
+                                                                        setTimedMessage("Connection to server lost. Attempting to reconnect.")
+                                                                
+                                                                },
                                                                 //Will attempt to reconnect on all close events, such as server shutting down
                                                                 shouldReconnect: (closeEvent) => {
                                                                     
+                                                                    if (closeEvent.code !== 3401 && closeEvent.code !== 3404){
+                                                                        return true
+                                                                    }
+
+                                                                    return false
                                                                 },
-                                                                })
+                                                                onError: (error) => {
+                                                                    setTimedMessage("something went wrong")
+                                                                    // console.log("Error: ", error)
+                                                                }
+                                                            })
+    
+                                                               
+    useEffect(() => {
+
+        if (!Cookies.get("sent-first-message"))
+            setText(randomTexts[randInt(0, randomTexts.length-1)])
+
+    }, [])
+
+    useEffect(() => {
+
+        if (lastJsonMessage){
+            console.log("Last message: ", lastJsonMessage)
+            
+            setMessages([...messages, lastJsonMessage])
+        } 
+
+    }, [lastJsonMessage])
+
+    useEffect(() => {
+
+        if (!navigator.onLine){
+            setTimedMessage("You are not connected to internet")
+        }
+
+    }, [navigator.onLine])
 
     const sumbitMessage = () => {
 
-        if (!text)
+        if (!text.trim())
             return
+
+        if (!navigator.onLine){
+            setTimedMessage("You are offline :(")
+            return 
+        }
+
+        if (readyState == ReadyState.CONNECTING){
+            setTimedMessage("Connecting please wait..")
+            return 
+        }
+
+        if (readyState == ReadyState.CLOSED){
+            setTimedMessage("connection closed. Try refreshing the page or try again later.")
+            return 
+        }
 
         sendJsonMessage({
             "message": text.trim()
         })
+
+        setText("")
+        // Cookies.set("sent-first-message", "true") // once the user has sent his/her first message stop setting random text to text box
     }
+
 
     return (
         <div className="chat-page">
             <ChatHeader />
 
+            {
+                timedMesage !== ""?
+                <TimedMessageModal message={timedMesage} timeout={2000} onTimeOut={() => setTimedMessage("")}/>
+                :
+                null
+            }
+
             <div className="chat-body">
+
+                {
+                    messages.map((msg) => {
+                        console.log("Msg: ", msg)
+                        return null
+                    })
+                }
+                <ChatCard message="wed"/>
+                <ChatCard message="wed"/>
+                <ChatCard message="wed"/>
                 <ChatCard message="wed"/>
             </div>
 
-            <div className="message-container">
-                <AutoHeightTextarea value={text} onChange={e => setText(e.target.value)}/>
-                <button className="send-btn" onClick={sumbitMessage}> 
-                    <SEND fill="#fff"/>
-                </button>
-            </div>
-        
+            {    
+                
+                !isBanned ? 
+                <div className="message-container">
+                    <AutoHeightTextarea value={text} onChange={e => setText(e.target.value)}/>
+                    <button className="send-btn" onClick={sumbitMessage}> 
+                        <SEND fill="#fff"/>
+                    </button>
+                </div>
+                :
+                <div className="message-container margin-10px row center font-18px">
+                    You have been banned from participating here. You won't recieve real time message.
+                </div>
+            }
         </div>
     )
 

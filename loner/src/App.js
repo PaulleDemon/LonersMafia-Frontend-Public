@@ -3,6 +3,8 @@ import Cookies from "js-cookie"
 
 import { CookieConsentModal } from "./modals/modals";
 import { useEffect, useState } from "react";
+import { Login } from "./apis/loner-apis";
+
 
 function App() {
 
@@ -12,6 +14,12 @@ function App() {
 
 		if (Cookies.get("cookie-accept") !== "true")
 			setShowCookieModal(true)
+
+		// TODO: Login set cookies
+		const login = Login().then(
+			(res) => {console.log("res: ", res);return res} 
+		).catch(err => console.log("Error: ", err))
+		console.log("Logged in: ", login)
 
 	}, [])
 

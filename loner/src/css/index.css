@@ -237,6 +237,7 @@ a{
 
 .send-btn:hover{
     background-color: #ffff00;
+    cursor: pointer;
 }
 
 /* ------------- auto resize text box -------------------------- */
@@ -498,9 +499,10 @@ a{
 
 .cookie-modal{
     padding: 10px;
-    bottom: 100px;
-    left: auto;
+    top: unset;
+    bottom: 50px;
     transform: unset;
+    left: auto;
     max-width: 450px;
     background-color: #ffff5f;
     max-height: max-content;
@@ -518,6 +520,23 @@ a{
     color: #fff;
     cursor: pointer;
     background-color: #b41c1ce3;
+}
+
+.timed-modal{
+    position: fixed;
+    z-index: 4;
+    top: 40px;
+    left: 50%;
+    padding: 10px;
+    transform: translate(-50%);
+    font-size: 18px;
+    color: #fff;
+    max-width: 100%;
+    min-width: 250px;
+    min-height: 40px;
+    background-color: #079cbd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #8a8989;
 }
 
 /* --------------------------- error page ------------------------- */

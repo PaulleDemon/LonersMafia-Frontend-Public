@@ -72,7 +72,7 @@ export const RegistrationModal = () => {
 } 
 
 
-export const TimedMessageModal = () => {
+export const TermsModal = () => {
 
     return (
         <div>
@@ -93,12 +93,22 @@ export const RulesModal = () => {
 }
 
 
-export const TermsModal = () => {
+export const TimedMessageModal = ({message, onTimeOut, timeout=2000}) => {
+
+    console.log("Timed, ", message)
+    useEffect(() => {
+
+        setTimeout(() => onTimeOut(), timeout)
+
+    }, [])
 
     return (
-        <div>
-            
+    
+        <div className="timed-modal row center">
+            {message}
         </div>
+            
+        
     )
 } 
 
@@ -120,7 +130,7 @@ export const CookieConsentModal = ({onCookieAccept}) => {
 
             <div className="maring-10px row center font-18px">
                 loner website stores necessary cookies for the functioning of the website. It may additionally 
-                make use of 3rd party cookies.
+                make use of 3rd party cookies to keep the site running.
             </div>
 
             <div className="btn margin-10px" onClick={onCookieAccept}>

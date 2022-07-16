@@ -18,7 +18,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "env-cmd -e development react-scripts start",
     "start:mobdev": "env-cmd -e mobiledev react-scripts start",
     "build": "GENERATE_SOURCEMAP=false env-cmd -e production react-scripts build",
     "test": "react-scripts test",
