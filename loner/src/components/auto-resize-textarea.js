@@ -15,6 +15,13 @@ const EMOJIPICKER_STYLE = {
                     }
 
 
+const inputTypes = [ // used to trigger manual change event 
+    window.HTMLInputElement,
+    window.HTMLSelectElement,
+    window.HTMLTextAreaElement,
+]
+                    
+
 /**
  * This text component expands upwards as the user types in the input.
  * Used to take input for chat app.
@@ -40,10 +47,28 @@ const AutoHeightTextarea = ({  value, onStickerClick, onMediaClick, ...props }) 
 
     }, [value, text])
 
-    // const onEmojiClick = (e, emojiObject) => {
-    //     console.log("Clicked: ", emojiObject.emoji)
-    //     value += emojiObject?.emoji
-    // }
+    const triggerInputChange = (node, value = '') => {
+        // Manually triggers change event
+        // only process the change on elements we know have a value setter in their constructor
+        if ( inputTypes.indexOf(node.__proto__.constructor) >-1 ) {
+    
+            const setValue = Object.getOwnPropertyDescriptor(node.__proto__, 'value').set;
+            const event = new Event('input', { bubbles: true });
+    
+            setValue.call(node, value);
+            node.dispatchEvent(event);
+    
+        }
+    
+    };
+
+    const onEmojiClick = (e, unicode) => {
+        
+        setText(text+`${unicode}`)
+        const input = document.getElementById('__auto_resize_text__')
+        triggerInputChange(input, text+`${unicode}`)
+
+    }
 
     return (
         <div className="autoresize-container">
@@ -53,13 +78,13 @@ const AutoHeightTextarea = ({  value, onStickerClick, onMediaClick, ...props }) 
                 ref={textareaRef}
                 {...props}
                 value={text}
-                onChange={(e) => {props.onChange(e); console.log("chanegd: ", e.target.value)}}
+                id="__auto_resize_text__"
+                // onInput={(e) => {props.onChange(e); console.log("chanegd: ", e.target.value)}}
+                onChange={props.onChange}
             />
-            // TODO: correct the emoji not trigrring onchange event
+ 
             { showEmojiPicker ? 
-                <EmojiPicker onEmojiClick={(e, unicode) => {setText(text+`${unicode}`)
-                                                            textareaRef.current?.dispatchEvent(new Event("input"), { bubbles: true})
-                                                            }} 
+                <EmojiPicker onEmojiClick={onEmojiClick} 
                     onClickOutside={() => setShowEmojiPicker(false)}
                 />
                 
