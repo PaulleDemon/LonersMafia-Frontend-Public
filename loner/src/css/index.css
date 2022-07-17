@@ -104,6 +104,11 @@ a{
     border: 3px solid #079cbd;
 }
 
+.input-error, .input-error:hover, .input-error:focus{
+    border: 3px solid #f61010;
+}
+
+
 .avatar{
     width: 250px;
     height: 250px;
@@ -569,6 +574,30 @@ a{
 .error-page .btn:hover{
     background-color: #0a813f;
 }
+
+/* --------------------------- loading wheel ----------------------------- */
+
+.loading-wheel {
+    border: 8px solid #cfcdcd;
+    border-radius: 50%;
+    border-top: 8px solid #3498db;
+    width: 50px;
+    height: 50px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+  }
+  
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
 
 /* --------------------------------*/
 .hidden{

@@ -1,5 +1,10 @@
 import Cookies from "js-cookie"
 import { memo, useEffect, useState } from "react"
+import {useMutation}from "react-query"
+
+import { createUser } from "../apis/loner-apis"
+import { LoadingWheel } from "../components/loading"
+
 import randomAvatarGenerator from "../utils/avatar-gnerator"
 
 import {ReactComponent as RELOAD} from "../icons/reload.svg"
@@ -17,7 +22,14 @@ export const RegistrationModal = () => {
                                         })
     const [name, setName] = useState("")
     const [error, setError] = useState("")
+    const [inputError, setInputError] = useState(false)
     
+    const registerMutation = useMutation(createUser, {
+        onError: (err) => {
+            console.log("error: ", err)
+        }
+    })
+
     useEffect(() => {
 
         randomAvatar("")
@@ -25,13 +37,30 @@ export const RegistrationModal = () => {
     }, [])
 
     const randomAvatar =  async () => {
-
+        // fetches random avatar
         const random_avatar = await randomAvatarGenerator(name).then(res => res).catch(err => console.log(err))
 
         setAvatar({
             file: random_avatar,
             url: URL.createObjectURL(random_avatar)
         })
+    }
+
+    const handleSubmit = () => {
+        
+        if (!name.trim()){
+            setError("Quick give yourself a name")
+            setInputError(true)
+            return 
+        } 
+
+
+        let form_data = new FormData()
+        form_data.append("name", name)
+        form_data.append("avatar", avatar.file)
+
+
+        registerMutation.mutate(form_data)
     }
 
     return (
@@ -53,14 +82,20 @@ export const RegistrationModal = () => {
 
             <p className={`row center font-14px ${error ? "error" : "hidden"}`}>{error}</p>
             <div className="row center">
-                <input type="text" className="input margin-10px" value={name} 
+                <input type="text" className={`input margin-10px ${inputError ? "input-error": ""}`} value={name} 
                         placeholder="nickname (eg: memer34)"
                         maxLength={MAX_LENGTH.name}
                         onChange={(e) => setName(e.target.value)}
                         autoFocus
                         />
 
-                <button className="btn row center"><NEXT fill="#fff"/></button>
+            {
+            registerMutation.isLoading ?
+                <LoadingWheel />
+                :
+                <button className="btn row center" onClick={handleSubmit}><NEXT fill="#fff"/></button>
+            }
+            
             </div>
 
             <div className="row center font-14px">

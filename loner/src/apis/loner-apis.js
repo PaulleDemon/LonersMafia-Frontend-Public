@@ -40,20 +40,16 @@ const getFormConfig = () => {
 /* ------------------------ User endpoints ---------------------- */
 
 // End point to create the user
-const createUser = async (name, avatar) => {
+export const createUser = async (form_data) => {
 
     const config = getFormConfig()
 
-    const body = JSON.stringify({
-        body: body,
-        avatar: avatar
-    })
 
-    return await api.post("user/create/", body, config)
+    return await api.post("/user/create/", form_data, config)
 
 } 
 
-const upateUser = async (id, name, avatar) => {
+export const upateUser = async (id, name, avatar) => {
 
     const config = getFormConfig()
 
@@ -62,7 +58,7 @@ const upateUser = async (id, name, avatar) => {
         avatar: avatar
     })
 
-    return await api.post(`user/update/${id}/`, body, config)
+    return await api.post(`/user/update/${id}/`, body, config)
 
 } 
 
@@ -75,7 +71,7 @@ export const banUser = async (id) => {
         id: id
     })
     
-    return await api.post(`user/ban/`, body, config)
+    return await api.post(`/user/ban/`, body, config)
 
 }
 
