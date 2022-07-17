@@ -17,6 +17,11 @@ function App() {
 		// enabled: false,
 		staleTime: Infinity,
 		cacheTime: 60 * 60 * 1000, // 1 hour
+		onSuccess: (data) => {
+			// console.log("data: ", data.data.id)
+			
+			sessionStorage.setItem("user-id", `${data.data.id}`)
+		},
 		onError: (err) => {
 
 			if (err.response?.status === 401)

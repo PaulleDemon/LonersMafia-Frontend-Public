@@ -1,5 +1,5 @@
 import Cookies from "js-cookie"
-import React, {useEffect, useRef, useState} from "react"
+import React, {useEffect, useMemo, useRef, useState} from "react"
 import { useParams } from "react-router-dom"
 import { useInfiniteQuery } from "react-query"
 import useWebSocket, {ReadyState} from "react-use-websocket"
@@ -74,6 +74,7 @@ export default function Chat(){
 
     const [text, setText] = useState("")
     const {space} = useParams() 
+
     // const socketUrl = `ws://127.0.0.1:8000/ws/space/${space}/`
     const [socketUrl, setSocketUrl] = useState(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/space/${space}/`)
     const [timedMesage, setTimedMessage] = useState("")
@@ -135,7 +136,39 @@ export default function Chat(){
         staleTime: Infinity,
 
     })
-                                                               
+
+    useEffect(() => {
+
+        const chatPages = []
+        console.log("Hey: ", chatQuery.data?.pages)
+        if (chatQuery.status === "success"){
+            chatQuery.data.pages.forEach((x) => {
+                x.data.results.forEach( (x) =>{
+                    chatPages.push(x)
+                }
+                )      
+            })
+            
+            /* NOTE: 
+            The below line removes the duplicate and displays it in the latest order.
+            The duplicate value arises because when there is a new message through websocket, we are not
+            fetching the same page again(because we don't need to). 
+            For example: page1 contains ids: {58, 57, 56} and page 2 has: {55, 54, 53}
+            Now a new message is added through websocket. So
+            The page1 has ids {59, 58, 57} and page2: has {56, 55, 54} but the 56 was already there in the 
+            messages which leads to data duplication and makes it unusable as key for list elements.
+            */
+            // const chat_pages = [...chatPages.reverse(), ...messages].filter((value, index, a) =>
+            // index === a.findIndex((t) => (t.id === value.id))
+            // )
+            // console.log("CHAT MESSAGES: ", chat_pages)
+            // setMessages(chat_pages)
+            setMessages(chatPages)
+            
+        }
+
+    }, [chatQuery.status, chatQuery.data, chatQuery.isFetched])
+    
     useEffect(() => {
 
         if (!localStorage.getItem("sent-first-message"))
@@ -170,19 +203,20 @@ export default function Chat(){
     
     useEffect(() => {
 
-        console.log("Online: ", navigator.onLine)
         if (!window.navigator.onLine){
             setTimedMessage("You are not connected to internet")
         }
 
     }, [window.navigator.onLine])
 
+    const currentUserId = useMemo(() => sessionStorage.getItem("user-id"), [sessionStorage.getItem("user-id")])
+
     const sumbitMessage = () => {
 
         if (!text.trim())
             return
 
-        if (!navigator.onLine && process.env === "production"){
+        if (!navigator.onLine && process.env.NODE_ENV === "production"){
             setTimedMessage("You are offline :(")
             return 
         }
@@ -249,7 +283,7 @@ export default function Chat(){
                     messages.map((msg) => {
                 
                         return (<li key={msg.id}>
-                                    <ChatCard props={msg}/>
+                                    <ChatCard currentUserId={currentUserId} props={msg}/>
                                 </li>)  
                     })
                 }

@@ -37,29 +37,28 @@ const linkifyConfig = [
             } 
         },
         {
-            regex: /(^|\s)(#[a-z\d-]+)/ig, // match hashtag
-            fn: (key, result) => {
-                // console.log("result: ", result)
-                return (<Link key={key} 
-                    to={ENDPOINTS.searchview(result[0].slice(1, ))}
-                    onClick={(e) => e.stopPropagation()}
-                    className="linkify-link-color"
-                    >
-                    {result[0]}
-                </Link>)
-            }
-        },
-        {
             regex: /\bl\/\w+/gm, //regex to match a username /\B@[a-z0-9_-]+/gi
             fn: (key, result) => {
-                // console.log("usernme: ", result[0].slice(1))
+                console.log("usernme: ", result[0].slice(1))
                 return (<Link key={key} 
-                            to={ENDPOINTS.spaceviewposts(result[0].slice(1, ))}
+                            to={ENDPOINTS.spaceview(result[0].slice(1, ))}
                             onClick={(e) => e.stopPropagation()}
                             className="linkify-link-color"
                             >
                             {result[0]}
                         </Link>)
+            }
+        },
+        {
+            regex: /(^|\s)(#[a-z\d-]+)/ig, // match hashtag
+            fn: (key, result) => {
+                // console.log("result: ", result)
+                return (<div key={key} 
+                    onClick={(e) => e.stopPropagation()}
+                    className="linkify-link-color"
+                    >
+                    {result[0]}
+                </div>)
             }
         },
         {   

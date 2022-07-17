@@ -206,31 +206,34 @@ a{
     justify-content: center;
     gap: 10px;
     padding: 5px;
-    max-width: max-content;
+    max-width: fit-content;
+    height: fit-content;
 }
 
 .chat-card .message-body{
-    min-height: 50px;
-    padding: 10px;
-    border-radius: 20px;
-    display: flex;
-    word-wrap: break-word;
-    font-size: 20px;
+    min-height: 10px;
     max-width: 80%;
-    width: fit-content;
-    align-items: center;
-    white-space: pre-wrap;
+    border-radius: 5px;
+    white-space: pre-line;
+    /* overflow-wrap: break-word; */
+    /* word-break: break-all; */
+    padding: 10px;
+    /* word-wrap: break-word; */
+    width: max-content;
+    height: max-content;
+    box-shadow: 0 0 10px #4b779d;
 }
 
 .chat-card .user-icon{
     width: 40px;
     height: 40px;
-    clip-path: circle(50%);
+    /* clip-path: circle(50%); */
 	background-color: #000000;
+    box-shadow: 0 0 10px #4b779d;
 }
 
 .receiver{
-    background-color: #b4b4b4;
+    background-color: #c8c6c6;
 }
 
 .sender{
@@ -243,6 +246,7 @@ a{
     margin: 5px;
 }
 
+/* ----------------- message input container --------------*/
 .message-container{
     width: 100%;
     z-index: 2;
@@ -606,6 +610,12 @@ a{
 
 
 /* --------------------------------*/
+
+.linkify-link-color{
+    color: #000000;
+    border-bottom: 1px solid #000000;
+}
+
 .hidden{
     visibility: hidden;
 }

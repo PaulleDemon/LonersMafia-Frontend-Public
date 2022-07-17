@@ -12,17 +12,18 @@ import {linkify} from "../utils/linkify"
  * user: object - user who sent the message
  */
 
-const ChatCard = memo(({props}) => {
+const ChatCard = memo(({currentUserId=1, props}) => {
 
     
     const {message, user, media, datetime, is_mod=false, is_staff=false, is_sender=false} = props
-    const {name, avatar_url} = user
+    const {id, name, avatar_url} = user
+    console.log("current: ", currentUserId, id)
     return (
-        <div className={`chat-card ${is_sender ? "right-end" : "left-end"}`}>
+        <div className={`chat-card ${currentUserId == id? "right-end" : "left-end"}`}>
             
             <div className="row" style={{gap: "5px"}}>
            
-                {is_sender ?
+                {currentUserId == id ?
 
                     <>
                         <div className={`message-body ${is_sender ? "sender right-end" : "receiver left-end"}`}>
@@ -54,6 +55,9 @@ const ChatCard = memo(({props}) => {
                     l\{name}
                 </div>
 
+            </div>
+            <div>
+                rocket
             </div>
         </div>
     )
