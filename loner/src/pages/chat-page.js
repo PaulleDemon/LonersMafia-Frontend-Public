@@ -80,7 +80,7 @@ export default function Chat(){
 
     const [messages, setMessages] = useState([])
 
-    const [scrollToEnd, setScrollToEnd] = useState(false)
+    const [scrollToEnd, setScrollToEnd] = useState(true)
     const scrollRef = useRef() // refernce to chat body
     const lastMessageRef = useRef() //reference to the last message div
 
@@ -123,42 +123,34 @@ export default function Chat(){
 
     useEffect(() => {
 
-        console.log("ID: ", lastJsonMessage)
-
         if (lastJsonMessage && !messages.some(msg => lastJsonMessage.id === msg.id)){
             // console.log("Last message: ", lastJsonMessage)
             setMessages([...messages, lastJsonMessage])
-            
-            console.log("scling", scrollRef.current?.scrollHeight - scrollRef.current?.scrollTop === scrollRef.current?.clientHeight)
-            if((scrollRef.current?.scrollHeight - scrollRef.current?.scrollTop) - scrollRef.current?.clientHeight < 100){ 
-                console.log("scrolling2")
-                scrollToBottom() // if the scroll is at the bottom the scroll to the end
-            }
-
+           
         } 
 
     }, [lastJsonMessage])
 
-
     useEffect(() => {
         // when there is a new message scroll to the bottom if the scrollbar is already at bottom
-
-        if (scrollToEnd )
+        console.log("scroll to bottom")
+        if (scrollToEnd)
             scrollToBottom()
 
-        // markReadMutate.mutateAsync(roomid)
     }, [messages])
     
     useEffect(() => {
 
-        if (!navigator.onLine){
+        console.log("Online: ", navigator.onLine)
+        if (!window.navigator.onLine){
             setTimedMessage("You are not connected to internet")
         }
 
-    }, [navigator.onLine])
+    }, [window.navigator.onLine])
 
     const sumbitMessage = () => {
 
+        console.log("sending...", text.trim(), text)
         if (!text.trim())
             return
 
@@ -178,16 +170,19 @@ export default function Chat(){
         }
 
         sendJsonMessage({
-            "message": text.trim()
+            "message": text
         })
+        console.log("Sent", text.trim())
 
         setText("")
         // Cookies.set("sent-first-message", "true") // once the user has sent his/her first message stop setting random text to text box
     }
 
     const scrollToBottom = () => {
-        // scroll to the bottom
-        lastMessageRef.current?.scrollIntoView()
+
+        if (scrollRef.current)
+            scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+            
     }
 
     const handleChatScroll = (e) =>{
@@ -233,26 +228,22 @@ export default function Chat(){
             <div className="chat-body" ref={scrollRef} onScroll={handleChatScroll}>
 
                 {
-                    messages.map((msg, index) => {
-                       
-                        if((scrollRef.current?.scrollHeight - scrollRef.current?.scrollTop) - scrollRef.current?.clientHeight < 100){ 
-                            lastMessageRef.current?.scrollIntoView() // if the scroll is at the bottom the scroll to the end
-                        }
+                    messages.map((msg) => {
                 
-                        return (<li key={msg.id} ref={(index === messages.length-1)? lastMessageRef : null}>
+                        return (<li key={msg.id}>
                                     <ChatCard props={msg}/>
                                 </li>)  
                     })
                 }
             </div>
-            
-            <SpaceCreateModal />
+
+            <div ref={lastMessageRef}/>
 
             {    
                 
                 !isBanned ? 
                 <div className="message-container">
-                    <AutoHeightTextarea value={text} onChange={e => setText(e.target.value)}/>
+                    <AutoHeightTextarea value={text} onChange={e => {setText(e.target.value); console.log("Value: ", e.target.value)}}/>
                     <button className="send-btn" onClick={sumbitMessage}> 
                         <SEND fill="#fff"/>
                     </button>

@@ -38,7 +38,6 @@ const AutoHeightTextarea = ({  value, onStickerClick, onMediaClick, ...props }) 
         const scrollHeight = textareaRef.current.scrollHeight
         textareaRef.current.style.height = scrollHeight + "px"
 
-
     }, [value, text])
 
     // const onEmojiClick = (e, emojiObject) => {
@@ -54,11 +53,13 @@ const AutoHeightTextarea = ({  value, onStickerClick, onMediaClick, ...props }) 
                 ref={textareaRef}
                 {...props}
                 value={text}
-                onChange={props.onChange}
+                onChange={(e) => {props.onChange(e); console.log("chanegd: ", e.target.value)}}
             />
-
+            // TODO: correct the emoji not trigrring onchange event
             { showEmojiPicker ? 
-                <EmojiPicker onEmojiClick={(e, unicode) => {setText(text+`${unicode}`)}} 
+                <EmojiPicker onEmojiClick={(e, unicode) => {setText(text+`${unicode}`)
+                                                            textareaRef.current?.dispatchEvent(new Event("input"), { bubbles: true})
+                                                            }} 
                     onClickOutside={() => setShowEmojiPicker(false)}
                 />
                 

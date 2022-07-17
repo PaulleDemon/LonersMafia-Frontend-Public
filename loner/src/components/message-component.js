@@ -14,7 +14,7 @@ import { toLocalTime } from "../utils/datetime";
 
 const ChatCard = memo(({props}) => {
 
-    console.log("Props: ", props)
+    
     const {message, user, media, datetime, is_mod=false, is_staff=false, is_sender=false} = props
     const {name, avatar} = user
     return (

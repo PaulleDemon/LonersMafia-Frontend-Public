@@ -1,5 +1,5 @@
 import Cookies from "js-cookie"
-import { useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react"
 import randomAvatarGenerator from "../utils/avatar-gnerator"
 
 import {ReactComponent as RELOAD} from "../icons/reload.svg"
@@ -114,9 +114,8 @@ export const RulesModal = () => {
 }
 
 
-export const TimedMessageModal = ({message, onTimeOut, timeout=2000}) => {
+export const TimedMessageModal = memo(({message, onTimeOut, timeout=2000}) => {
 
-    console.log("Timed, ", message)
     useEffect(() => {
 
         setTimeout(() => onTimeOut(), timeout)
@@ -132,7 +131,7 @@ export const TimedMessageModal = ({message, onTimeOut, timeout=2000}) => {
         
     )
 } 
-
+)
 
 // used to ask for consent to store cookies
 export const CookieConsentModal = ({onCookieAccept}) => {

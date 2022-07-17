@@ -304,6 +304,7 @@ a{
     max-width: 30%;
     background-color: var(--emoji-picker-background);
     border-radius: 5px;
+    box-shadow: 0 0 5px #a19f9f;
 }
 
 .emoji-picker input{
