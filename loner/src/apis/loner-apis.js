@@ -77,7 +77,7 @@ export const banUser = async (id) => {
 
 /* ----------------------------------- login ----------------------------------- */
 
-export const Login = async () => {
+export const login = async () => {
 
     const config = getConfig()
     return await api.get(`/user/login/`, config)

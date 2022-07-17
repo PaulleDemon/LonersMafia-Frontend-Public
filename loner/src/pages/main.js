@@ -10,7 +10,7 @@ function Main(){
 		<Routes>
 			<Route path="/" exact element={<Navigate to="/loner" replace />} />
 
-			<Route path="/space" element={<Chat />}/>
+			<Route path="/space/:space" element={<Chat />}/>
 			<Route path="/loner" element={<Chat />}/>
 
 			<Route path="*" element={<Error404 />} />

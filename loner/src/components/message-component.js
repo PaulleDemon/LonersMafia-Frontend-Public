@@ -1,6 +1,6 @@
 import { memo, useState, useEffect } from "react";
 import { toLocalTime } from "../utils/datetime";
-
+import {linkify} from "../utils/linkify"
 
 /**
  * message: str - message to be displayed
@@ -16,7 +16,7 @@ const ChatCard = memo(({props}) => {
 
     
     const {message, user, media, datetime, is_mod=false, is_staff=false, is_sender=false} = props
-    const {name, avatar} = user
+    const {name, avatar_url} = user
     return (
         <div className={`chat-card ${is_sender ? "right-end" : "left-end"}`}>
             
@@ -26,16 +26,16 @@ const ChatCard = memo(({props}) => {
 
                     <>
                         <div className={`message-body ${is_sender ? "sender right-end" : "receiver left-end"}`}>
-                            {message}  
+                            {linkify(message)}  
                         </div>
-                        <img className="user-icon" src={avatar} alt="" />
+                        <img className="user-icon" src={avatar_url} alt="" />
                     </>
 
                     :
                     <>
-                        <img className="user-icon" src={avatar} alt="" />
+                        <img className="user-icon" src={avatar_url} alt="" />
                         <div className={`message-body ${is_sender ? "sender" : "receiver"}`}>
-                            {message}  
+                            {linkify(message)}  
                         </div>
                     </>
                 }

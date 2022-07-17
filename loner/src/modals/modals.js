@@ -13,7 +13,7 @@ import {ReactComponent as RELOAD} from "../icons/reload.svg"
 import {ReactComponent as NEXT} from "../icons/next.svg"
 
 
-import MAX_LENGTH from "../constants/max-lengths"
+import {MAX_LENGTH, MIN_LENGTH} from "../constants/lengths"
 import FILE_TYPE_MAPPING from "../constants/file-types"
 import { randInt } from "../utils/random-generator"
 
@@ -66,6 +66,18 @@ export const RegistrationModal = ({onSuccess}) => {
             setInputError(true)
             return 
         } 
+
+        if (name.trim().length < MIN_LENGTH.name){
+            setError("name too short")
+            setInputError(true)
+            return 
+        }
+        
+        if (!/^[a-zA-Z][a-zA-Z0-9_-]+$/.test(name)){
+            setError("Must begin with alphabet and must contain only alpha numeric values")
+            setInputError(true)
+            return 
+        }
         
         if (!navigator.onLine)
             setError("You are not connected")
@@ -92,7 +104,25 @@ export const RegistrationModal = ({onSuccess}) => {
         })
     }
 
-    console.log("status: ", registerMutation.status)
+    const handleInputChange = (e) => {
+
+        const value = e.target.value.trim()
+
+        setError("")
+        setInputError(false)
+        setName(value)
+
+        if (name.length < 2){
+            return 
+        }
+
+        if (!/^[a-zA-Z][a-zA-Z0-9_-]+$/.test(value)){
+            setError("Must begin with alphabet and must contain only alpha numeric values")
+            setInputError(true)
+        }
+    }
+
+    // console.log("status: ", registerMutation.status)
     return (
         <div className="modal registration-modal">
             
@@ -115,7 +145,7 @@ export const RegistrationModal = ({onSuccess}) => {
                 <input type="text" className={`input margin-10px ${inputError ? "input-error": ""}`} value={name} 
                         placeholder="nickname (eg: memer34)"
                         maxLength={MAX_LENGTH.name}
-                        onChange={(e) => setName(e.target.value)}
+                        onChange={handleInputChange}
                         disabled={registerMutation.isLoading}
                         autoFocus
                         />

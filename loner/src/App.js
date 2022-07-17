@@ -3,7 +3,7 @@ import Cookies from "js-cookie"
 
 import { CookieConsentModal, RegistrationModal, TimedMessageModal } from "./modals/modals";
 import { useEffect, useState } from "react";
-import { Login } from "./apis/loner-apis";
+import { login } from "./apis/loner-apis";
 import { useQuery } from "react-query";
 
 
@@ -13,7 +13,7 @@ function App() {
 	const [showCookieModal, setShowCookieModal] = useState(false)
 	const [showRegistrationModal, setShowRegistrationModal] = useState(false)
 
-	const loginQuery = useQuery("login", Login, {
+	const loginQuery = useQuery("login", login, {
 		// enabled: false,
 		staleTime: Infinity,
 		cacheTime: 60 * 60 * 1000, // 1 hour
@@ -21,13 +21,16 @@ function App() {
 
 			if (err.response?.status === 401)
 				setShowRegistrationModal(true)
+			
+			else if (err.response.status === 417)
+				setTimedMessage("You have been banned from loners")
 
 			else 
 				setTimedMessage("An error occured trying to log you in.")
 		},
 		retry: (failureCount, err) => {
 
-			if (err.response?.status === 401)
+			if (err.response?.status === 401 || err.response?.status === 417)
 				return false
 			
 			return 3
