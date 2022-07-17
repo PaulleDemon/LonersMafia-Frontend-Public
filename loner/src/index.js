@@ -10,7 +10,56 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 
-const queryClient = new QueryClient();
+
+// NOTE: the below will remove console output during production. If you want the console
+// output please comment window.console.log = () => {}
+if (process.env.NODE_ENV === 'production'){
+    // when in production redefine console.log to an empty function so that the console.log is not displayed.
+
+    if (!window.console){
+        window.console = {} // if console doesn't exist create a dummy so error isn't raised
+    }
+
+    window.console.log = () => {} // in production we don't want to see console output.
+    window.console.warn = () => {} // in production we don't want to see console output.
+}
+
+const dontTryErrors = [400, 404, 403]
+
+const queryClientConfig = {
+
+    defaultOptions: {
+        queries: {
+            retry: (failureCount, error) => {
+                if (dontTryErrors.includes(error.response?.status) || error.response?.status >= 500) //dont retry if the page returns 404 or 400
+                    return false 
+
+                if (failureCount >= 3)
+                    return false
+
+                return true
+            }
+        },
+
+        mutations: {
+            retry: (failureCount, error) => {
+
+				if (dontTryErrors.includes(error.response?.status) || error.response?.status >= 500) //dont retry if the page returns 404 or 400
+				//dont retry if the page returns 404 or 400
+                    return false 
+
+                if (failureCount >= 3)
+                    return false
+
+                return true
+            }
+        }
+    }
+
+}
+
+
+const queryClient = new QueryClient(queryClientConfig);
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(

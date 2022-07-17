@@ -2,6 +2,8 @@ import Cookies from "js-cookie"
 import { memo, useEffect, useState } from "react"
 import {useMutation}from "react-query"
 
+import { getErrorCodeDescription } from "../error-pages/errors"
+
 import { createUser } from "../apis/loner-apis"
 import { LoadingWheel } from "../components/loading"
 
@@ -16,7 +18,7 @@ import FILE_TYPE_MAPPING from "../constants/file-types"
 import { randInt } from "../utils/random-generator"
 
 
-export const RegistrationModal = () => {
+export const RegistrationModal = ({onSuccess}) => {
     
     const [avatar, setAvatar] = useState({
                                             file: "",
@@ -27,9 +29,18 @@ export const RegistrationModal = () => {
     const [inputError, setInputError] = useState(false)
     
     const registerMutation = useMutation(createUser, {
-        onError: (err) => {
-            console.log("error: ", err)
-        }
+        // onError: (err) => {
+        //     console.log("error: ", err, ":")
+            
+        //     // if (err.response?.data && typeof err.response.data === "object"){
+        //     //     console.log("error set")
+        //     //     setError(`${Object.values(err.response.data).join(" ")}`)
+        //     //     // return 
+        //     // }
+        //     error = getErrorCodeDescription(err.code, err.response?.data)
+        //     setError(error.errorDescription)
+        //     console.log("error set2")
+        // }
     })
 
     useEffect(() => {
@@ -55,16 +66,33 @@ export const RegistrationModal = () => {
             setInputError(true)
             return 
         } 
+        
+        if (!navigator.onLine)
+            setError("You are not connected")
 
-        console.log("FIle: ", avatar.file)
         let form_data = new FormData()
         form_data.append("name", name)
         form_data.append("avatar", avatar.file, `loner-${name || randInt(0, 10000)}.${FILE_TYPE_MAPPING[avatar.file.type]}`)
 
         
-        registerMutation.mutate(form_data)
+        registerMutation.mutate(form_data, {
+            onError: (err) => {
+                if (err.response?.data && typeof err.response.data === "object"){
+                        setError(`${Object.values(err.response.data).join(" ")}`)
+                        return 
+                    }
+
+                error = getErrorCodeDescription(err.code, err.response?.data)
+                setError(error.errorDescription)
+            },
+            onSuccess: (data) => {                
+                if (onSuccess)
+                    onSuccess(data)
+            }
+        })
     }
 
+    console.log("status: ", registerMutation.status)
     return (
         <div className="modal registration-modal">
             
@@ -76,7 +104,7 @@ export const RegistrationModal = () => {
                 <p>Avatar</p>
                 <img src={avatar.url} alt="avatar" className="avatar margin-10px"/>
 
-                <button onClick={randomAvatar} className="btn row center">
+                <button onClick={randomAvatar} disabled={registerMutation.isLoading} className="btn row center">
                     <RELOAD fill="#fff"/>
                 </button>
 
@@ -88,16 +116,17 @@ export const RegistrationModal = () => {
                         placeholder="nickname (eg: memer34)"
                         maxLength={MAX_LENGTH.name}
                         onChange={(e) => setName(e.target.value)}
+                        disabled={registerMutation.isLoading}
                         autoFocus
                         />
 
             {
-            registerMutation.isLoading ?
-                <LoadingWheel />
+            (registerMutation.status === "loading" && navigator.onLine) ?
+                <LoadingWheel />      
                 :
                 <button className="btn row center" onClick={handleSubmit}><NEXT fill="#fff"/></button>
             }
-            
+       
             </div>
 
             <div className="row center font-14px">
@@ -150,6 +179,11 @@ export const RulesModal = () => {
     )
 }
 
+/**
+ * message: str - message to be displayed
+ * onTimedOut: function - function to execute when the timer stops
+ * timeout: number - seconds to countdown
+ */
 
 export const TimedMessageModal = memo(({message, onTimeOut, timeout=2000}) => {
 

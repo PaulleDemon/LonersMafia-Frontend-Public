@@ -224,7 +224,6 @@ export default function Chat(){
                 :
                 null
             }
-            <RegistrationModal />
             <div className="chat-body" ref={scrollRef} onScroll={handleChatScroll}>
 
                 {

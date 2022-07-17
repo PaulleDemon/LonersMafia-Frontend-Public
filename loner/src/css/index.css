@@ -116,6 +116,30 @@ a{
     background-color: #19adf8;
 }
 
+/* --------------------------- loading wheel ----------------------------- */
+
+.loading-wheel {
+    border: 8px solid #cfcdcd;
+    border-radius: 50%;
+    border-top: 8px solid #3498db;
+    width: 50px;
+    height: 50px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+  }
+  
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+
 /* ---------------- chat space ------------- */
 
 .chat-page{
@@ -505,6 +529,11 @@ a{
     width: 80%;
 }
 
+.registration-modal .loading-wheel{
+    width: 40px;
+    height: 40px;
+}
+
 .cookie-modal{
     padding: 10px;
     top: unset;
@@ -532,7 +561,7 @@ a{
 
 .timed-modal{
     position: fixed;
-    z-index: 4;
+    z-index: 6;
     top: 40px;
     left: 50%;
     padding: 10px;
@@ -574,29 +603,6 @@ a{
 .error-page .btn:hover{
     background-color: #0a813f;
 }
-
-/* --------------------------- loading wheel ----------------------------- */
-
-.loading-wheel {
-    border: 8px solid #cfcdcd;
-    border-radius: 50%;
-    border-top: 8px solid #3498db;
-    width: 50px;
-    height: 50px;
-    -webkit-animation: spin 2s linear infinite; /* Safari */
-    animation: spin 2s linear infinite;
-  }
-  
-  /* Safari */
-  @-webkit-keyframes spin {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
-  }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
 
 
 /* --------------------------------*/

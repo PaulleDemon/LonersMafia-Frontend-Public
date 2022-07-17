@@ -17,7 +17,7 @@ export function getErrorCodeDescription(code, error_description){
         errorDescription: "" // longer description
     }
 
-    if(error_description === "Network Error")
+    if(code === "ERR_NETWORK" || error_description === "Network Error")
         error = {
             errorType: "Unable to connect to servers!",
             errorDescription: "Servers may be offline. Check back again later."
@@ -65,7 +65,7 @@ export function getErrorCodeDescription(code, error_description){
     else
         error = {
             errorType: "Something went wrong!",
-            errorDescription: "Try refreshing the page or try logging in again!!"
+            errorDescription: "Try refreshing the page or try again later!!"
         }
 
     return error
