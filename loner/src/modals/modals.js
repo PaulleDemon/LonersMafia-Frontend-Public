@@ -12,6 +12,8 @@ import {ReactComponent as NEXT} from "../icons/next.svg"
 
 
 import MAX_LENGTH from "../constants/max-lengths"
+import FILE_TYPE_MAPPING from "../constants/file-types"
+import { randInt } from "../utils/random-generator"
 
 
 export const RegistrationModal = () => {
@@ -39,7 +41,7 @@ export const RegistrationModal = () => {
     const randomAvatar =  async () => {
         // fetches random avatar
         const random_avatar = await randomAvatarGenerator(name).then(res => res).catch(err => console.log(err))
-
+     
         setAvatar({
             file: random_avatar,
             url: URL.createObjectURL(random_avatar)
@@ -54,12 +56,12 @@ export const RegistrationModal = () => {
             return 
         } 
 
-
+        console.log("FIle: ", avatar.file)
         let form_data = new FormData()
         form_data.append("name", name)
-        form_data.append("avatar", avatar.file)
+        form_data.append("avatar", avatar.file, `loner-${name || randInt(0, 10000)}.${FILE_TYPE_MAPPING[avatar.file.type]}`)
 
-
+        
         registerMutation.mutate(form_data)
     }
 
