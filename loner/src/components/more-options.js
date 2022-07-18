@@ -19,18 +19,19 @@ export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, onDe
     useEffect(() => {
 
         const handleClickOutside = (e) => {
-            console.log("Clicked outside")
-            if (!ref.current.contains(e.target)){
+            if (!ref.current?.contains(e.target)){
                 setShowDropDown(false)
+                window.removeEventListener("click", handleClickOutside)
             }
 
         }
 
-        window.addEventListener("click", handleClickOutside)
+        if (showDropDown)
+            window.addEventListener("click", handleClickOutside)
 
         return () => window.removeEventListener("click", handleClickOutside)
 
-    }, [ref])
+    }, [ref, showDropDown])
 
     if (is_mod_message && !is_staff){
         return null

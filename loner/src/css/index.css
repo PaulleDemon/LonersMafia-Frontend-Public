@@ -299,7 +299,7 @@ a{
     background-color: transparent;
     z-index: 3;
     position: absolute;
-    bottom: 5px;
+    bottom: 2px;
     right: 5%;
     display: flex;
     align-items: center;
@@ -326,6 +326,7 @@ a{
     min-height: 40px;
     max-height: 150px;
     padding: 8px;
+    /* padding-right: 130px; */
     box-shadow: 0 0 10px #6c6b6b;
     font-size: 18px;
 }

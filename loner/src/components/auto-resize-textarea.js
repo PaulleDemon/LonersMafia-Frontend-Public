@@ -88,7 +88,12 @@ const AutoHeightTextarea = ({  value, onStickerClick, onMediaClick, ...props }) 
             <div className="media-options row">
                 <EMOJI onClick={() => setShowEmojiPicker(true)}/>
                 <STICKERS fill="#00F470"/>
-                <MEDIA fill="#6134C1"/>
+                
+                <label htmlFor="file-upload" className="row center">
+                    <MEDIA fill="#6134C1"/>
+                    <input id="file-upload" type="file" style={{display: "none"}} accept="image/png, image/jpeg, image/gif, image/svg+xml"/>
+                </label>
+  
             </div>
         
         </div>

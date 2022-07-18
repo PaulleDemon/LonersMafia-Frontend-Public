@@ -19,10 +19,12 @@ import { Error404 } from "../error-pages/errors"
 import { LoadingWheel } from "../components/loading"
 
 
-function ChatHeader({icon, name, tag_line, rules=[]}){
+function ChatHeader({props}){
+
+    const {name, icon, tag_line, rules, mods} = props
 
     const [showRules, setShowRules] = useState(false)
-
+    
     return (
         <div className="chat-header">
             <BACK className="icon margin-10px"/>
@@ -140,7 +142,8 @@ export default function Chat(){
         staleTime: Infinity,
 
         onSuccess: (data) => {
-            console.log("Data: ", data)
+            console.log("Data: ", data.data)
+            setSpaceDetails(data.data)
         }
     })
 
@@ -297,7 +300,8 @@ export default function Chat(){
         { !show404Page ?  
         
             <div className="chat-page">
-                <ChatHeader />
+                
+                <ChatHeader props={spaceDetails}/>
 
                 {
                     timedMesage !== ""?
