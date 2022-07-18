@@ -176,7 +176,11 @@ export default function Chat(){
 
     })
 
-    const uploadMediaMessageMutation = useMutation(uploadChatMedia)
+    const uploadMediaMessageMutation = useMutation(uploadChatMedia, {
+        onSuccess: () => {
+            resetMedia()
+        }
+    })
 
     useEffect(() => {
 
@@ -251,6 +255,15 @@ export default function Chat(){
 
     const currentUserId = useMemo(() => sessionStorage.getItem("user-id"), [sessionStorage.getItem("user-id")])
 
+    const resetMedia = () => {
+        
+        setMedia({fileObject: null, fileUrl: null, fileType: ''})
+                                        
+        if (mediaRef.current)
+            mediaRef.current.value = null
+
+    }
+
     const sumbitMessage = () => {
 
         if (!text.trim())
@@ -278,7 +291,9 @@ export default function Chat(){
            
             formData.append("space", spaceDetails.id)
             formData.append("media", media.fileObject)
-            formData.append("message", text.trim())
+            
+            if (text)
+                formData.append("message", text.trim())
 
             uploadMediaMessageMutation.mutate(formData)
 
@@ -376,13 +391,7 @@ export default function Chat(){
                             onClick={removeMedia}    
                             /> */}
                         <CLOSE className="close-btn" 
-                            onClick={() => {
-                                        setMedia({fileObject: null, fileUrl: null, fileType: ''})
-                                        
-                                        if (mediaRef.current)
-                                            mediaRef.current.value = null
-                                        
-                                        }}/>
+                            onClick={resetMedia}/>
 
                         {media.fileType === "video"? 
                             <video controls className="media">

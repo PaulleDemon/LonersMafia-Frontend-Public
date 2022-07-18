@@ -43,6 +43,8 @@ function App() {
 		
 	})
 
+	console.log("Logging in: ", loginQuery.status)
+
 	useEffect(() => {
 
 		if (localStorage.getItem("cookie-accept") !== "true")

@@ -1,7 +1,10 @@
 import { memo, useState, useEffect } from "react";
+
 import { toLocalTime } from "../utils/datetime";
 import {linkify} from "../utils/linkify"
 import { MoreChatOptions } from "./more-options";
+import { getFileType } from "../constants/file"; 
+
 
 /**
  * message: str - message to be displayed
@@ -19,12 +22,35 @@ const ChatCard = memo(({currentUserId=1, props}) => {
     const {message, user, media, datetime, is_mod=false, is_staff=false} = props
     const {id, name, avatar_url} = user
     
+    let media_content = null
+
+    if (media){
+        
+        if (getFileType(media) === "video"){
+            media_content = <video controls alt="video" className="chat-media">
+                                <source src={media} type="video/mp4" alt="Video"/>
+                            </video>
+        }
+
+        else if (getFileType(media) === "image"){
+            media_content = <img src={media} 
+                                alt="image" 
+                                className="chat-media"
+                                onClick={() => setShowImageEnlarged(true)}/>
+        }
+
+    }
+
     return ( 
         // the == is used instead of === because one is a string and other is an integer
         <div className={`chat-card ${currentUserId == id? "right-end" : "left-end"}`}> 
             
+            { (media)
+
+            }
+
             <div className="row" style={{gap: "5px"}}>
-           
+
                 {currentUserId == id ?
 
                     <>  
