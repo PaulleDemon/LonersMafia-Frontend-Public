@@ -1,10 +1,10 @@
 import { memo, useState, useEffect } from "react";
 
+import ZoomableImage from "./zoomable-image"
 import { toLocalTime } from "../utils/datetime";
 import {linkify} from "../utils/linkify"
 import { MoreChatOptions } from "./more-options";
-import { getFileType } from "../constants/file"; 
-
+import { getFileType, getFileTypeFromUrl } from "../constants/file"; 
 
 /**
  * message: str - message to be displayed
@@ -19,24 +19,29 @@ import { getFileType } from "../constants/file";
 const ChatCard = memo(({currentUserId=1, props}) => {
 
     
-    const {message, user, media, datetime, is_mod=false, is_staff=false} = props
+    const {message, user, media_url, datetime, is_mod=false, is_staff=false} = props
     const {id, name, avatar_url} = user
     
+    const [showImageEnlarged, setShowImageEnlarged] = useState(false)
+
+
     let media_content = null
 
-    if (media){
+    if (media_url){
         
-        if (getFileType(media) === "video"){
+        if (getFileTypeFromUrl(media_url) === "video"){
             media_content = <video controls alt="video" className="chat-media">
-                                <source src={media} type="video/mp4" alt="Video"/>
+                                <source src={media_url} type="video/mp4" alt="Video"/>
                             </video>
         }
 
-        else if (getFileType(media) === "image"){
-            media_content = <img src={media} 
+        else if (getFileTypeFromUrl(media_url) === "image"){
+            media_content = <img src={media_url} 
                                 alt="image" 
                                 className="chat-media"
-                                onClick={() => setShowImageEnlarged(true)}/>
+                                onClick={() => setShowImageEnlarged(true)}
+                                />
+                            
         }
 
     }
@@ -45,8 +50,20 @@ const ChatCard = memo(({currentUserId=1, props}) => {
         // the == is used instead of === because one is a string and other is an integer
         <div className={`chat-card ${currentUserId == id? "right-end" : "left-end"}`}> 
             
-            { (media)
+            { media_url ?
 
+                <div className={`row margin-10px ${currentUserId == id? "right-end" : "left-end"}`}>
+                    {media_content}
+                </div>
+                :
+                null
+            }
+
+            {
+                showImageEnlarged ?
+                <ZoomableImage src={media_url} onClose={() => setShowImageEnlarged(false)}/>
+                :
+                null
             }
 
             <div className="row" style={{gap: "5px"}}>
@@ -54,15 +71,16 @@ const ChatCard = memo(({currentUserId=1, props}) => {
                 {currentUserId == id ?
 
                     <>  
-                        <div className={`message-body ${currentUserId == id ? "sender right-end" : "receiver left-end"}`}>
-                        
+                        { message ?
+                            <div className={`message-body ${currentUserId == id ? "sender right-end" : "receiver left-end"}`}>
                                 {linkify(message)}  
-               
-                        </div>
+                            </div>
+                            :
+                            null
+                        }   
                         <img className="user-icon" src={avatar_url} alt="" />
+                        
                         <div className="row">
-                            {/* <KEBAB_MENU className="more-options-btn"/> */}
-
                             <MoreChatOptions is_mod_message={currentUserId == id}/>
                         </div>
                     </>
@@ -70,13 +88,15 @@ const ChatCard = memo(({currentUserId=1, props}) => {
                     :
                     <>
                         <img className="user-icon" src={avatar_url} alt="" />
-                        <div className={`message-body ${currentUserId == id ? "sender" : "receiver"}`}>
-                     
+                        {
+                            message ?
+                            <div className={`message-body ${currentUserId == id ? "sender" : "receiver"}`}>
                                 {linkify(message)}  
-        
-                        </div>
+                            </div>
+                            :
+                            null
+                        }      
                         <div className="row">
-
                             <MoreChatOptions is_mod_message={currentUserId == id||is_mod}/>
                         </div>
                     </>

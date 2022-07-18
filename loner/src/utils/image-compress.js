@@ -12,8 +12,8 @@ const imageCompress = async (imageFile, maxSize=8, maxWidthOrHeight=1920) => {
         useWebWorker: true
     }
 
-    console.log("FILE: ", imageFile)
-    if (!imageFile.name.endsWith(".gif")){
+    // console.log("FILE: ", imageFile)
+    if (!imageFile.name.endsWith(".gif") && !imageFile.name.endsWith(".svg")){
         // don't compress if the file is gif
         try{
             const image = await imageCompression(imageFile, options)

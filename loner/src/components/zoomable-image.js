@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import {ReactComponent as CLOSE} from "../static/svg/close.svg"
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
+import {ReactComponent as CLOSE} from "../icons/close.svg"
 
 
 export default function ZoomableImage({src, onClose}){
+
+    console.log("Works...")
 
     useEffect(() => {
         // disables scroll while zooming
@@ -57,18 +59,19 @@ export default function ZoomableImage({src, onClose}){
         }
     
     }, [])
-
+    console.log("Works")
     return (
 
         <div className="zoomable-image-container">
-            
-            <CLOSE id="close-btn" onClick={onClose}/> 
+            {"closing"}
+                <CLOSE id="close-btn" onClick={onClose}/> 
 
-                <TransformWrapper
-                initialScale={1}
-                initialPositionX={200}
-                initialPositionY={100}
-                centerOnInit={true}
+                {/*TODO: Problem here */}
+                {/* <TransformWrapper
+                    initialScale={1}
+                    initialPositionX={200}
+                    initialPositionY={100}
+                    centerOnInit={true}
                 >
                     {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
                         <React.Fragment>
@@ -80,7 +83,7 @@ export default function ZoomableImage({src, onClose}){
                         </TransformComponent>
                     </React.Fragment>
                     )}
-                </TransformWrapper>
+                </TransformWrapper> */}
             
         </div>
 

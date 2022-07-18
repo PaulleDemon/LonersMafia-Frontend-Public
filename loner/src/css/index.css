@@ -217,13 +217,13 @@ a{
 .chat-card .message-body{
     min-height: 10px;
     max-width: 90%;
+    padding: 10px;
+    width: max-content;
     border-radius: 5px;
     white-space: pre-line;
     overflow-wrap: break-word;
     word-break: break-all;
     word-wrap: break-word;
-    padding: 10px;
-    width: max-content;
     height: max-content;
     box-shadow: 0 0 10px #4b779d;
 }
@@ -234,6 +234,17 @@ a{
     /* clip-path: circle(50%); */
 	background-color: #000000;
     box-shadow: 0 0 10px #4b779d;
+}
+
+.chat-card .chat-media{
+    max-width: 90%;
+    max-height: 600px;
+    padding: 2px;
+    height: auto;
+    width: auto;
+    border-radius: 20px;
+    box-shadow: 0 0 10px #4b779d;
+    /* background-color: #08a14d; */
 }
 
 .sender{

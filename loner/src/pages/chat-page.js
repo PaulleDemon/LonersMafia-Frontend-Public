@@ -154,6 +154,11 @@ export default function Chat(){
         onSuccess: (data) => {
             console.log("Data: ", data.data)
             setSpaceDetails(data.data)
+        },
+        retry: (failureCount, error) => {
+
+            // if (err)
+
         }
     })
 
@@ -179,6 +184,10 @@ export default function Chat(){
     const uploadMediaMessageMutation = useMutation(uploadChatMedia, {
         onSuccess: () => {
             resetMedia()
+            setText("")
+        },
+        onError: () => {
+            setTimedMessage("An error occurred. Try again later.")
         }
     })
 
@@ -228,7 +237,8 @@ export default function Chat(){
 
 
     useEffect(() => {
-
+        
+        console.log("Sent message: ", lastJsonMessage)
         if (lastJsonMessage && !messages.some(msg => lastJsonMessage.id === msg.id)){
             // console.log("Last message: ", lastJsonMessage)
             setMessages([...messages, lastJsonMessage])
@@ -239,7 +249,7 @@ export default function Chat(){
 
     useEffect(() => {
         // when there is a new message scroll to the bottom if the scrollbar is already at bottom
-        console.log("scroll to bottom")
+        // console.log("scroll to bottom")
         if (scrollToEnd)
             scrollToBottom()
 
@@ -265,9 +275,6 @@ export default function Chat(){
     }
 
     const sumbitMessage = () => {
-
-        if (!text.trim())
-            return
 
         if (!navigator.onLine && process.env.NODE_ENV === "production"){
             setTimedMessage("You are offline :(")
@@ -297,9 +304,14 @@ export default function Chat(){
 
             uploadMediaMessageMutation.mutate(formData)
 
+            return 
         }
 
         else{
+
+            if (!text.trim())
+                return
+
             sendJsonMessage({
                 "message": text.trim()
             })
@@ -384,15 +396,20 @@ export default function Chat(){
                 
                 {   media.fileObject ?
                     
-                    <div className="media-container margin-4px">
+                    <div className="media-container column margin-4px">
                         {/* <img src={ICONS.close_button}
                             alt="close"
                             className="close-btn"
                             onClick={removeMedia}    
                             /> */}
-                        <CLOSE className="close-btn" 
-                            onClick={resetMedia}/>
-
+                       {
+                       
+                        !uploadMediaMessageMutation.isLoading ?
+                            <CLOSE className="close-btn" 
+                                onClick={resetMedia}/>
+                            :
+                        null
+                        }
                         {media.fileType === "video"? 
                             <video controls className="media">
                                 <source src={media.displayFile} type="video/mp4" alt="Video"/>
@@ -401,7 +418,7 @@ export default function Chat(){
                             : 
                             <img src={media.fileUrl} className="media" alt="image"/>
                         }
-
+                        <div className="margin-10px"/>
                         {uploadMediaMessageMutation.isLoading ? <LoadingWheel /> : null}
                     </div>
                     :
@@ -419,6 +436,7 @@ export default function Chat(){
                             onMediaUpload={(media) => setMedia(media)}
                             onFileUploadError={(err) => setTimedMessage(err)}
                             onInfo={(info) => setTimedMessage(info)}
+                            disabled={uploadMediaMessageMutation.isLoading}
                         />
                     
                         <button className="send-btn" onClick={sumbitMessage}> 
