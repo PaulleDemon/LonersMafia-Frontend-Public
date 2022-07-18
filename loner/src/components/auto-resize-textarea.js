@@ -7,13 +7,6 @@ import {ReactComponent as STICKERS} from "../icons/stickers.svg"
 import {ReactComponent as EMOJI} from "../icons/emoji.svg"
 
 
-const EMOJIPICKER_STYLE = {
-                            zIndex: 3,
-                            position: "fixed",
-                            top: "30%",
-                            left: "30%"
-                    }
-
 
 const inputTypes = [ // used to trigger manual change event 
     window.HTMLInputElement,

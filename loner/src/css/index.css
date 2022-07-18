@@ -195,7 +195,11 @@ a{
     overflow-y: auto;
     gap: 20px;
     list-style: none;
+    width: 100%;
+    overflow-x: hidden;
     /* background-color: #08a14d; */
+    justify-self: center;
+    align-self: center;
 }
 
 /* ------------------ chat card --------------------- */
@@ -212,13 +216,13 @@ a{
 
 .chat-card .message-body{
     min-height: 10px;
-    max-width: 80%;
+    max-width: 90%;
     border-radius: 5px;
     white-space: pre-line;
-    /* overflow-wrap: break-word; */
-    /* word-break: break-all; */
+    overflow-wrap: break-word;
+    word-break: break-all;
+    word-wrap: break-word;
     padding: 10px;
-    /* word-wrap: break-word; */
     width: max-content;
     height: max-content;
     box-shadow: 0 0 10px #4b779d;
@@ -232,18 +236,23 @@ a{
     box-shadow: 0 0 10px #4b779d;
 }
 
+.sender{
+    justify-content: end;
+}
+
 .receiver{
     background-color: #c8c6c6;
+    margin-left: 10px;
 }
 
 .sender{
     background-color: #26b3ef;
+    margin-right: 10px;
 }
 
 .chat-card .username-time{
     color: #858484;
     font-size: 14px;
-    margin: 5px;
 }
 
 /* ----------------- message input container --------------*/
@@ -364,6 +373,61 @@ a{
 .emoji-container li:hover{
     background-color: #8c8a8a77;
     cursor: pointer;
+}
+
+
+/* --------------------- drop-down --------------- */
+
+.dropdown-container{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.dropdown{
+    min-width: 160px;
+    position: absolute;
+    top: 90%;
+    left: 50px;
+
+    display: flex;
+    flex-direction: column;
+    border-radius: 2px;
+    /* background-color: #838080; */
+    background-color: #fff;
+    box-shadow: 0 0 4px #050f5fe1;
+    z-index: 2;
+}
+
+.more-options-btn{
+    /* position: absolute;
+    left: -50px; */
+    display: flex;
+    max-width: 25px;
+    max-height: 25px;
+}
+
+.more-options-btn:hover{
+    background-color: #7a79795c;
+    cursor: pointer;
+}
+
+
+.dropdown-btn{
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    font-size: 16px;
+    padding: 4px;
+    margin: 3px;
+    cursor: pointer;
+}
+
+.dropdown-btn:hover{
+    background-color: #b3b1b15e;
 }
 
 

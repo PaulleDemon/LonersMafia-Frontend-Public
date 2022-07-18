@@ -1,8 +1,10 @@
+import { memo } from "react"
+import { Link } from "react-router-dom"
+
 import { randInt } from "../utils/random-generator"
 
 import {ReactComponent as ERROR} from "../icons/error-icons/error.svg"
 import {ReactComponent as ERROR_404} from "../icons/error-icons/404/404page.svg"
-import { Link } from "react-router-dom"
 
 
 const ERROR_SVGS = [
@@ -123,9 +125,7 @@ const ERROR_404_DESC = [
                         "Stop looking at a 404 page, Go back and chat Now!"
                     ]
 
-export function Error404(){
-
-    console.log("error: ", ERROR_404_IMG)
+export const Error404 = memo(() => {
 
     return (
         <div className="error-page column center">
@@ -149,3 +149,4 @@ export function Error404(){
     )
 
 }
+)

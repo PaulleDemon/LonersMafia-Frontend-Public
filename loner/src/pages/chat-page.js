@@ -15,6 +15,8 @@ import { RegistrationModal, SpaceCreateModal, TimedMessageModal } from "../modal
 import { randInt } from "../utils/random-generator"
 
 import { getMessages } from "../apis/loner-apis"
+import { Error404 } from "../error-pages/errors"
+import { LoadingWheel } from "../components/loading"
 
 
 function ChatHeader({icon, name, tag_line, rules=[]}){
@@ -79,6 +81,7 @@ export default function Chat(){
     const [socketUrl, setSocketUrl] = useState(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/space/${space}/`)
     const [timedMesage, setTimedMessage] = useState("")
     const [messagable, setMessageble] = useState(true)
+    const [show404Page, setShow404Page] = useState(false)
 
     const [messages, setMessages] = useState([])
     const [socketCloseReason, setSocketCloseReason] = useState("")
@@ -110,7 +113,7 @@ export default function Chat(){
                                                                 },
                                                                 //Will attempt to reconnect on all close events, such as server shutting down
                                                                 shouldReconnect: (closeEvent) => {
-                                                                    console.log("Close event: ", closeEvent.code)
+                                                                    // console.log("Close event: ", closeEvent.code)
                                                                     if (closeEvent.code !== 3401 && closeEvent.code !== 3404){
                                                                         return true
                                                                     }
@@ -134,13 +137,18 @@ export default function Chat(){
         refetchOnMount: true,
         refetchOnWindowFocus: false,
         staleTime: Infinity,
+        onError: (err) => {
+            
+            if (err.response?.status === 404)
+                setShow404Page(true)
+        },
 
     })
 
     useEffect(() => {
 
         const chatPages = []
-        console.log("Hey: ", chatQuery.data?.pages)
+    
         if (chatQuery.status === "success"){
             chatQuery.data.pages.forEach((x) => {
                 x.data.results.forEach( (x) =>{
@@ -150,7 +158,7 @@ export default function Chat(){
             })
             
             /* NOTE: 
-            The below line removes the duplicate and displays it in the latest order.
+            The below commented line removes the duplicate just incase and displays it in the latest order.
             The duplicate value arises because when there is a new message through websocket, we are not
             fetching the same page again(because we don't need to). 
             For example: page1 contains ids: {58, 57, 56} and page 2 has: {55, 54, 53}
@@ -158,12 +166,11 @@ export default function Chat(){
             The page1 has ids {59, 58, 57} and page2: has {56, 55, 54} but the 56 was already there in the 
             messages which leads to data duplication and makes it unusable as key for list elements.
             */
-            // const chat_pages = [...chatPages.reverse(), ...messages].filter((value, index, a) =>
-            // index === a.findIndex((t) => (t.id === value.id))
-            // )
-            // console.log("CHAT MESSAGES: ", chat_pages)
-            // setMessages(chat_pages)
-            setMessages(chatPages)
+            const chat_pages = [...chatPages.reverse(), ...messages].filter((value, index, a) =>
+            index === a.findIndex((t) => (t.id === value.id))
+            )
+
+            setMessages(chat_pages)
             
         }
 
@@ -259,53 +266,84 @@ export default function Chat(){
 
         // If the scroll-bar is at the top then fetch old messages from the database
         // note: we may also have to check if scroll bar is scrolling to the top
-        if (scrollRef.current && (20 >= scrollRef.current.scrollTop 
+        if (scrollRef.current && (80 >= scrollRef.current.scrollTop 
             || scrollRef.current.clientHeight === scrollRef.current.scrollHeight) 
             && (chatQuery.hasNextPage === undefined || chatQuery.hasNextPage === true)) {
-            chatQuery.fetchNextPage({cancelRefetch: false})
+           
+                chatQuery.fetchNextPage({cancelRefetch: false})
         }        
     }
 
-
     return (
-        <div className="chat-page">
-            <ChatHeader />
-
-            {
-                timedMesage !== ""?
-                <TimedMessageModal message={timedMesage} timeout={2000} onTimeOut={() => setTimedMessage("")}/>
-                :
-                null
-            }
-            <div className="chat-body" ref={scrollRef} onScroll={handleChatScroll}>
+        <>
+        { !show404Page ?  
+        
+            <div className="chat-page">
+                <ChatHeader />
 
                 {
-                    messages.map((msg) => {
-                
-                        return (<li key={msg.id}>
-                                    <ChatCard currentUserId={currentUserId} props={msg}/>
-                                </li>)  
-                    })
+                    timedMesage !== ""?
+                    <TimedMessageModal message={timedMesage} timeout={2000} onTimeOut={() => setTimedMessage("")}/>
+                    :
+                    null
+                }
+                <div className="chat-body" ref={scrollRef} onScroll={handleChatScroll}>
+
+                    {
+                        (navigator.onLine && (chatQuery.isLoading || chatQuery.isFetching)) ? 
+                            <LoadingWheel />
+                            :
+                        null
+                    }
+
+                    {
+                        (!navigator.onLine) ? 
+
+                        <div className="row center">
+                            you are not connected to the internet
+                        </div>
+                        :
+                        null
+                    }
+
+                    {
+                        messages.map((msg) => {
+                    
+                            return (<li key={msg.id}>
+                                        <ChatCard currentUserId={currentUserId} props={msg}/>
+                                    </li>)  
+                        })
+                    }
+                </div>
+
+                <div ref={lastMessageRef}/>
+
+                {    
+                    
+                    messagable ? 
+                    <div className="message-container">
+                    
+                        <AutoHeightTextarea value={text} onChange={e => {setText(e.target.value)}}/>
+                    
+                        <button className="send-btn" onClick={sumbitMessage}> 
+                            <SEND fill="#fff"/>
+                        </button>
+                    
+                    </div>
+                    :
+                    <div className="message-container margin-10px row center font-18px">
+                        {socketCloseReason}
+                    </div>
                 }
             </div>
+            
+            :
 
-            <div ref={lastMessageRef}/>
-
-            {    
-                
-                messagable ? 
-                <div className="message-container">
-                    <AutoHeightTextarea value={text} onChange={e => {setText(e.target.value)}}/>
-                    <button className="send-btn" onClick={sumbitMessage}> 
-                        <SEND fill="#fff"/>
-                    </button>
-                </div>
-                :
-                <div className="message-container margin-10px row center font-18px">
-                    {socketCloseReason}
-                </div>
+            <Error404 />
+            
             }
-        </div>
+
+        </>
     )
 
 }
