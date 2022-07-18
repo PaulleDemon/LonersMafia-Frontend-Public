@@ -99,6 +99,15 @@ export const updateSpace = async (data) => {
 
 }
 
+
+export const getSpace = async (space) => {
+
+    // const [_, space] = queryKey
+    const config = getConfig()
+    return await api.get(`/space/${space}/`, config)
+}
+
+
 export const deleteSpace = async (space) => {
 
     const config = getConfig()
@@ -106,8 +115,8 @@ export const deleteSpace = async (space) => {
     return await api.delete(`/space/delete/${space}/`, config)
 }
 
-/* ----------------------------------- messages endpoints ------------------------- */
 
+/* ----------------------------------- messages endpoints ------------------------- */
 export const getMessages = async ({queryKey, pageParam=1}) => {
 
     const [_, space] = queryKey

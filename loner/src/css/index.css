@@ -395,18 +395,17 @@ a{
     display: flex;
     flex-direction: column;
     border-radius: 2px;
-    /* background-color: #838080; */
     background-color: #fff;
     box-shadow: 0 0 4px #050f5fe1;
     z-index: 2;
 }
 
 .more-options-btn{
-    /* position: absolute;
-    left: -50px; */
+    position: absolute;
+    left: 20px;
     display: flex;
-    max-width: 25px;
-    max-height: 25px;
+    width: 25px;
+    height: 25px;
 }
 
 .more-options-btn:hover{
@@ -418,11 +417,12 @@ a{
 .dropdown-btn{
     display: flex;
     justify-content: center;
+    text-align: center;
     height: 100%;
     width: 100%;
     font-size: 16px;
-    padding: 4px;
-    margin: 3px;
+    padding: 8px;
+    /* margin: 3px; */
     cursor: pointer;
 }
 

@@ -2,7 +2,6 @@ import { memo, useState, useEffect } from "react";
 import { toLocalTime } from "../utils/datetime";
 import {linkify} from "../utils/linkify"
 import { MoreChatOptions } from "./more-options";
-import {ReactComponent as KEBAB_MENU} from "../icons/kebab-menu.svg"
 
 /**
  * message: str - message to be displayed
@@ -36,9 +35,9 @@ const ChatCard = memo(({currentUserId=1, props}) => {
                         </div>
                         <img className="user-icon" src={avatar_url} alt="" />
                         <div className="row">
-                            <KEBAB_MENU className="more-options-btn"/>
+                            {/* <KEBAB_MENU className="more-options-btn"/> */}
 
-                            {/* <MoreChatOptions is_mod_message={currentUserId == id}/> */}
+                            <MoreChatOptions is_mod_message={currentUserId == id}/>
                         </div>
                     </>
 
@@ -51,9 +50,8 @@ const ChatCard = memo(({currentUserId=1, props}) => {
         
                         </div>
                         <div className="row">
-                            <KEBAB_MENU/>
 
-                            {/* <MoreChatOptions is_mod_message={currentUserId == id}/> */}
+                            <MoreChatOptions is_mod_message={currentUserId == id||is_mod}/>
                         </div>
                     </>
                 }

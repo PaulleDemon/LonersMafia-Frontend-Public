@@ -1,4 +1,5 @@
-import { useEffect, useState, useRef } from "react"
+import { memo, useEffect, useState, useRef } from "react"
+import {ReactComponent as KEBAB_MENU} from "../icons/kebab-menu.svg"
 
 
 /**
@@ -7,20 +8,20 @@ import { useEffect, useState, useRef } from "react"
  * onDeleteMessage: function - function to call when delete message is clicked
  * onDeleteMessageAndBanUser: function - function to call when delete message and ban user is clicked
  */
-export const MoreChatOptions = ({is_staff=false, is_mod_message=false, onClose,
-                                onDeleteMessage, 
+export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, onDeleteMessage, 
                                 onDeleteMessageAndBanUser, onDeleteAllAndBanUser, onAssignMod,
                                 onBanFromLoner
                                 }) => {
                                    
     const ref = useRef()
+    const [showDropDown, setShowDropDown] = useState(false)
 
     useEffect(() => {
 
         const handleClickOutside = (e) => {
             console.log("Clicked outside")
             if (!ref.current.contains(e.target)){
-                onClose()
+                setShowDropDown(false)
             }
 
         }
@@ -36,52 +37,62 @@ export const MoreChatOptions = ({is_staff=false, is_mod_message=false, onClose,
     }
 
     return (
-        <div className="dropdown-container column center" ref={ref}>       
+        <div className="dropdown-container" ref={ref}>       
 
-            <div className="dropdown">
-                <div className="dropdown-btn" onClick={onDeleteMessage}
-                    style={{color: "#ff1900"}}
-                >
-                    Delete Message
-                </div>
-                
-                { (!is_mod_message || is_staff) ?
-                    <>
-                        <div className="dropdown-btn" 
-                            onClick={onDeleteMessageAndBanUser}
-                            style={{color: "#ff1900"}}
-                            >
-                            Delete Message and ban user
-                        </div>
 
-                        <div className="dropdown-btn" 
-                             onClick={onDeleteAllAndBanUser}
-                             style={{color: "#ff1900"}}
-                            >
-                            Delete all message and ban the user
-                        </div>
+            <KEBAB_MENU fill="black" className="more-options-btn" onClick={() => setShowDropDown(true)}/> 
 
-                        <div className="dropdown-btn" onClick={onAssignMod}
-                            style={{color: "#0054fc"}}
-                        >
-                            Assign Mod
-                        </div>
-                    </>
-                    :
-                    null
-                }
-                
-                { is_staff ?
-                    
-                    <div className="" onClick={onBanFromLoner}>
-                        Ban User from loner
+            {    
+                showDropDown ?
+            
+                <div className="dropdown">
+                    <div className="dropdown-btn" onClick={onDeleteMessage}
+                        style={{color: "#ff1900"}}
+                    >
+                        Delete message
                     </div>
+                    
+                    { (!is_mod_message || is_staff) ?
+                        <>
+                            <div className="dropdown-btn" 
+                                onClick={onDeleteMessageAndBanUser}
+                                style={{color: "#ff1900"}}
+                                >
+                                Delete message and ban user
+                            </div>
 
-                    :
-                    null
+                            <div className="dropdown-btn" 
+                                onClick={onDeleteAllAndBanUser}
+                                style={{color: "#ff1900"}}
+                                >
+                                Delete all message and ban the user
+                            </div>
+
+                            <div className="dropdown-btn" onClick={onAssignMod}
+                                style={{color: "#0054fc"}}
+                            >
+                                Assign mod role
+                            </div>
+                        </>
+                        :
+                        null
+                    }
+                    
+                    { is_staff ?
+                        
+                        <div className="" onClick={onBanFromLoner}>
+                            Ban User from loner
+                        </div>
+
+                        :
+                        null
+                    }
+                </div>
+                :
+                null
                 }
-            </div>
         </div>
     )
 
 }
+)

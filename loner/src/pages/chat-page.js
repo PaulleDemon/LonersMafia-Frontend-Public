@@ -1,7 +1,7 @@
 import Cookies from "js-cookie"
 import React, {useEffect, useMemo, useRef, useState} from "react"
 import { useParams } from "react-router-dom"
-import { useInfiniteQuery } from "react-query"
+import { useInfiniteQuery, useQuery } from "react-query"
 import useWebSocket, {ReadyState} from "react-use-websocket"
 
 import {ReactComponent as BACK} from "../icons/back.svg"
@@ -14,7 +14,7 @@ import AutoHeightTextarea from "../components/auto-resize-textarea"
 import { RegistrationModal, SpaceCreateModal, TimedMessageModal } from "../modals/modals"
 import { randInt } from "../utils/random-generator"
 
-import { getMessages } from "../apis/loner-apis"
+import { getMessages, getSpace } from "../apis/loner-apis"
 import { Error404 } from "../error-pages/errors"
 import { LoadingWheel } from "../components/loading"
 
@@ -77,11 +77,19 @@ export default function Chat(){
     const [text, setText] = useState("")
     const {space} = useParams() 
 
-    // const socketUrl = `ws://127.0.0.1:8000/ws/space/${space}/`
     const [socketUrl, setSocketUrl] = useState(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/space/${space}/`)
     const [timedMesage, setTimedMessage] = useState("")
     const [messagable, setMessageble] = useState(true)
     const [show404Page, setShow404Page] = useState(false)
+
+    const [spaceDetails, setSpaceDetails] =useState({
+                                            name: "",
+                                            icon: "",
+                                            rules: [],
+                                            mods: [],
+                                            is_mod: false,
+                                            is_staff: false
+                                            })
 
     const [messages, setMessages] = useState([])
     const [socketCloseReason, setSocketCloseReason] = useState("")
@@ -126,6 +134,16 @@ export default function Chat(){
                                                                 }
                                                             })
     
+    const spaceQuery = useQuery(["space", space], () => getSpace(space), {
+        refetchOnMount: true,
+        refetchOnWindowFocus: false,
+        staleTime: Infinity,
+
+        onSuccess: (data) => {
+            console.log("Data: ", data)
+        }
+    })
+
     const chatQuery = useInfiniteQuery(["chat", space], getMessages, {
 
         getNextPageParam: (lastPage, ) => {
