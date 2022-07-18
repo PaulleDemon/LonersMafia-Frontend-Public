@@ -1,12 +1,13 @@
 import Cookies from "js-cookie"
 import React, {useEffect, useMemo, useRef, useState} from "react"
 import { useParams } from "react-router-dom"
-import { useInfiniteQuery, useQuery } from "react-query"
+import { useInfiniteQuery, useMutation, useQuery } from "react-query"
 import useWebSocket, {ReadyState} from "react-use-websocket"
 
 import {ReactComponent as BACK} from "../icons/back.svg"
-import {ReactComponent as SHARE} from "../icons/share.svg"
 import {ReactComponent as SEND} from "../icons/send.svg"
+import {ReactComponent as SHARE} from "../icons/share.svg"
+import {ReactComponent as CLOSE} from "../icons/close.svg"
 
 import ChatCard from "../components/message-component"
 import AutoHeightTextarea from "../components/auto-resize-textarea"
@@ -14,7 +15,7 @@ import AutoHeightTextarea from "../components/auto-resize-textarea"
 import { RegistrationModal, SpaceCreateModal, TimedMessageModal } from "../modals/modals"
 import { randInt } from "../utils/random-generator"
 
-import { getMessages, getSpace } from "../apis/loner-apis"
+import { getMessages, getSpace, uploadChatMedia } from "../apis/loner-apis"
 import { Error404 } from "../error-pages/errors"
 import { LoadingWheel } from "../components/loading"
 
@@ -76,8 +77,16 @@ const randomTexts = [
 
 export default function Chat(){
 
-    const [text, setText] = useState("")
     const {space} = useParams() 
+
+    const mediaRef = useRef()
+
+    const [text, setText] = useState("")
+    const [media, setMedia] = useState({
+        fileObject: null,
+        fileUrl: null,
+        fileType: ''
+    })
 
     const [socketUrl, setSocketUrl] = useState(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/space/${space}/`)
     const [timedMesage, setTimedMessage] = useState("")
@@ -85,6 +94,7 @@ export default function Chat(){
     const [show404Page, setShow404Page] = useState(false)
 
     const [spaceDetails, setSpaceDetails] =useState({
+                                            id: null,
                                             name: "",
                                             icon: "",
                                             rules: [],
@@ -165,6 +175,8 @@ export default function Chat(){
         },
 
     })
+
+    const uploadMediaMessageMutation = useMutation(uploadChatMedia)
 
     useEffect(() => {
 
@@ -258,10 +270,25 @@ export default function Chat(){
             setTimedMessage("connection closed. Try refreshing the page or try again later.")
             return 
         }
+        
+        // if there is media content the send through http endpoint else send through websocket
+        if (media.fileObject){
 
-        sendJsonMessage({
-            "message": text
-        })
+            const formData = new FormData()
+           
+            formData.append("space", spaceDetails.id)
+            formData.append("media", media.fileObject)
+            formData.append("message", text.trim())
+
+            uploadMediaMessageMutation.mutate(formData)
+
+        }
+
+        else{
+            sendJsonMessage({
+                "message": text.trim()
+            })
+        }
 
         setText("")
         localStorage.setItem("sent-first-message", "true") // once the user has sent his/her first message stop setting random text to text box
@@ -339,13 +366,51 @@ export default function Chat(){
                 </div>
 
                 <div ref={lastMessageRef}/>
+                
+                {   media.fileObject ?
+                    
+                    <div className="media-container margin-4px">
+                        {/* <img src={ICONS.close_button}
+                            alt="close"
+                            className="close-btn"
+                            onClick={removeMedia}    
+                            /> */}
+                        <CLOSE className="close-btn" 
+                            onClick={() => {
+                                        setMedia({fileObject: null, fileUrl: null, fileType: ''})
+                                        
+                                        if (mediaRef.current)
+                                            mediaRef.current.value = null
+                                        
+                                        }}/>
+
+                        {media.fileType === "video"? 
+                            <video controls className="media">
+                                <source src={media.displayFile} type="video/mp4" alt="Video"/>
+                                Video is missing
+                            </video>
+                            : 
+                            <img src={media.fileUrl} className="media" alt="image"/>
+                        }
+
+                        {uploadMediaMessageMutation.isLoading ? <LoadingWheel /> : null}
+                    </div>
+                    :
+                    null
+                }
 
                 {    
                     
                     messagable ? 
                     <div className="message-container">
                     
-                        <AutoHeightTextarea value={text} onChange={e => {setText(e.target.value)}}/>
+                        <AutoHeightTextarea value={text} 
+                            mediaRef={mediaRef}
+                            onChange={e => {setText(e.target.value)}}
+                            onMediaUpload={(media) => setMedia(media)}
+                            onFileUploadError={(err) => setTimedMessage(err)}
+                            onInfo={(info) => setTimedMessage(info)}
+                        />
                     
                         <button className="send-btn" onClick={sumbitMessage}> 
                             <SEND fill="#fff"/>

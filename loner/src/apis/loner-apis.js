@@ -4,6 +4,8 @@ import axios from "axios"
  * contains endpoints
  */
 
+// axios.defaults.withCredentials = true;
+
  const api = axios.create({
     baseURL: process.env.REACT_APP_API_ENDPOINT,
 })
@@ -128,7 +130,8 @@ export const getMessages = async ({queryKey, pageParam=1}) => {
 export const uploadChatMedia = async (data) => {
 
     const config = getFormConfig()
-    return await api.post(`/space/${data.space}/message/create/`, data.formData, config)
+    
+    return await api.post(`/space/message/create/`, data, config)
 
 }
 

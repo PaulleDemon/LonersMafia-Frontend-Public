@@ -14,7 +14,7 @@ import {ReactComponent as NEXT} from "../icons/next.svg"
 
 
 import {MAX_LENGTH, MIN_LENGTH} from "../constants/lengths"
-import FILE_TYPE_MAPPING from "../constants/file-types"
+import {FILE_TYPE_MAPPING} from "../constants/file"
 import { randInt } from "../utils/random-generator"
 
 

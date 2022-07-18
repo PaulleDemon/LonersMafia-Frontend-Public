@@ -284,10 +284,49 @@ a{
     cursor: pointer;
 }
 
+
+/* ---------------------- media container ------------------------ */
+
+.media-container{
+    position: fixed;
+    top: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: calc(100% - 120px);
+    background-color: #575e6082;
+}
+
+.media-container .close-btn{
+    position: fixed;
+    top: 80px;
+    left: 40px;
+    width: 50px;
+    height: 50px;
+    z-index: 3;
+    fill: #fff;
+    padding: 0px;
+    border-radius: 50%;
+    background-color: #6b6767;
+}
+
+.media-container .close-btn:hover{
+    background-color: #00000091;
+}
+
+.media-container .media{
+    max-width: 99%;
+    max-height: 90%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
 /* ------------- auto resize text box -------------------------- */
 .autoresize-container{
     position: relative;
-    bottom: -15px;
+    bottom: 5px;
     display: flex;
     flex-direction: column;
     padding: 5px;
@@ -298,9 +337,9 @@ a{
 .media-options{
     background-color: transparent;
     z-index: 3;
-    position: absolute;
+    /* position: absolute;
     bottom: 2px;
-    right: 5%;
+    right: 5%; */
     display: flex;
     align-items: center;
 }
@@ -317,12 +356,13 @@ a{
     position: absolute;
     top: auto;
     bottom: 0px;
+    left: 40px;
     border: 0px;
     color: var(--default-font-color);
     border-radius: 5px;
     overflow: auto;
     resize: none;
-    width: 99%;
+    width: calc(100% - 120px);
     min-height: 40px;
     max-height: 150px;
     padding: 8px;

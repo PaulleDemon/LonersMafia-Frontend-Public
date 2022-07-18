@@ -6,6 +6,10 @@ import {ReactComponent as MEDIA} from "../icons/media.svg"
 import {ReactComponent as STICKERS} from "../icons/stickers.svg"
 import {ReactComponent as EMOJI} from "../icons/emoji.svg"
 
+import imageCompress from "../utils/image-compress"
+import { getFileType, getFileSize } from "../constants/file"
+import { MAX_LENGTH } from "../constants/lengths"
+
 
 
 const inputTypes = [ // used to trigger manual change event 
@@ -20,13 +24,13 @@ const inputTypes = [ // used to trigger manual change event
  * Used to take input for chat app.
  * includes all the props available for textarea jsx(html) element
  */
-const AutoHeightTextarea = ({  value, onStickerClick, onMediaClick, ...props }) => {
+const AutoHeightTextarea = ({  value, mediaRef=null, onStickerClick, onMediaUpload, onInfo, onFileUploadError, ...props }) => {
     
     const textareaRef = useRef(null)
 
+    const [text, setText] = useState(value)
     const [showEmojiPicker, setShowEmojiPicker] = useState(false)
     
-    const [text, setText] = useState(value)
 
     useEffect(() => {
         setText(value)
@@ -56,44 +60,87 @@ const AutoHeightTextarea = ({  value, onStickerClick, onMediaClick, ...props }) 
     };
 
     const onEmojiClick = (e, unicode) => {
-        
         setText(text+`${unicode}`)
         const input = document.getElementById('__auto_resize_text__')
         triggerInputChange(input, text+`${unicode}`)
+    }
+
+    const imageChange = async (e) => {
+        
+        if (!e.target.files[0])
+			return
+        
+        onInfo("Preparing your image for uploading. Please wait for few seconds")
+        
+        const image = await imageCompress(e.target.files[0])
+        
+        handleMedia(image)
+    
+    }
+
+    const handleMedia = (image) =>{
+        //
+
+        const fileType = getFileType(image)
+
+        const fileSize = getFileSize(image)
+
+		if (fileSize > MAX_LENGTH.file_upload) {
+            onFileUploadError(`File size exceeds ${MAX_LENGTH.file_upload} MiB`)
+            return
+		} 
+
+        if (["image"].includes(fileType)){
+
+            onMediaUpload({
+                fileObject: image,
+                fileUrl: URL.createObjectURL(image),
+                fileType: fileType
+            })
+        }
 
     }
 
     return (
         <div className="autoresize-container">
-            
-            <textarea
-                className="autoresize"
-                ref={textareaRef}
-                {...props}
-                value={text}
-                id="__auto_resize_text__"
-                // onInput={(e) => {props.onChange(e); console.log("chanegd: ", e.target.value)}}
-                onChange={props.onChange}
-            />
- 
-            { showEmojiPicker ? 
-                <EmojiPicker onEmojiClick={onEmojiClick} 
-                    onClickOutside={() => setShowEmojiPicker(false)}
-                />
-                
-                :
-                null
-            }   
-            
-            <div className="media-options row">
-                <EMOJI onClick={() => setShowEmojiPicker(true)}/>
+
+            <div className="row center">
+
                 <STICKERS fill="#00F470"/>
+
+                <textarea
+                    className="autoresize"
+                    ref={textareaRef}
+                    {...props}
+                    value={text}
+                    id="__auto_resize_text__"
+                    // onInput={(e) => {props.onChange(e); console.log("chanegd: ", e.target.value)}}
+                    onChange={props.onChange}
+                />
+    
+                { showEmojiPicker ? 
+                    <EmojiPicker onEmojiClick={onEmojiClick} 
+                        onClickOutside={() => setShowEmojiPicker(false)}
+                    />
+                    
+                    :
+                    null
+                }   
+            
+                <div className="media-options right-end">
+                    <EMOJI onClick={() => setShowEmojiPicker(true)}/>
+                    
+                    <label htmlFor="file-upload" className="row center">
+                        <MEDIA fill="#6134C1"/>
+                        <input id="file-upload" type="file" 
+                                        style={{display: "none"}}
+                                        onChange={imageChange} 
+                                        accept="image/png, image/jpeg, image/gif, image/svg+xml"
+                                        ref={mediaRef} 
+                                         />
+                    </label>
+                </div>
                 
-                <label htmlFor="file-upload" className="row center">
-                    <MEDIA fill="#6134C1"/>
-                    <input id="file-upload" type="file" style={{display: "none"}} accept="image/png, image/jpeg, image/gif, image/svg+xml"/>
-                </label>
-  
             </div>
         
         </div>
