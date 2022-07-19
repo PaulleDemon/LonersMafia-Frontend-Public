@@ -207,13 +207,12 @@ a{
     height: calc(100% - 120px);
     padding: 20px;
     overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
     gap: 20px;
     list-style: none;
     width: 100%;
-    overflow-x: hidden;
     /* background-color: #08a14d; */
     justify-self: center;
     align-self: center;
@@ -511,14 +510,15 @@ a{
 .loner-home{
     display: flex;
     flex-direction: column;
-    /* background-color: #079cbd; */
     width: 100%;
     height: 100%;
+    overflow: auto;
 }
 
 .loner-home .dashboard{
     width: 100%;
     display: flex;
+    height: 100px;
     max-height: 30vh;
     min-height: 20vh;
     position: relative;
@@ -579,6 +579,39 @@ a{
 
 .loner-home .edit:hover{
     background-color: #8c8b8b93;
+}
+
+.section{
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+    overflow-x: auto;
+    background-color: #0780bd;
+    margin-top: 20px;
+}
+
+/* --------------------- space-card -------------- */
+
+.space-card{
+    display: flex;
+    flex-direction: column;
+    height: 300px;
+    width: 300px;
+    border-radius: 5px;
+    box-shadow: 0 0 4px #050f5fe1;
+    /* background-color: #a12908; */
+}
+
+.space_card .dashboard-container{
+    display: flex;
+    width: 100%;
+    height: 100px;
+}
+
+.space-card .dashboard{
+    max-width: 100%;
+    max-height: 100%;
+    background-color: red;
 }
 
 /* --------------------- cropper ------------------ */
@@ -739,6 +772,13 @@ a{
     cursor: pointer;
     width: 100%;
     text-align: center;
+}
+
+.modal .img{
+    max-width: 100%;
+    max-height: 500px;
+    width: auto;
+    height: auto;
 }
 
 .modal .btn{

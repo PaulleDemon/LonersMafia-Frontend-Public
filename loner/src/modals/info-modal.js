@@ -77,3 +77,25 @@ export const ConfirmationModal = ({message, onYes, onNo}) => {
     )
 
 }
+
+
+export const BannedUserModal = () => {
+
+    return (
+        <div className="modal-background" >
+            <div className="modal center">
+
+                <div className="title-22px margin-10px">
+                    You have been banned form Loner
+                </div>
+
+                <img src={require("../icons/illustrations/banned-icon.png")} alt="" className="img"/>
+
+                <div className="font-18px margin-10px">You have been banned for violating loners policy</div>
+
+            </div>
+        </div>
+    
+    )
+
+}

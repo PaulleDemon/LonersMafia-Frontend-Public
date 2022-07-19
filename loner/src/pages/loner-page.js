@@ -1,12 +1,14 @@
 import { useState, useEffect, useMemo } from "react"
-import { useQuery } from "react-query"
+import { useInfiniteQuery, useQuery } from "react-query"
 import { useParams } from "react-router-dom"
 
-import { getUser } from "../apis/loner-apis"
+import { getUser, listSpaces } from "../apis/loner-apis"
+import { SpaceCard } from "../components/card"
 import { Error404 } from "../error-pages/errors"
 
 import {ReactComponent as EDIT} from "../icons/edit.svg"
 import {ReactComponent as SHARE} from "../icons/share.svg"
+import { BannedUserModal } from "../modals/info-modal"
 
 // import { default as logo } from "../icons/emoji.svg"
 
@@ -24,6 +26,10 @@ export default function LonerPage(){
                                                 tag_line: ""
                                             })
     
+    const [trendingSpaces, setTrendingSpace] = useState([])
+    const [recentSpaces, setRecentSpaces] = useState([])
+    const [moderatingSpaces, setModeratingSpaces] = useState([])
+
     const userid = useMemo(() => sessionStorage.getItem("user-id"), [sessionStorage.getItem("user-id")])
 
     useEffect(() => {
@@ -52,6 +58,41 @@ export default function LonerPage(){
         }
     })
 
+    const trendingListQuery = useInfiniteQuery(["spaces", "trending", lonerData.id], listSpaces, {
+        enabled: enabled,
+        getNextPageParam: (lastPage, ) => {
+            // console.log("PAGE: ", lastPage)
+            if (lastPage.data.current < lastPage.data.pages){
+                return lastPage.data.current + 1}
+            
+        },
+        staleTime: Infinity
+    }) 
+
+
+    const recentListQuery = useInfiniteQuery(["spaces", "recent", lonerData.id], listSpaces, {
+        enabled: enabled,
+        getNextPageParam: (lastPage, ) => {
+            // console.log("PAGE: ", lastPage)
+            if (lastPage.data.current < lastPage.data.pages){
+                return lastPage.data.current + 1}
+            
+        },
+        staleTime: Infinity
+
+    })
+
+    const moderatingListQuery = useInfiniteQuery(["spaces", "moderating", lonerData.id], listSpaces, {
+        enabled: enabled,
+        getNextPageParam: (lastPage, ) => {
+            // console.log("PAGE: ", lastPage)
+            if (lastPage.data.current < lastPage.data.pages){
+                return lastPage.data.current + 1}
+            
+        },
+        staleTime: Infinity
+    })
+
     if (show404Page)
         return (
             <Error404 />
@@ -59,7 +100,7 @@ export default function LonerPage(){
 
     return (
         <div className="loner-home">
-
+            <BannedUserModal />
             <div className="dashboard">
             
                { 
@@ -103,16 +144,37 @@ export default function LonerPage(){
                 </div>
             </div>
 
-            <div>
-                Trending spaces
+            <div className="section">
+                <div className="title-22px">
+                    Recently texted spaces
+                </div>
+                
+                <div>
+                    <SpaceCard />
+                </div>
+                    
             </div>
 
-            <div>
-                Your Recent spaces
+            <div className="section">
+                <div className="title-22px">
+                    Trending spaces
+                </div>
+                
+                <div>
+                    <SpaceCard />
+                </div>
+
             </div>
 
-            <div>
-                Spaces you moderate
+            <div className="section">
+                <div className="title-22px">
+                    Moderating spaces
+                </div>
+                
+                <div>
+                    <SpaceCard />
+                </div>
+
             </div>
 
             <div>

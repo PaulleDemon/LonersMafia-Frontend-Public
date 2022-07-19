@@ -8,7 +8,7 @@ import {ReactComponent as SEND} from "../icons/send.svg"
 import {ReactComponent as SHARE} from "../icons/share.svg"
 import {ReactComponent as CLOSE} from "../icons/close.svg"
 
-import ChatCard from "../components/message-component"
+import ChatCard from "../components/message-card"
 import AutoHeightTextarea from "../components/auto-resize-textarea"
 
 import {  TimedMessageModal  } from "../modals/info-modal"
@@ -161,7 +161,7 @@ export default function Chat(){
         retry: (failureCount, error) => {
 
             // if (err)
-
+            return 3
         }
     })
 
