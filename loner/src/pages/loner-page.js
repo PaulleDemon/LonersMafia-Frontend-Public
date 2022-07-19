@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useQuery } from "react-query"
 import { useParams } from "react-router-dom"
 
@@ -18,11 +18,14 @@ export default function LonerPage(){
     const [enabled, setEnabled] = useState(false)
     const [show404Page, setShow404Page] =useState(false)
     const [lonerData, setLonerData] = useState({
+                                                id: null,
                                                 name: "",
                                                 avatar: "",
                                                 tag_line: ""
                                             })
     
+    const userid = useMemo(() => sessionStorage.getItem("user-id"), [sessionStorage.getItem("user-id")])
+
     useEffect(() => {
         
         if (loner)
@@ -35,6 +38,7 @@ export default function LonerPage(){
         onSuccess: (data) => {
 
             setLonerData({
+                id: data.data.id,
                 name: data.data.name,
                 avatar: data.data.avatar,
                 tag_line: data.data.tag_line
@@ -75,9 +79,14 @@ export default function LonerPage(){
                             <div className="">
                                 {lonerData.name}
                             </div>
-                            <div className="edit-container">
-                                <EDIT className="edit"/>
-                            </div>
+                           { 
+                            userid == lonerData.id ?
+                                <div className="edit-container">
+                                    <EDIT className="edit"/>
+                                </div>
+                                :
+                                null
+                            }
                         </> 
                     :
                         <div className="btn">

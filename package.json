@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "browser-image-compression": "^2.0.0",
-    "react-zoom-pan-pinch": "^2.1.3"
-  }
-}

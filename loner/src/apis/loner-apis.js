@@ -117,7 +117,7 @@ export const getSpace = async (space) => {
 
     // const [_, space] = queryKey
     const config = getConfig()
-    return await api.get(`/space/${space}/`, config)
+    return await api.get(`/space/${space}/get/`, config)
 }
 
 
@@ -149,6 +149,13 @@ export const deleteAndBan = async ({data, deleteAll=false}) =>{
     return await api.post(`/space/delete-and-ban/?deleteAll=${deleteAll}`, body, config)
 }
 
+export const listSpaces = async ({queryKey, pageParam=1}) => {
+
+    const [_, sort, user] = queryKey
+    const config = getConfig()
+
+    return await api.get(`/space/list/?sort=${sort}&user=${user}&page${pageParam}`, config)
+}
 
 /* ----------------------------------- messages endpoints ------------------------- */
 export const getMessages = async ({queryKey, pageParam=1}) => {
