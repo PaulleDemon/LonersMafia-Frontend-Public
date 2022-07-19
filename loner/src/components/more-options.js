@@ -8,7 +8,7 @@ import {ReactComponent as KEBAB_MENU} from "../icons/kebab-menu.svg"
  * onDeleteMessage: function - function to call when delete message is clicked
  * onDeleteMessageAndBanUser: function - function to call when delete message and ban user is clicked
  */
-export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, user_is_staff=false, 
+export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, user_is_staff=false,
                                 onDeleteMessage, onDeleteMessageAndBanUser, onDeleteAllAndBanUser, 
                                 onAssignMod, onBanFromLoner
                                 }) => {
@@ -33,9 +33,8 @@ export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, user
 
     }, [ref, showDropDown])
 
-    if ((is_mod_message || is_staff) && !user_is_staff){
-        return null
-    }
+    console.log("USers:", is_mod_message, is_staff, user_is_staff)
+   
 
     return (
         <div className="dropdown-container" ref={ref}>       
@@ -53,7 +52,7 @@ export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, user
                         Delete message
                     </div>
                     
-                    { (!is_mod_message || is_staff) ?
+                    { (!is_staff) ?
                         <>
                             <div className="dropdown-btn" 
                                 onClick={onDeleteMessageAndBanUser}

@@ -72,11 +72,13 @@ const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false,
                 null
             } */}
 
-            <div className="row" style={{gap: "5px"}}>
+            <div className="row center" style={{gap: "5px"}}>
 
                 {currentUserId == id ?
 
                     <>  
+
+                        
                         { message ?
                             <div className={`message-body ${currentUserId == id ? "sender right-end" : "receiver left-end"}`}>
                                 {linkify(message)}  
@@ -86,14 +88,6 @@ const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false,
                         }   
                         <img className="user-icon" src={avatar_url} alt="" />
                         
-                        { 
-                           ((user_is_staff||user_is_mod) && (!is_staff))? // mods or other staffs cannot have previlages over other staff messages
-                            <div className="row">
-                                <MoreChatOptions is_mod_message={currentUserId == id||is_mod}/>
-                            </div>
-                            :
-                            null
-                        }
                     </>
 
                     :
@@ -107,19 +101,12 @@ const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false,
                             :
                             null
                         }      
-                        { 
-                           ((user_is_staff||user_is_mod) && (!is_staff))? // mods or other staffs cannot have previlages over other staff messages
-                            <div className="row">
-                                <MoreChatOptions is_mod_message={is_mod} user_is_staff={user_is_staff}/>
-                            </div>
-                            :
-                            null
-                        }
+
                     </>
                 }
                 
             </div>
-
+            
 
             <div className="row">
 
@@ -132,6 +119,19 @@ const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false,
                 </div>
 
             </div>
+
+            { 
+                ((currentUserId == id && (user_is_staff||user_is_mod))|| 
+                    ((!is_mod && !is_staff) && user_is_mod) || (!is_staff && user_is_staff))? // mods or other staffs cannot have previlages over other staff messages
+                <div className={`row margin-10px`}>
+                    <MoreChatOptions is_mod_message={currentUserId == id||is_mod} 
+                        is_staff={is_staff} is_mod={is_mod}
+                        user_is_staff={user_is_staff}
+                        />
+                </div>
+                :
+                null
+            }
             {/* <div>
                 rocket
             </div> */}
