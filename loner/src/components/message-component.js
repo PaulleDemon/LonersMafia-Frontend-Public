@@ -4,7 +4,7 @@ import ZoomableImage from "./zoomable-image"
 import { toLocalTime } from "../utils/datetime";
 import {linkify} from "../utils/linkify"
 import { MoreChatOptions } from "./more-options";
-import { getFileType, getFileTypeFromUrl } from "../constants/file"; 
+import { getFileTypeFromUrl } from "../constants/file"; 
 
 /**
  * message: str - message to be displayed
@@ -14,16 +14,22 @@ import { getFileType, getFileTypeFromUrl } from "../constants/file";
  * is_staff: bool - allows previlages
  * is_sender: bool - is the user the sender of the message
  * user: object - user who sent the message
+ * user_is_staff: bool - the current requested user has staff previlages
+ * user_is_mod: bool - the current requested user has mod previlages
  */
 
-const ChatCard = memo(({currentUserId=1, props}) => {
+const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false, props}) => {
 
     
-    const {message, user, media_url, datetime, is_mod=false, is_staff=false} = props
+    const {message, user, media_url, datetime, 
+            is_mod=false, is_staff=false} = props
+
     const {id, name, avatar_url} = user
     
     const [showImageEnlarged, setShowImageEnlarged] = useState(false)
 
+    
+    console.log("Details: ", is_mod, is_staff, user_is_mod, user_is_staff)
 
     let media_content = null
 
@@ -39,7 +45,7 @@ const ChatCard = memo(({currentUserId=1, props}) => {
             media_content = <img src={media_url} 
                                 alt="image" 
                                 className="chat-media"
-                                onClick={() => setShowImageEnlarged(true)}
+                                // onClick={() => setShowImageEnlarged(true)}
                                 />
                             
         }
@@ -59,12 +65,12 @@ const ChatCard = memo(({currentUserId=1, props}) => {
                 null
             }
 
-            {
+            {/* {
                 showImageEnlarged ?
                 <ZoomableImage src={media_url} onClose={() => setShowImageEnlarged(false)}/>
                 :
                 null
-            }
+            } */}
 
             <div className="row" style={{gap: "5px"}}>
 
@@ -80,9 +86,14 @@ const ChatCard = memo(({currentUserId=1, props}) => {
                         }   
                         <img className="user-icon" src={avatar_url} alt="" />
                         
-                        <div className="row">
-                            <MoreChatOptions is_mod_message={currentUserId == id}/>
-                        </div>
+                        { 
+                           ((user_is_staff||user_is_mod) && (!is_staff))? // mods or other staffs cannot have previlages over other staff messages
+                            <div className="row">
+                                <MoreChatOptions is_mod_message={currentUserId == id||is_mod}/>
+                            </div>
+                            :
+                            null
+                        }
                     </>
 
                     :
@@ -96,9 +107,14 @@ const ChatCard = memo(({currentUserId=1, props}) => {
                             :
                             null
                         }      
-                        <div className="row">
-                            <MoreChatOptions is_mod_message={currentUserId == id||is_mod}/>
-                        </div>
+                        { 
+                           ((user_is_staff||user_is_mod) && (!is_staff))? // mods or other staffs cannot have previlages over other staff messages
+                            <div className="row">
+                                <MoreChatOptions is_mod_message={is_mod} user_is_staff={user_is_staff}/>
+                            </div>
+                            :
+                            null
+                        }
                     </>
                 }
                 

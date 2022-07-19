@@ -12,6 +12,7 @@ import Cookies from "js-cookie"
 
  const api = axios.create({
     baseURL: process.env.REACT_APP_API_ENDPOINT,
+    withCredentials: true,
 })
 
 
@@ -22,8 +23,8 @@ const getConfig = () => {
         headers: {
             "X-CSRFToken": Cookies.get("csrftoken"),
             "Content-Type": "application/json",
-            "Accept": "application/json"
-        }
+            "Accept": "application/json",
+        },
     }
    
     return config
@@ -38,7 +39,8 @@ const getFormConfig = () => {
             "X-CSRFToken": Cookies.get("csrftoken"),
             "Content-Type": "multipart/form-data",
             "Accept": "application/json"
-        }
+        },
+        // withCredentials: true
     }
 
     return config

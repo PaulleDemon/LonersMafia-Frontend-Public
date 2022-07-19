@@ -154,6 +154,8 @@ export default function Chat(){
         onSuccess: (data) => {
             console.log("Data: ", data.data)
             setSpaceDetails(data.data)
+            sessionStorage.setItem("is_staff", data.data?.is_staff.toString())
+            sessionStorage.setItem("is_mod", data.data?.is_mod.toString())
         },
         retry: (failureCount, error) => {
 
@@ -238,7 +240,6 @@ export default function Chat(){
 
     useEffect(() => {
         
-        console.log("Sent message: ", lastJsonMessage)
         if (lastJsonMessage && !messages.some(msg => lastJsonMessage.id === msg.id)){
             // console.log("Last message: ", lastJsonMessage)
             setMessages([...messages, lastJsonMessage])
@@ -264,6 +265,14 @@ export default function Chat(){
     }, [window.navigator.onLine])
 
     const currentUserId = useMemo(() => sessionStorage.getItem("user-id"), [sessionStorage.getItem("user-id")])
+    
+    const user_is_mod = useMemo(() => {
+        return JSON.parse(sessionStorage.getItem("is_mod"))
+    }, [sessionStorage.getItem("is_mod")])
+
+    const user_is_staff = useMemo(() => {
+        return JSON.parse(sessionStorage.getItem("is_staff"))
+    }, [sessionStorage.getItem("is_staff")])
 
     const resetMedia = () => {
         
@@ -299,12 +308,11 @@ export default function Chat(){
             formData.append("space", spaceDetails.id)
             formData.append("media", media.fileObject)
             
-            if (text)
+            if (text.trim())
                 formData.append("message", text.trim())
 
             uploadMediaMessageMutation.mutate(formData)
 
-            return 
         }
 
         else{
@@ -315,9 +323,10 @@ export default function Chat(){
             sendJsonMessage({
                 "message": text.trim()
             })
+
+            setText("")
         }
 
-        setText("")
         localStorage.setItem("sent-first-message", "true") // once the user has sent his/her first message stop setting random text to text box
     }
 
@@ -341,13 +350,14 @@ export default function Chat(){
 
         // If the scroll-bar is at the top then fetch old messages from the database
         // note: we may also have to check if scroll bar is scrolling to the top
-        if (scrollRef.current && (80 >= scrollRef.current.scrollTop 
+        if (scrollRef.current && (100 >= scrollRef.current.scrollTop 
             || scrollRef.current.clientHeight === scrollRef.current.scrollHeight) 
             && (chatQuery.hasNextPage === undefined || chatQuery.hasNextPage === true)) {
            
                 chatQuery.fetchNextPage({cancelRefetch: false})
         }        
     }
+
 
     return (
         <>
@@ -386,7 +396,10 @@ export default function Chat(){
                         messages.map((msg) => {
                     
                             return (<li key={msg.id}>
-                                        <ChatCard currentUserId={currentUserId} props={msg}/>
+                                        <ChatCard currentUserId={currentUserId}
+                                            user_is_mod={user_is_mod}
+                                            user_is_staff={user_is_staff}
+                                            props={msg}/>
                                     </li>)  
                         })
                     }

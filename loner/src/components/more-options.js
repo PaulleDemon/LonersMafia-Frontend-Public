@@ -8,11 +8,11 @@ import {ReactComponent as KEBAB_MENU} from "../icons/kebab-menu.svg"
  * onDeleteMessage: function - function to call when delete message is clicked
  * onDeleteMessageAndBanUser: function - function to call when delete message and ban user is clicked
  */
-export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, onDeleteMessage, 
-                                onDeleteMessageAndBanUser, onDeleteAllAndBanUser, onAssignMod,
-                                onBanFromLoner
+export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, user_is_staff=false, 
+                                onDeleteMessage, onDeleteMessageAndBanUser, onDeleteAllAndBanUser, 
+                                onAssignMod, onBanFromLoner
                                 }) => {
-                                   
+                 
     const ref = useRef()
     const [showDropDown, setShowDropDown] = useState(false)
 
@@ -33,13 +33,13 @@ export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, onDe
 
     }, [ref, showDropDown])
 
-    if (is_mod_message && !is_staff){
+    if ((is_mod_message || is_staff) && !user_is_staff){
         return null
     }
 
     return (
         <div className="dropdown-container" ref={ref}>       
-
+        
 
             <KEBAB_MENU fill="black" className="more-options-btn" onClick={() => setShowDropDown(true)}/> 
 
@@ -68,20 +68,25 @@ export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, onDe
                                 >
                                 Delete all message and ban the user
                             </div>
-
-                            <div className="dropdown-btn" onClick={onAssignMod}
-                                style={{color: "#0054fc"}}
-                            >
-                                Assign mod role
-                            </div>
+                            { !is_mod_message ?
+                                <div className="dropdown-btn" onClick={onAssignMod}
+                                    style={{color: "#0054fc"}}
+                                >
+                                    Assign mod role
+                                </div>
+                                :
+                                null
+                            }
                         </>
                         :
                         null
                     }
                     
-                    { is_staff ?
+                    { (user_is_staff && !is_staff)?
                         
-                        <div className="" onClick={onBanFromLoner}>
+                        <div className="dropdown-btn" 
+                            onClick={onBanFromLoner}
+                            style={{color: "#ff1900"}}>
                             Ban User from loner
                         </div>
 
