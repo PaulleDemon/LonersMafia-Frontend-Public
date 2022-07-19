@@ -59,7 +59,15 @@ export const createUser = async (form_data) => {
 
 } 
 
-export const upateUser = async (formData) => {
+
+export const getUser = async(user) => {
+
+    const config = getConfig()
+
+    return await api.get(`/user/${user}/get/`, config)
+}
+
+export const updateUser = async (formData) => {
 
     const config = getFormConfig()
 
@@ -140,6 +148,7 @@ export const deleteAndBan = async ({data, deleteAll=false}) =>{
     
     return await api.post(`/space/delete-and-ban/?deleteAll=${deleteAll}`, body, config)
 }
+
 
 /* ----------------------------------- messages endpoints ------------------------- */
 export const getMessages = async ({queryKey, pageParam=1}) => {

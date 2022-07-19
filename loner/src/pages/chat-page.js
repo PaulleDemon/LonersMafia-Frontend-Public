@@ -1,6 +1,5 @@
-import Cookies from "js-cookie"
 import React, {useEffect, useMemo, useRef, useState} from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { useInfiniteQuery, useMutation, useQuery } from "react-query"
 import useWebSocket, {ReadyState} from "react-use-websocket"
 
@@ -12,8 +11,7 @@ import {ReactComponent as CLOSE} from "../icons/close.svg"
 import ChatCard from "../components/message-component"
 import AutoHeightTextarea from "../components/auto-resize-textarea"
 
-import { RegistrationModal, SpaceCreateModal} from "../modals/registration-modals"
-import {  ConfirmationModal, TimedMessageModal  } from "../modals/info-modal"
+import {  TimedMessageModal  } from "../modals/info-modal"
 import { randInt } from "../utils/random-generator"
 
 import { getMessages, getSpace, uploadChatMedia } from "../apis/loner-apis"
@@ -24,12 +22,14 @@ import { LoadingWheel } from "../components/loading"
 function ChatHeader({props}){
 
     const {name, icon, tag_line, rules, mods} = props
+    
+    const history = useNavigate()
 
     const [showRules, setShowRules] = useState(false)
     
     return (
         <div className="chat-header">
-            <BACK className="icon margin-10px"/>
+            <BACK className="icon margin-10px" onClick={() => history("/loner")}/>
 
             <div className="row center margin-10px">
                 <img src={icon} alt=" " className="space-icon"/>
@@ -43,7 +43,7 @@ function ChatHeader({props}){
                     </div>
                 </div>
             </div>
-            <SHARE className="margin-10px"/>
+            <SHARE className="margin-10px icon"/>
 
             <div className="link font-18px" >
                 view rules
@@ -149,7 +149,7 @@ export default function Chat(){
     
     const spaceQuery = useQuery(["space", space], () => getSpace(space), {
         refetchOnMount: true,
-        refetchOnWindowFocus: false,
+        refetchOnWindowFocus: true,
         staleTime: Infinity,
 
         onSuccess: (data) => {
@@ -370,9 +370,9 @@ export default function Chat(){
 
                 {
                     timedMesage !== ""?
-                    <TimedMessageModal message={timedMesage} timeout={2000} onTimeOut={() => setTimedMessage("")}/>
+                        <TimedMessageModal message={timedMesage} timeout={2000} onTimeOut={() => setTimedMessage("")}/>
                     :
-                    null
+                        null
                 }
                 <div className="chat-body" ref={scrollRef} onScroll={handleChatScroll}>
 

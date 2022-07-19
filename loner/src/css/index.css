@@ -36,8 +36,15 @@ a{
 }
 
 .icon{
-	max-height: 30px;
-	max-width: 30px;
+    height: 40px;
+	width: 40px;
+    padding: 5px;
+    clip-path: circle(50%);
+}
+
+.icon:hover{
+    background-color: #8c8b8b93;
+    cursor: pointer;
 }
 
 .column{
@@ -109,11 +116,21 @@ a{
 }
 
 
-.avatar{
-    width: 250px;
-    height: 250px;
-    clip-path: circle(50%);
-    background-color: #19adf8;
+.btn{
+    padding: 10px;
+    border-radius: 3px;
+    color: #fff;
+    background-color: #0780bd;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.btn:hover{
+    background-color: #065e8a;
+}
+
+.margin-top{
+    margin-top: 50px;
 }
 
 /* --------------------------- loading wheel ----------------------------- */
@@ -489,8 +506,82 @@ a{
     left: 0px;
 }
 
-/* --------------------- cropper ------------------ */
+/* --------------------- loner page ---------------- */
 
+.loner-home{
+    display: flex;
+    flex-direction: column;
+    /* background-color: #079cbd; */
+    width: 100%;
+    height: 100%;
+}
+
+.loner-home .dashboard{
+    width: 100%;
+    display: flex;
+    max-height: 30vh;
+    min-height: 20vh;
+    position: relative;
+    background-color: #08a14d;
+}
+
+.loner-home .dashboard::before{
+    content: "";
+    float: left;
+
+    /* essentially the aspect ratio. 100% means the
+       div will remain 100% as tall as it is wide, or
+       square in other words.  */
+    padding-bottom: 20%;
+}
+
+.loner-home .dashboard::after{
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.loner-home .avatar-container{
+    display: flex;
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100px;
+    width: 100px;
+    border-radius: 5px;
+    border: 4px solid #272724;
+    background-color: #000000;
+}
+
+
+.loner-home .avatar{
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+}
+
+.loner-home .edit-container{
+    position: relative;
+    width: 100%;
+}
+
+.loner-home .edit{
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    margin-left: 20px;
+    padding: 5px;
+    clip-path: circle(50%);
+    cursor: pointer;
+}
+
+.loner-home .edit:hover{
+    background-color: #8c8b8b93;
+}
+
+/* --------------------- cropper ------------------ */
 .cropper{
     position: fixed;
     top: 20%;
@@ -666,6 +757,13 @@ a{
     max-width: 450px;
     width: fit-content;
     text-align: center;
+}
+
+.registration-modal.avatar{
+    width: 250px;
+    height: 250px;
+    clip-path: circle(50%);
+    background-color: #19adf8;
 }
 
 .registration-modal .btn{

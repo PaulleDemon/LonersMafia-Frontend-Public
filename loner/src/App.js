@@ -22,6 +22,8 @@ function App() {
 			// console.log("data: ", data.data.id)
 			
 			sessionStorage.setItem("user-id", `${data.data.id}`)
+			sessionStorage.setItem("user-name", `${data.data.name}`)
+			sessionStorage.setItem("loggedIn", "true")
 		},
 		onError: (err) => {
 
