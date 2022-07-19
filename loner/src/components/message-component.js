@@ -28,9 +28,6 @@ const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false,
     
     const [showImageEnlarged, setShowImageEnlarged] = useState(false)
 
-    
-    console.log("Details: ", is_mod, is_staff, user_is_mod, user_is_staff)
-
     let media_content = null
 
     if (media_url){

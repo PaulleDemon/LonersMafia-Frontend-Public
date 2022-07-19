@@ -118,6 +118,13 @@ export const getSpace = async (space) => {
 }
 
 
+export const assignMod = async (space) => {
+
+    const config = getConfig()
+    return await api.get(``)
+}
+
+
 export const deleteSpace = async (space) => {
 
     const config = getConfig()
@@ -125,6 +132,17 @@ export const deleteSpace = async (space) => {
     return await api.delete(`/space/delete/${space}/`, config)
 }
 
+
+export const deleteAndBan = async ({data, deleteAll=false}) =>{
+    /**
+     * deletes the users message and bans them
+     * deleteAll if set to True will delete all the users message
+     */
+    const config = getConfig()
+    const body = JSON.stringify(data)
+    
+    return await api.post(`/space/delete-and-ban?deleteAll=${deleteAll}`, body, config)
+}
 
 /* ----------------------------------- messages endpoints ------------------------- */
 export const getMessages = async ({queryKey, pageParam=1}) => {
