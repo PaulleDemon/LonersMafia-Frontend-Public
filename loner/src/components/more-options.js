@@ -9,9 +9,12 @@ import { ConfirmationModal } from "../modals/info-modal"
  * is_staff: bool - staff have special permission and power
  * onDeleteMessage: function - function to call when delete message is clicked
  * onDeleteMessageAndBanUser: function - function to call when delete message and ban user is clicked
+ * onDeleteAllBanUser: function - function to call when delete all message and ban user is clicked
+ * onAssignMod: function - function to call assign mod is clicked
+ * onBanFromLoner: function - function to call ban from loner is clicked
  */
 export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, user_is_staff=false,
-                                onDeleteMessage, onDeleteMessageAndBanUser, onDeleteAllAndBanUser, 
+                                onDeleteMessage, onDeleteMessageAndBanUser, 
                                 onAssignMod, onBanFromLoner
                                 }) => {
                  
@@ -28,12 +31,12 @@ export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, user
        return { 
         "__option-1__": [onDeleteMessage, "Are you sure you want to delete this message?"],
         "__option-2__": [onDeleteMessageAndBanUser, "Are you sure you want to delete this message and ban the user?"],
-        "__option-3__": [onDeleteAllAndBanUser, "Are you sure you want to delete all message and ban the user?"],
+        "__option-3__": [() => onDeleteMessageAndBanUser(true), "Are you sure you want to delete all message and ban the user?"], //the event handler is the same the event handler expects true or false parameter
         "__option-4__": [onAssignMod, "Are you sure you want to assign this user as the moderator?"],
         "__option-5__": [onBanFromLoner, "Are you sure you want to ban this user from Loner?"],
         }
 
-    }, [onDeleteMessage, onDeleteMessageAndBanUser, onDeleteAllAndBanUser, 
+    }, [onDeleteMessage, onDeleteMessageAndBanUser, 
         onAssignMod, onBanFromLoner])
     
     useEffect(() => {

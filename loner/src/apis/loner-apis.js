@@ -59,16 +59,11 @@ export const createUser = async (form_data) => {
 
 } 
 
-export const upateUser = async (id, name, avatar) => {
+export const upateUser = async (formData) => {
 
     const config = getFormConfig()
 
-    const body = JSON.stringify({
-        body: body,
-        avatar: avatar
-    })
-
-    return await api.post(`/user/update/${id}/`, body, config)
+    return await api.put(`/user/update/`, formData.data, config)
 
 } 
 
@@ -118,10 +113,12 @@ export const getSpace = async (space) => {
 }
 
 
-export const assignMod = async (space) => {
+export const assignMod = async (data) => {
 
     const config = getConfig()
-    return await api.get(``)
+    const body = JSON.parse(data)
+
+    return await api.post(`/space/assign-mod/`, body, config)
 }
 
 
@@ -141,7 +138,7 @@ export const deleteAndBan = async ({data, deleteAll=false}) =>{
     const config = getConfig()
     const body = JSON.stringify(data)
     
-    return await api.post(`/space/delete-and-ban?deleteAll=${deleteAll}`, body, config)
+    return await api.post(`/space/delete-and-ban/?deleteAll=${deleteAll}`, body, config)
 }
 
 /* ----------------------------------- messages endpoints ------------------------- */
@@ -184,5 +181,5 @@ export const deleteMessage = async (msg_id) => {
 
     const config = getConfig()
 
-    return await api.delete(`/space/message/${msg_id}/`, config)
+    return await api.delete(`/space/message/delete/${msg_id}/`, config)
 } 

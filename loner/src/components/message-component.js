@@ -1,10 +1,13 @@
-import { memo, useState, useEffect } from "react";
+import { memo, useState, useEffect } from "react"
+import { useMutation } from "react-query"
 
-import ZoomableImage from "./zoomable-image"
-import { toLocalTime } from "../utils/datetime";
+// import ZoomableImage from "./zoomable-image"
+import { toLocalTime } from "../utils/datetime"
 import {linkify} from "../utils/linkify"
 import { MoreChatOptions } from "./more-options";
-import { getFileTypeFromUrl } from "../constants/file"; 
+import { getFileTypeFromUrl } from "../constants/file" 
+import { assignMod, banUser, deleteAndBan, deleteMessage } from "../apis/loner-apis";
+import { TimedMessageModal } from "../modals/info-modal";
 
 /**
  * message: str - message to be displayed
@@ -21,12 +24,18 @@ import { getFileTypeFromUrl } from "../constants/file";
 const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false, props}) => {
 
     
-    const {message, user, media_url, datetime, 
-            is_mod=false, is_staff=false} = props
+    const {id, message, user, media_url, space,
+        datetime, is_mod=false, is_staff=false} = props
 
-    const {id, name, avatar_url} = user
+    const {id: userid, name, avatar_url} = user
     
     const [showImageEnlarged, setShowImageEnlarged] = useState(false)
+    const [timedMessageModal, setTimedMessageModal] = useState("")
+    
+    const banMutate = useMutation(banUser)
+    const assignModMutate = useMutation(assignMod)
+    const banFromSpaceMutate = useMutation(deleteAndBan)
+    const deleteMessageMutate = useMutation(deleteMessage)
 
     let media_content = null
 
@@ -49,13 +58,65 @@ const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false,
 
     }
 
+    const onAssignMod = () => {
+
+        const data = {
+            user: userid,
+            space: space
+        }
+        assignModMutate.mutate(data, {
+            onError: () => {
+                setTimedMessageModal("Something went wrong.")
+            }
+        })
+    }
+
+    const onDeleteMessage = () => {
+
+        deleteMessageMutate.mutate(id, {
+            onError: () => {
+                setTimedMessageModal("Something went wrong")
+            } 
+        })
+    }
+
+    const onDeleteAndBan = (deleteAll=false) => {
+
+        banFromSpaceMutate.mutate({
+            data: {
+                    id: id, 
+                    user: userid,
+                    space: space
+                },
+            deleteAll: deleteAll
+        }, {
+            onError: () => setTimedMessageModal("An error occurred")
+        })
+
+    }
+    
+    const onBanFromLoner = () => {
+
+        banMutate.mutate({id: id}, {
+            onError: () => setTimedMessageModal("An error occurred")
+        })
+
+    }
+
     return ( 
         // the == is used instead of === because one is a string and other is an integer
-        <div className={`chat-card ${currentUserId == id? "right-end" : "left-end"}`}> 
+        <div className={`chat-card ${currentUserId == userid? "right-end" : "left-end"}`}> 
             
+            {
+                timedMessageModal ?
+                <TimedMessageModal message={timedMessageModal} onTimeOut={() => setTimedMessageModal("")}/>
+                :
+                null
+            }
+
             { media_url ?
 
-                <div className={`row margin-10px ${currentUserId == id? "right-end" : "left-end"}`}>
+                <div className={`row margin-10px ${currentUserId == userid? "right-end" : "left-end"}`}>
                     {media_content}
                 </div>
                 :
@@ -71,13 +132,13 @@ const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false,
 
             <div className="row center" style={{gap: "5px"}}>
 
-                {currentUserId == id ?
+                {currentUserId == userid ?
 
                     <>  
 
                         
                         { message ?
-                            <div className={`message-body ${currentUserId == id ? "sender right-end" : "receiver left-end"}`}>
+                            <div className={`message-body ${currentUserId == userid ? "sender right-end" : "receiver left-end"}`}>
                                 {linkify(message)}  
                             </div>
                             :
@@ -92,7 +153,7 @@ const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false,
                         <img className="user-icon" src={avatar_url} alt="" />
                         {
                             message ?
-                            <div className={`message-body ${currentUserId == id ? "sender right-end" : "receiver left-end"}`}>
+                            <div className={`message-body ${currentUserId == userid ? "sender right-end" : "receiver left-end"}`}>
                                 {linkify(message)}  
                             </div>
                             :
@@ -118,12 +179,19 @@ const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false,
             </div>
 
             { 
-                ((currentUserId == id && (user_is_staff||user_is_mod))|| 
+                ((currentUserId == userid && (user_is_staff||user_is_mod))|| 
                     ((!is_mod && !is_staff) && user_is_mod) || (!is_staff && user_is_staff))? // mods or other staffs cannot have previlages over other staff messages
                 <div className={`row margin-10px`}>
-                    <MoreChatOptions is_mod_message={currentUserId == id||is_mod} 
-                        is_staff={is_staff} is_mod={is_mod}
+                    <MoreChatOptions 
+                        is_mod_message={currentUserId == userid||is_mod} 
+                        is_staff={is_staff} 
+                        is_mod={is_mod}
                         user_is_staff={user_is_staff}
+                        onDeleteMessage={onDeleteMessage}
+                        onDeleteMessageAndBanUser={onDeleteAndBan}
+                        onDeleteAllAndBanUser={onDeleteAndBan}
+                        onAssignMod={onAssignMod}
+                        onBanFromLoner={onBanFromLoner}
                         />
                 </div>
                 :
