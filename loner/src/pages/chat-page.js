@@ -12,7 +12,8 @@ import {ReactComponent as CLOSE} from "../icons/close.svg"
 import ChatCard from "../components/message-component"
 import AutoHeightTextarea from "../components/auto-resize-textarea"
 
-import { RegistrationModal, SpaceCreateModal, TimedMessageModal } from "../modals/modals"
+import { RegistrationModal, SpaceCreateModal} from "../modals/registration-modals"
+import {  ConfirmationModal, TimedMessageModal  } from "../modals/info-modal"
 import { randInt } from "../utils/random-generator"
 
 import { getMessages, getSpace, uploadChatMedia } from "../apis/loner-apis"

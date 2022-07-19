@@ -95,7 +95,7 @@ const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false,
                         <img className="user-icon" src={avatar_url} alt="" />
                         {
                             message ?
-                            <div className={`message-body ${currentUserId == id ? "sender" : "receiver"}`}>
+                            <div className={`message-body ${currentUserId == id ? "sender right-end" : "receiver left-end"}`}>
                                 {linkify(message)}  
                             </div>
                             :

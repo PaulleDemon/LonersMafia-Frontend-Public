@@ -1,5 +1,7 @@
+import { useMemo } from "react"
 import { memo, useEffect, useState, useRef } from "react"
 import {ReactComponent as KEBAB_MENU} from "../icons/kebab-menu.svg"
+import { ConfirmationModal } from "../modals/info-modal"
 
 
 /**
@@ -15,7 +17,25 @@ export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, user
                  
     const ref = useRef()
     const [showDropDown, setShowDropDown] = useState(false)
+    const [confirmationModal, setConfirmationModal] = useState({
+                                                                show: false,
+                                                                message: "",
+                                                                onYesFunction: null
+                                                                })
+    
+    const functionMapping = useMemo(() => {
 
+       return { 
+        "__option-1__": [onDeleteMessage, "Are you sure you want to delete this message?"],
+        "__option-2__": [onDeleteMessageAndBanUser, "Are you sure you want to delete this message and ban the user?"],
+        "__option-3__": [onDeleteAllAndBanUser, "Are you sure you want to delete all message and ban the user?"],
+        "__option-4__": [onAssignMod, "Are you sure you want to assign this user as the moderator?"],
+        "__option-5__": [onBanFromLoner, "Are you sure you want to ban this user from Loner?"],
+        }
+
+    }, [onDeleteMessage, onDeleteMessageAndBanUser, onDeleteAllAndBanUser, 
+        onAssignMod, onBanFromLoner])
+    
     useEffect(() => {
 
         const handleClickOutside = (e) => {
@@ -32,9 +52,34 @@ export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, user
         return () => window.removeEventListener("click", handleClickOutside)
 
     }, [ref, showDropDown])
+    
+    const handleClick = (e) => {
+        
+        console.log("Handling...", e.target.id)
 
-    console.log("USers:", is_mod_message, is_staff, user_is_staff)
-   
+        if (Object.keys(functionMapping).includes(e.target.id))
+            setConfirmationModal({
+                show: true,
+                message: functionMapping[e.target.id][1],
+                onYesFunction: functionMapping[e.target.id][0]
+            })
+
+        else
+            setConfirmationModal({
+                show: false,
+                message: "",
+                onYesFunction: null
+            })
+
+    }
+
+    const resetConfirmationModal = () => {
+        setConfirmationModal({
+            show: false,
+            message: "",
+            onYesFunction: null
+        })
+    }
 
     return (
         <div className="dropdown-container" ref={ref}>       
@@ -42,12 +87,23 @@ export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, user
 
             <KEBAB_MENU fill="black" className="more-options-btn" onClick={() => setShowDropDown(true)}/> 
 
+            {
+                confirmationModal.show ?
+                    <ConfirmationModal message={confirmationModal.message} 
+                    onYes={() => {confirmationModal.onYesFunction(); resetConfirmationModal()}} 
+                    onNo={resetConfirmationModal}
+                    />
+                    :
+                null
+            }
+
             {    
                 showDropDown ?
             
                 <div className="dropdown">
-                    <div className="dropdown-btn" onClick={onDeleteMessage}
+                    <div className="dropdown-btn" onClick={handleClick}
                         style={{color: "#ff1900"}}
+                        id={"__option-1__"}
                     >
                         Delete message
                     </div>
@@ -55,21 +111,24 @@ export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, user
                     { (!is_staff) ?
                         <>
                             <div className="dropdown-btn" 
-                                onClick={onDeleteMessageAndBanUser}
+                                onClick={handleClick}
                                 style={{color: "#ff1900"}}
+                                id={"__option-2__"}
                                 >
                                 Delete message and ban user
                             </div>
 
                             <div className="dropdown-btn" 
-                                onClick={onDeleteAllAndBanUser}
+                                onClick={handleClick}
                                 style={{color: "#ff1900"}}
+                                id={"__option-3__"}
                                 >
                                 Delete all message and ban the user
                             </div>
                             { !is_mod_message ?
                                 <div className="dropdown-btn" onClick={onAssignMod}
                                     style={{color: "#0054fc"}}
+                                    id={"__option-4__"}
                                 >
                                     Assign mod role
                                 </div>
@@ -84,8 +143,10 @@ export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, user
                     { (user_is_staff && !is_staff)?
                         
                         <div className="dropdown-btn" 
-                            onClick={onBanFromLoner}
-                            style={{color: "#ff1900"}}>
+                            onClick={handleClick}
+                            style={{color: "#ff1900"}}
+                            id={"__option-5__"}
+                            >
                             Ban User from loner
                         </div>
 

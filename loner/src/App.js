@@ -1,7 +1,8 @@
 import Main from "./pages/main"
 import Cookies from "js-cookie"
 
-import { CookieConsentModal, RegistrationModal, TimedMessageModal } from "./modals/modals";
+import { RegistrationModal } from "./modals/registration-modals";
+import { TimedMessageModal, CookieConsentModal } from "./modals/info-modal";
 import { useEffect, useState } from "react";
 import { login } from "./apis/loner-apis";
 import { useQuery } from "react-query";
@@ -42,8 +43,6 @@ function App() {
 		}
 		
 	})
-
-	console.log("Logging in: ", loginQuery.status)
 
 	useEffect(() => {
 

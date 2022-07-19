@@ -234,6 +234,7 @@ a{
     /* clip-path: circle(50%); */
 	background-color: #000000;
     box-shadow: 0 0 10px #4b779d;
+    margin-top: auto;
 }
 
 .chat-card .chat-media{
@@ -626,6 +627,39 @@ a{
     z-index: 5;
     border-radius: 5px;
     box-shadow: 0 0 10px #adadad;
+    min-width: 200px;
+}
+
+.modal-background{ /* prevents user from clicking on the background when modal is active*/
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    background-color: #7f7f7f65;
+}
+
+.modal .btn, .modal .cancel-btn{
+    margin: 5px;
+    padding: 10px;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+
+.modal .btn{
+    background-color: #0ec3ec;
+}
+
+.modal .btn:hover{
+    background-color: #1e7386;
+}
+
+.modal .cancel-btn{
+    background-color: #f21717;
 }
 
 .registration-modal{
@@ -699,6 +733,13 @@ a{
     background-color: #079cbd;
     border-radius: 5px;
     box-shadow: 0 0 10px #8a8989;
+}
+
+.confirmation-modal{
+    padding: 20px;
+    min-width: 350px;
+    max-width: 550px;
+    overflow-wrap: break-word;
 }
 
 /* --------------------------- error page ------------------------- */
