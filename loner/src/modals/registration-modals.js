@@ -1,16 +1,17 @@
 import Cookies from "js-cookie"
-import { memo, useEffect, useState } from "react"
+import { memo, useEffect, useRef, useState } from "react"
 import {useMutation}from "react-query"
 
 import { getErrorCodeDescription } from "../error-pages/errors"
 
-import { createUser } from "../apis/loner-apis"
+import { createSpace, createUser } from "../apis/loner-apis"
 import { LoadingWheel } from "../components/loading"
 
 import randomAvatarGenerator from "../utils/avatar-gnerator"
 
 import {ReactComponent as RELOAD} from "../icons/reload.svg"
 import {ReactComponent as NEXT} from "../icons/next.svg"
+import {ReactComponent as UPLOAD} from "../icons/upload.svg"
 
 
 import {MAX_LENGTH, MIN_LENGTH} from "../constants/lengths"
@@ -167,53 +168,44 @@ export const RegistrationModal = ({onSuccess}) => {
     )
 } 
 
-
+/**
+ * Form used to create a space in loners
+ */
 
 export const SpaceCreateModal = ({onSuccess}) => {
     
-    const [avatar, setAvatar] = useState({
-                                            file: "",
-                                            url: ""
-                                        })
-    const [name, setName] = useState("")
+    const [icon, setIcon] = useState({
+                                        file: "",
+                                        url: ""
+                                    })
+
+    const [spaceForm, setSpaceForm] = useState({
+                                        name: "",
+                                        tag_line: "",
+                                        about: ""
+                                    })
+
     const [error, setError] = useState("")
     const [inputError, setInputError] = useState(false)
     
-    const registerMutation = useMutation(createUser, {
-
-    })
-
-    useEffect(() => {
-
-        randomAvatar("")
-
-    }, [])
-
-    const randomAvatar =  async () => {
-        // fetches random avatar
-        const random_avatar = await randomAvatarGenerator(name).then(res => res).catch(err => console.log(err))
-     
-        setAvatar({
-            file: random_avatar,
-            url: URL.createObjectURL(random_avatar)
-        })
-    }
+    const mediaRef = useRef()
+    const registerMutation = useMutation(createSpace, {})
 
     const handleSubmit = () => {
         
-        if (!name.trim()){
-            setError("Quick give yourself a name")
+        if (!spaceForm.name.trim()){
+            setError("Enter a space name")
             setInputError(true)
             return 
         } 
 
-        if (name.trim().length < MIN_LENGTH.name){
+        if (spaceForm.name.trim().length < MIN_LENGTH.spacename){
             setError("name too short")
             setInputError(true)
             return 
         }
         
-        if (!/^[a-zA-Z][a-zA-Z0-9_-]+$/.test(name)){
+        if (!/^[a-zA-Z][a-zA-Z0-9_-]+$/.test(spaceForm.name)){
             setError("Must begin with alphabet and must contain only alpha numeric values")
             setInputError(true)
             return 
@@ -223,8 +215,10 @@ export const SpaceCreateModal = ({onSuccess}) => {
             setError("You are not connected")
 
         let form_data = new FormData()
-        form_data.append("name", name)
-        form_data.append("avatar", avatar.file, `loner-${name || randInt(0, 10000)}.${FILE_TYPE_MAPPING[avatar.file.type]}`)
+        form_data.append("name", spaceForm.name)
+        form_data.append("icon", icon.file)
+        form_data.append("tag_line", spaceForm.tag_line)
+        form_data.append("about", spaceForm.about)
 
         
         registerMutation.mutate(form_data, {
@@ -250,9 +244,12 @@ export const SpaceCreateModal = ({onSuccess}) => {
 
         setError("")
         setInputError(false)
-        setName(value)
+        setSpaceForm({
+            ...spaceForm,
+            name: value
+        })
 
-        if (name.length < 2){
+        if (spaceForm.name.length < 2){
             return 
         }
 
@@ -262,33 +259,59 @@ export const SpaceCreateModal = ({onSuccess}) => {
         }
     }
 
+    const handleImageUpload = () => {
+
+    }
+
+    const resetImageFiled = () => {
+
+    }
+
     // console.log("status: ", registerMutation.status)
     return (
         <div className="modal registration-modal">
             
             <div className="row center title-22px">
-                Quick enter a name and join the loners.
+                Think and make a space
             </div>
 
             <div className="column center">
-                <p>Avatar</p>
-                <img src={avatar.url} alt="avatar" className="avatar margin-10px"/>
+                <p>Icon</p>
+                <img src={icon.url} alt="dashboard" className="dashboard margin-10px"/>
 
-                <button onClick={randomAvatar} disabled={registerMutation.isLoading} className="btn row center">
-                    <RELOAD fill="#fff"/>
-                </button>
+                <label htmlFor="file-upload" className="row center">
+                        <UPLOAD fill="#6134C1"/>
+                        <input id="file-upload" type="file" 
+                                        style={{display: "none"}}
+                                        onChange={handleImageUpload} 
+                                        accept="image/png, image/jpeg, image/gif, image/svg+xml"
+                                        ref={mediaRef} 
+                                         />
+                </label>
 
             </div>
 
             <p className={`row center font-14px ${error ? "error" : "hidden"}`}>{error}</p>
             <div className="row center">
-                <input type="text" className={`input margin-10px ${inputError ? "input-error": ""}`} value={name} 
-                        placeholder="nickname (eg: memer34)"
-                        maxLength={MAX_LENGTH.name}
+                <input type="text" className={`input margin-10px ${inputError ? "input-error": ""}`} 
+                        value={spaceForm.name} 
+                        placeholder="name (eg: space)"
+                        maxLength={MAX_LENGTH.spacename}
                         onChange={handleInputChange}
                         disabled={registerMutation.isLoading}
                         autoFocus
                         />
+                
+                <input type="text" className={`input margin-10px ${inputError ? "input-error": ""}`} 
+                        value={spaceForm.tag_line} 
+                        placeholder="tag line (eg: the happiest place on earth)"
+                        maxLength={MAX_LENGTH.tag_line}
+                        onChange={handleInputChange}
+                        disabled={registerMutation.isLoading}
+                        autoFocus
+                        />
+
+                <textarea name="" id="" placeholder="about" />
 
             {
             (registerMutation.status === "loading" && navigator.onLine) ?
@@ -298,11 +321,6 @@ export const SpaceCreateModal = ({onSuccess}) => {
             }
        
             </div>
-
-            <div className="row center font-14px">
-                by clicking on next button you agree to terms and conditions.
-            </div>
-
         </div>
     )
 } 

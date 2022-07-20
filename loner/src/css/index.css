@@ -850,11 +850,17 @@ a{
     text-align: center;
 }
 
-.registration-modal.avatar{
+.registration-modal .avatar{
     width: 250px;
     height: 250px;
     clip-path: circle(50%);
     background-color: #19adf8;
+}
+
+.registration-modal .dashboard{
+    width: 350px;
+    height: 250px;
+    background-color: #000000;
 }
 
 .registration-modal .btn{
