@@ -9,8 +9,6 @@ export const FILE_TYPE_MAPPING = {
 
 export const getFileType = (file) => {
 
-	console.log("FILE: ",file)
-
 	if(file.type.match("image.*"))
 		return "image"
 

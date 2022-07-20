@@ -790,8 +790,8 @@ a{
 
 .modal{
     position: fixed;
-    top: 40%;
-    left: 50%;
+    top: 50%;
+    left: 45%;
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
@@ -844,10 +844,21 @@ a{
     background-color: #f21717;
 }
 
+.modal .close-container{
+    position: relative;
+    display: flex;
+}
+
+.modal .close-btn{
+    position: absolute;
+    left: 50px;
+}
+
 .registration-modal{
-    max-width: 450px;
-    width: fit-content;
+    max-width: 400px;
+    width: min-content;
     text-align: center;
+    margin: 20px;
 }
 
 .registration-modal .avatar{
@@ -861,6 +872,13 @@ a{
     width: 350px;
     height: 250px;
     background-color: #000000;
+}
+
+.registration-modal .text-area{
+    resize: vertical;
+    max-height: 100px;
+    min-height: 50px;
+    width: 80%;
 }
 
 .registration-modal .btn{

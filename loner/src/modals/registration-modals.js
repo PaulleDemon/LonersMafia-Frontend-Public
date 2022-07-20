@@ -1,7 +1,8 @@
-import Cookies from "js-cookie"
 import { memo, useEffect, useRef, useState } from "react"
 import {useMutation}from "react-query"
 
+import imageCompress from "../utils/image-compress"
+import { getFileType, getFileSize } from "../constants/file"
 import { getErrorCodeDescription } from "../error-pages/errors"
 
 import { createSpace, createUser } from "../apis/loner-apis"
@@ -12,6 +13,7 @@ import randomAvatarGenerator from "../utils/avatar-gnerator"
 import {ReactComponent as RELOAD} from "../icons/reload.svg"
 import {ReactComponent as NEXT} from "../icons/next.svg"
 import {ReactComponent as UPLOAD} from "../icons/upload.svg"
+import {ReactComponent as CLOSE} from "../icons/close.svg"
 
 
 import {MAX_LENGTH, MIN_LENGTH} from "../constants/lengths"
@@ -126,7 +128,7 @@ export const RegistrationModal = ({onSuccess}) => {
     // console.log("status: ", registerMutation.status)
     return (
         <div className="modal registration-modal">
-            
+        
             <div className="row center title-22px">
                 Quick enter a name and join the loners.
             </div>
@@ -172,11 +174,11 @@ export const RegistrationModal = ({onSuccess}) => {
  * Form used to create a space in loners
  */
 
-export const SpaceCreateModal = ({onSuccess}) => {
+export const SpaceCreateModal = ({onSuccess, onClose}) => {
     
     const [icon, setIcon] = useState({
-                                        file: "",
-                                        url: ""
+                                        url: "",
+                                        file: ""
                                     })
 
     const [spaceForm, setSpaceForm] = useState({
@@ -187,6 +189,7 @@ export const SpaceCreateModal = ({onSuccess}) => {
 
     const [error, setError] = useState("")
     const [inputError, setInputError] = useState(false)
+    const [timedMessage, setTimedMessage] = useState("")
     
     const mediaRef = useRef()
     const registerMutation = useMutation(createSpace, {})
@@ -215,11 +218,14 @@ export const SpaceCreateModal = ({onSuccess}) => {
             setError("You are not connected")
 
         let form_data = new FormData()
+
         form_data.append("name", spaceForm.name)
-        form_data.append("icon", icon.file)
+        
+        if (icon.file)
+            form_data.append("icon", icon.file)
+        
         form_data.append("tag_line", spaceForm.tag_line)
         form_data.append("about", spaceForm.about)
-
         
         registerMutation.mutate(form_data, {
             onError: (err) => {
@@ -238,7 +244,7 @@ export const SpaceCreateModal = ({onSuccess}) => {
         })
     }
 
-    const handleInputChange = (e) => {
+    const handleNameChange = (e) => {
 
         const value = e.target.value.trim()
 
@@ -259,32 +265,57 @@ export const SpaceCreateModal = ({onSuccess}) => {
         }
     }
 
-    const handleImageUpload = () => {
+
+    const handleImageUpload = async (e) => {
+        
+        if (!e.target.files[0])
+			return
+
+        setTimedMessage("Preparing your image.")
+
+        const image = await imageCompress(e.target.files[0])
+
+        const fileSize = getFileSize(image)
+
+		if (fileSize > MAX_LENGTH.file_upload) {
+            setError(`File size exceeds ${MAX_LENGTH.file_upload} MiB`)
+            return
+		} 
+
+        // const file_reader = new FileReader()
+
+        setIcon({
+            file: image,
+            url: URL.createObjectURL(image) 
+        })
+        
 
     }
 
-    const resetImageFiled = () => {
-
-    }
-
-    // console.log("status: ", registerMutation.status)
     return (
         <div className="modal registration-modal">
-            
+
+            {
+
+            }
+
+             <div className="close-container">
+                <CLOSE onClick={onClose} className="icon"/>
+            </div>
+
             <div className="row center title-22px">
                 Think and make a space
             </div>
 
             <div className="column center">
-                <p>Icon</p>
                 <img src={icon.url} alt="dashboard" className="dashboard margin-10px"/>
 
                 <label htmlFor="file-upload" className="row center">
-                        <UPLOAD fill="#6134C1"/>
+                        <UPLOAD fill="#6134C1" className="icon"/>
                         <input id="file-upload" type="file" 
                                         style={{display: "none"}}
                                         onChange={handleImageUpload} 
-                                        accept="image/png, image/jpeg, image/gif, image/svg+xml"
+                                        accept="image/png, image/jpeg, image/svg+xml"
                                         ref={mediaRef} 
                                          />
                 </label>
@@ -292,26 +323,29 @@ export const SpaceCreateModal = ({onSuccess}) => {
             </div>
 
             <p className={`row center font-14px ${error ? "error" : "hidden"}`}>{error}</p>
-            <div className="row center">
+            <div className="column center">
+               
                 <input type="text" className={`input margin-10px ${inputError ? "input-error": ""}`} 
                         value={spaceForm.name} 
                         placeholder="name (eg: space)"
-                        maxLength={MAX_LENGTH.spacename}
-                        onChange={handleInputChange}
+                        maxLength={MAX_LENGTH.space_name}
+                        onChange={handleNameChange}
                         disabled={registerMutation.isLoading}
+                        name="name"
                         autoFocus
                         />
                 
                 <input type="text" className={`input margin-10px ${inputError ? "input-error": ""}`} 
                         value={spaceForm.tag_line} 
                         placeholder="tag line (eg: the happiest place on earth)"
-                        maxLength={MAX_LENGTH.tag_line}
-                        onChange={handleInputChange}
+                        maxLength={MAX_LENGTH.space_tag_line}
+                        onChange={(e) => setSpaceForm({...spaceForm, tag_line: e.target.value})}
                         disabled={registerMutation.isLoading}
+                        name="tag_line"
                         autoFocus
                         />
 
-                <textarea name="" id="" placeholder="about" />
+                <textarea name="" id="" placeholder="about" className="text-area"/>
 
             {
             (registerMutation.status === "loading" && navigator.onLine) ?
@@ -324,25 +358,4 @@ export const SpaceCreateModal = ({onSuccess}) => {
         </div>
     )
 } 
-
-
-export const TermsModal = () => {
-
-    return (
-        <div>
-            
-        </div>
-    )
-
-}
-
-
-export const RulesModal = () => {
-
-    return (
-        <div className="modal">
-
-        </div>
-    )
-}
 

@@ -99,3 +99,25 @@ export const BannedUserModal = () => {
     )
 
 }
+
+
+
+export const TermsModal = () => {
+
+    return (
+        <div>
+            
+        </div>
+    )
+
+}
+
+
+export const RulesModal = () => {
+
+    return (
+        <div className="modal">
+
+        </div>
+    )
+}

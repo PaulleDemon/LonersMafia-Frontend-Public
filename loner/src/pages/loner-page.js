@@ -9,6 +9,7 @@ import { Error404 } from "../error-pages/errors"
 import {ReactComponent as EDIT} from "../icons/edit.svg"
 import {ReactComponent as SHARE} from "../icons/share.svg"
 import { BannedUserModal } from "../modals/info-modal"
+import { SpaceCreateModal } from "../modals/registration-modals"
 
 // import { default as logo } from "../icons/emoji.svg"
 
@@ -156,7 +157,7 @@ export default function LonerPage(){
                 }
             </div>
            
-
+            <SpaceCreateModal />
             <div className="margin-top column center">
                 <div className="row">
                     {loner ?
