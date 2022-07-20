@@ -106,14 +106,14 @@ export default async function getImageUrl(
  * it will round the crop display border.
  * 
  * imgFile: File - provide a image file not a url.
- * onOk: function - function to be called when the user presses Ok button
- * onCancel: function - function to be called when the user presses Cancel button
+ * startCrop: bool - when set to true gives you the cropped image file
+ * croppedImage: function - calls the function when the crop is complete it passes the image file as parameter
  * round: bool - rounds the crop display
  * aspect: number - provide a number to change the aspect ratio eg: 1 / 3
  * className: string(optional) - add a class 
  */
 
-export const CropImage = ({imgFile=File, onOk, onCancel, aspect=1, round=false, className=""}) => {
+export const CropImage = ({imgFile=File, startCrop=false, croppedImage,  aspect=1, round=false, className=""}) => {
 
     const canvasRef = useRef()
 
@@ -132,15 +132,20 @@ export const CropImage = ({imgFile=File, onOk, onCancel, aspect=1, round=false, 
     
     useEffect(() => {
 
-        console.log(imgFile)
-
-        const img = URL.createObjectURL(imgFile)
-
-        console.log("img:  ", imgFile, img)
-        setImg(img)
+        if (imgFile){
+            const img = URL.createObjectURL(imgFile)
+            setImg(img)
+        }
 
     }, [imgFile])
     
+    useEffect(() => {
+
+        if (startCrop)
+            onCrop()
+
+    }, [startCrop])
+
     const onCropChange = (crop) => {
         setCrop(crop)
       }
@@ -169,6 +174,11 @@ export const CropImage = ({imgFile=File, onOk, onCancel, aspect=1, round=false, 
 
     const onCrop = async () => {
         
+        if (!img){
+            croppedImage(null)
+            return
+        }
+
         try {
             const croppedImageData = await getImageUrl(
                 img,
@@ -179,11 +189,11 @@ export const CropImage = ({imgFile=File, onOk, onCancel, aspect=1, round=false, 
             const croppedFile = new File([croppedImageData], imgFile.name, {type: imgFile.type})
             // console.log("FILE: ", croppedFile)
 
-            if (onOk)
-                onOk(croppedFile)  
+            if (croppedImage)
+                croppedImage(croppedFile)  
     
           } catch (e) {
-            console.error(e)
+                console.error(e)
           }
 
     }
@@ -196,19 +206,24 @@ export const CropImage = ({imgFile=File, onOk, onCancel, aspect=1, round=false, 
                 height={croppedAreaPixels.height}>
             </canvas>
             <div className="crop-container">
-                <div className="crop">
-                    <Cropper
-                        image={img}
-                        crop={crop}
-                        zoom={zoom}
-                        aspect={aspect}
-                        cropShape={round ? "round": "rect"}
-                        showGrid={false}
-                        onCropChange={onCropChange}
-                        onZoomChange={onZoomChange}
-                        onCropComplete={onCropComplete}
-                    />
-                </div>
+                {img ?
+                        
+                    <div className="crop">
+                        <Cropper
+                            image={img}
+                            crop={crop}
+                            zoom={zoom}
+                            aspect={aspect}
+                            cropShape={round ? "round": "rect"}
+                            showGrid={false}
+                            onCropChange={onCropChange}
+                            onZoomChange={onZoomChange}
+                            onCropComplete={onCropComplete}
+                        />
+                    </div>
+                : 
+                null
+                }
             </div>
             <div className="cropper__controls">
                 <Slider
@@ -219,11 +234,6 @@ export const CropImage = ({imgFile=File, onOk, onCancel, aspect=1, round=false, 
                     onChange={(zoom) => onZoomChange(zoom)}
                 />
 
-                <div className="cropper__btns__container row center">
-                    <button onClick={onCancel} className="btn">Cancel</button>
-                    <button onClick={onReset} className="btn">Reset</button>
-                    <button onClick={onCrop} className="btn">Ok</button>
-                </div>
             </div>
         </div>
       )

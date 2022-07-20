@@ -101,7 +101,8 @@ export const login = async () => {
 export const createSpace = async (data) => {
 
     const config = getFormConfig()
-    return await api.post(`/space/create/`, data.formData, config)
+    console.log("DATA: ", data)
+    return await api.post(`/space/create/`, data, config)
 
 }
 

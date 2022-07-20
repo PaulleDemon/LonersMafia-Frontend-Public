@@ -113,10 +113,22 @@ export const TermsModal = () => {
 }
 
 
-export const RulesModal = () => {
+export const RulesModal = ({rules=[]}) => {
 
     return (
         <div className="modal">
+            
+            {
+                rules.map((rule) => {
+                 
+                    return (
+                        <div>
+                            {rule}
+                        </div>
+                    )
+                    
+                })
+            }
 
         </div>
     )

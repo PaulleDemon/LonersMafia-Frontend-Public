@@ -667,17 +667,13 @@ a{
 
 /* --------------------- cropper ------------------ */
 .cropper{
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    /* margin: 10px; */
     display: flex;
     flex-direction: column;
-    width: 70%;
-    height: 70%;
+    width: 100%;
+    height: 100%;
+    max-height: min-content;
     border-radius: 5px;
-    background-color: #858484;
+    background-color: #2e2c2c;
     box-shadow: 0 0 5px #a19f9f;
     z-index: 6;
 }   
@@ -688,7 +684,7 @@ a{
 
     .crop-container{
         position: relative;
-        height: 80%;
+        height: 100%;
         display: flex;
         border-radius: inherit;
     }
@@ -706,28 +702,6 @@ a{
         flex-direction: column;
         align-items: center;
     }
-
-    .cropper__controls{
-        background-color: #474646;
-        height: 20%;
-    }
-
-    .cropper__btns__container{
-        display: flex;
-        justify-content: space-around;
-    }
-
-    .cropper__btns__container .btn{
-        height: 40px;
-        width: 20%;
-        border-radius: 25px;
-    }
-
-    .cropper__controls .btn{
-        /* margin */
-        min-width: 60px;
-    }
-
 
 /* ---------------------- slider -------------- */
 
@@ -868,10 +842,19 @@ a{
     background-color: #19adf8;
 }
 
-.registration-modal .dashboard{
+.registration-modal .space-dashboard-container{
     width: 350px;
     height: 250px;
+    display: flex;
     background-color: #000000;
+    justify-content: center;
+}
+
+.registration-modal .space-dashboard{
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
 }
 
 .registration-modal .text-area{

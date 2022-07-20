@@ -19,6 +19,8 @@ import {ReactComponent as CLOSE} from "../icons/close.svg"
 import {MAX_LENGTH, MIN_LENGTH} from "../constants/lengths"
 import {FILE_TYPE_MAPPING} from "../constants/file"
 import { randInt } from "../utils/random-generator"
+import { CropImage } from "../components/cropper"
+import { TimedMessageModal } from "./info-modal"
 
 
 export const RegistrationModal = ({onSuccess}) => {
@@ -188,11 +190,30 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
                                     })
 
     const [error, setError] = useState("")
+    const [submitBtnEnabled, setSubmitBtnEnabled] = useState(false)
     const [inputError, setInputError] = useState(false)
+    const [submitForm, setSubmitForm] = useState(false) // when this is true the form is submitted
     const [timedMessage, setTimedMessage] = useState("")
-    
+
     const mediaRef = useRef()
-    const registerMutation = useMutation(createSpace, {})
+    const registerMutation = useMutation(createSpace, {
+        
+        onError: (err) => {
+            if (err.response?.data && typeof err.response.data === "object"){
+                    setError(`${Object.values(err.response.data).join(" ")}`)
+                    return 
+                }
+
+            error = getErrorCodeDescription(err.code, err.response?.data)
+            setError(error.errorDescription)
+        },
+        onSuccess: (data) => {                
+            console.log("Success:")
+            if (onSuccess){
+                onSuccess(data)
+            }
+        }
+    })
 
     const handleSubmit = () => {
         
@@ -202,7 +223,7 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
             return 
         } 
 
-        if (spaceForm.name.trim().length < MIN_LENGTH.spacename){
+        if (spaceForm.name.trim().length < MIN_LENGTH.space_name){
             setError("name too short")
             setInputError(true)
             return 
@@ -214,9 +235,10 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
             return 
         }
         
-        if (!navigator.onLine)
+        if (!navigator.onLine){
             setError("You are not connected")
-
+            return
+        }
         let form_data = new FormData()
 
         form_data.append("name", spaceForm.name)
@@ -224,29 +246,20 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
         if (icon.file)
             form_data.append("icon", icon.file)
         
-        form_data.append("tag_line", spaceForm.tag_line)
-        form_data.append("about", spaceForm.about)
+        if (spaceForm.tag_line)
+            form_data.append("tag_line", spaceForm.tag_line)
         
-        registerMutation.mutate(form_data, {
-            onError: (err) => {
-                if (err.response?.data && typeof err.response.data === "object"){
-                        setError(`${Object.values(err.response.data).join(" ")}`)
-                        return 
-                    }
-
-                error = getErrorCodeDescription(err.code, err.response?.data)
-                setError(error.errorDescription)
-            },
-            onSuccess: (data) => {                
-                if (onSuccess)
-                    onSuccess(data)
-            }
-        })
+        if (spaceForm.about)
+            form_data.append("about", spaceForm.about)
+        
+        registerMutation.mutate(form_data, )
     }
 
     const handleNameChange = (e) => {
 
         const value = e.target.value.trim()
+
+        setSubmitBtnEnabled(false)
 
         setError("")
         setInputError(false)
@@ -255,14 +268,17 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
             name: value
         })
 
-        if (spaceForm.name.length < 2){
+        if (spaceForm.name.length < MIN_LENGTH.space_name){
             return 
         }
 
         if (!/^[a-zA-Z][a-zA-Z0-9_-]+$/.test(value)){
             setError("Must begin with alphabet and must contain only alpha numeric values")
             setInputError(true)
+            return 
         }
+
+        setSubmitBtnEnabled(true)
     }
 
 
@@ -292,10 +308,27 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
 
     }
 
+    const handleCroppedImage = (file) => {
+        console.log("FILE: ", file)
+
+        if (file)
+            setIcon({
+                file: file,
+                url: URL.createObjectURL(file)
+            })
+
+        handleSubmit()
+    }
+
     return (
         <div className="modal registration-modal">
 
             {
+                timedMessage ?
+                    <TimedMessageModal message={timedMessage} onTimeOut={() => setTimedMessage("")} />
+                    :
+
+                null
 
             }
 
@@ -308,7 +341,14 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
             </div>
 
             <div className="column center">
-                <img src={icon.url} alt="dashboard" className="dashboard margin-10px"/>
+                
+                <div className="space-dashboard-container">
+                    {/* <img src={icon.url} alt="dashboard" className="space-dashboard margin-10px"/> */}
+                    <CropImage imgFile={icon.file} aspect={1/1} 
+                                startCrop={submitForm} 
+                                croppedImage={handleCroppedImage}/>
+                    
+                </div>
 
                 <label htmlFor="file-upload" className="row center">
                         <UPLOAD fill="#6134C1" className="icon"/>
@@ -335,7 +375,7 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
                         autoFocus
                         />
                 
-                <input type="text" className={`input margin-10px ${inputError ? "input-error": ""}`} 
+                <input type="text" className={`input margin-10px`} 
                         value={spaceForm.tag_line} 
                         placeholder="tag line (eg: the happiest place on earth)"
                         maxLength={MAX_LENGTH.space_tag_line}
@@ -351,7 +391,11 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
             (registerMutation.status === "loading" && navigator.onLine) ?
                 <LoadingWheel />      
                 :
-                <button className="btn row center" onClick={handleSubmit}><NEXT fill="#fff"/></button>
+                <button className="btn row center" 
+                        onClick={()=>setSubmitForm(true)} 
+                        disabled={!submitBtnEnabled}>
+                            <NEXT fill="#fff"/>
+                </button>
             }
        
             </div>
