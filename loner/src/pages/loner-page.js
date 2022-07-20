@@ -3,7 +3,7 @@ import { useInfiniteQuery, useQuery } from "react-query"
 import { useParams } from "react-router-dom"
 
 import { getUser, listSpaces } from "../apis/loner-apis"
-import { SpaceCard } from "../components/card"
+import { CreateSpaceCard, SpaceCard } from "../components/card"
 import { Error404 } from "../error-pages/errors"
 
 import {ReactComponent as EDIT} from "../icons/edit.svg"
@@ -100,19 +100,24 @@ export default function LonerPage(){
 
     return (
         <div className="loner-home">
-            <BannedUserModal />
-            <div className="dashboard">
             
-               { 
+            <div className="dashboard">
+
+                <div>
+                    Create Space
+                </div>
+
+                { 
                 loner ?
                     <div className="avatar-container">
                         <img src={lonerData.avatar} alt="avatar" className="avatar" />
                     </div>
                 :
-                   null
+                null
                 }
             </div>
-            
+           
+
             <div className="margin-top column center">
                 <div className="row">
                     {loner ?
@@ -143,44 +148,56 @@ export default function LonerPage(){
                     <SHARE className="icon"/>
                 </div>
             </div>
-
-            <div className="section">
-                <div className="title-22px">
-                    Recently texted spaces
-                </div>
                 
-                <div>
-                    <SpaceCard />
-                </div>
+            <div className="section-container">
+
+                <div className="section">
+                    <div className="title-22px">
+                        Recently texted spaces
+                    </div>
                     
-            </div>
-
-            <div className="section">
-                <div className="title-22px">
-                    Trending spaces
-                </div>
-                
-                <div>
-                    <SpaceCard />
+                    <div className="space-cards-container">
+                        <SpaceCard />
+                        <SpaceCard />
+                        <CreateSpaceCard />
+                    </div>
+                        
                 </div>
 
-            </div>
+                <div className="section">
+                    <div className="title-22px">
+                        Trending spaces
+                    </div>
+                    
+                    <div className="space-cards-container">
+                        <SpaceCard />
+                    </div>
 
-            <div className="section">
-                <div className="title-22px">
-                    Moderating spaces
                 </div>
-                
-                <div>
-                    <SpaceCard />
+
+                <div className="section">
+                    <div className="title-22px">
+                        Moderating spaces
+                    </div>
+                    
+                    <div className="space-cards-container">
+                        <SpaceCard />
+                    </div>
+
+                </div>
+
+                <div className="section">
+                    <div className="title">
+                        Sponsor
+                    </div>
+
+                    <div className="space-cards-container">
+
+                    </div>
+
                 </div>
 
             </div>
-
-            <div>
-                Promoted
-            </div>
-
         </div>
     )
 }
