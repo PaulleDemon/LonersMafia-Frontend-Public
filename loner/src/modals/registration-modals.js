@@ -192,7 +192,7 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
     const [error, setError] = useState("")
     const [submitBtnEnabled, setSubmitBtnEnabled] = useState(false)
     const [inputError, setInputError] = useState(false)
-    const [submitForm, setSubmitForm] = useState(false) // when this is true the form is submitted
+    const [crop, setCrop] = useState(false) // when this is true the form is submitted
     const [timedMessage, setTimedMessage] = useState("")
 
     const mediaRef = useRef()
@@ -208,7 +208,12 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
             setError(error.errorDescription)
         },
         onSuccess: (data) => {                
-            console.log("Success:")
+
+            setIcon({
+                file: "",
+                url: ""
+            })
+
             if (onSuccess){
                 onSuccess(data)
             }
@@ -309,8 +314,8 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
     }
 
     const handleCroppedImage = (file) => {
-        console.log("FILE: ", file)
 
+        setCrop(false)
         if (file)
             setIcon({
                 file: file,
@@ -345,7 +350,7 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
                 <div className="space-dashboard-container">
                     {/* <img src={icon.url} alt="dashboard" className="space-dashboard margin-10px"/> */}
                     <CropImage imgFile={icon.file} aspect={1/1} 
-                                startCrop={submitForm} 
+                                startCrop={crop} 
                                 croppedImage={handleCroppedImage}/>
                     
                 </div>
@@ -392,7 +397,7 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
                 <LoadingWheel />      
                 :
                 <button className="btn row center" 
-                        onClick={()=>setSubmitForm(true)} 
+                        onClick={()=>setCrop(true)} 
                         disabled={!submitBtnEnabled}>
                             <NEXT fill="#fff"/>
                 </button>

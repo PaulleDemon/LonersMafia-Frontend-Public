@@ -173,9 +173,10 @@ export const CropImage = ({imgFile=File, startCrop=false, croppedImage,  aspect=
     }
 
     const onCrop = async () => {
-        
+
         if (!img){
             croppedImage(null)
+            console.log("mage unknown")
             return
         }
 
