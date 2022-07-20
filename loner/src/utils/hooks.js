@@ -35,45 +35,43 @@ export const useScrollDirection = (ref) => {
         
         const currentElement = ref.current
 
-        let lastScrollTop = window.scrollY || document.documentElement.scrollTop
-        let lastScrollLeft = window.scrollX || document.documentElement.scrollLeft
+        let timeout = 0
 
-        console.log("ref: ", ref.current)
+        let lastScrollTop = 0
+        let lastScrollLeft = 0
 
         const handleNavigation = (e) =>{
-            console.log("Navigation: ", e)
-            let st = window.scrollY || document.documentElement.scrollTop //scroll top
 
-            let sh = window.scrollX || document.documentElement.scrollLeft
-            console.log("ST: ", st)
+            window.clearTimeout(timeout)
+            timeout = setTimeout(() => setDirection(null), 100)
 
-            if (st > lastScrollTop){
-                console.log("down scroll")
+            let st = currentElement.scrollTop  
+            let sh = currentElement.scrollLeft 
+
+            if (st < lastScrollTop){
                 setDirection("down")
             }
 
             else{
-                console.log("UP scroll")
                 setDirection("up")
             }
 
-            if (sh > lastScrollLeft){
-                console.log("scroll left")
+            if (sh < lastScrollLeft){
                 setDirection("left")
             }
 
             else{
-                console.log("scroll right")
                 setDirection("right")
             }
 
-            lastScrollTop = st <=0 ? 0 : st
+            lastScrollTop = st
+            lastScrollLeft = sh
 
         }
-
+        
         if (currentElement){
 
-            currentElement.addEventListener("scroll", handleNavigation)
+            currentElement.addEventListener("scroll", handleNavigation, false)
         }
 
         return () => currentElement?.removeEventListener("scroll", handleNavigation)

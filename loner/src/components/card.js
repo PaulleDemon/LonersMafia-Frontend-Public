@@ -43,7 +43,7 @@ export const SpaceCard = memo(({name="", tag_line="", icon="",
                 </div>
 
                 <div className="btn">
-                    take a peak
+                    take a peek
                 </div>
             </div>
         </div>

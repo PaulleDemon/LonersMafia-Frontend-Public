@@ -17,26 +17,40 @@ import { useScrollDirection } from "../utils/hooks"
 
 const HorizontalSection = memo(({title, data=[]}) => {
 
-    console.log("Data: ", data)
+
     const scrollRef = useRef()
     const [showSpaceCreateModal, setShowSpaceCreateModal] = useState(false)
 
     const scrollDirection = useScrollDirection(scrollRef)
-    console.log("scroll direction: ", scrollDirection)
+
+    // console.log(scrollRef.current?.scrollLeft, ((scrollRef.current?.scrollWidth - scrollRef.current?.clientWidth) - scrollRef.current?.scrollLeft))
+
+    const handleScroll = (e) => {
+
+        const current = e.target
+
+        if (((current.scrollWidth - current.clientWidth) - current.scrollLeft) < 400 && scrollDirection === "right"){
+            console.log("True")
+        }
+
+    }
+
     return (
-        <div className="section" ref={scrollRef}>
+        <div className="section" >
             <div className="title-22px">
                 {title}
             </div>
             
             {
              showSpaceCreateModal ?    
-                <SpaceCreateModal onClose={() => setShowSpaceCreateModal(false)}/>
+                <SpaceCreateModal onClose={() => setShowSpaceCreateModal(false)}
+                                  onSuccess={() => setShowSpaceCreateModal(false)}
+                />
                 :
                 null
             }
 
-            <div className="space-cards-container">
+            <div className="space-cards-container" ref={scrollRef} onScroll={handleScroll}>
                 {
                     data.map((data) => {
 
