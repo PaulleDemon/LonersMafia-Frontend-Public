@@ -23,7 +23,7 @@ export const SpaceCard = memo(({name="", tag_line="", icon="",
             history(ENDPOINTS.spaceview(name))
 
         else
-            window.open(promoted_url,'_blank').focus()
+            window.open(promoted_url, '_blank').focus()
 
     }
 

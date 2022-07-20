@@ -153,7 +153,7 @@ export default function Chat(){
         staleTime: Infinity,
 
         onSuccess: (data) => {
-            console.log("Data: ", data.data)
+            // console.log("Data: ", data.data)
             setSpaceDetails(data.data)
             sessionStorage.setItem("is_staff", data.data?.is_staff.toString())
             sessionStorage.setItem("is_mod", data.data?.is_mod.toString())

@@ -153,8 +153,11 @@ export const listSpaces = async ({queryKey, pageParam=1}) => {
 
     const [_, sort, user] = queryKey
     const config = getConfig()
+    
+    if (user === null)
+        user = ""
 
-    return await api.get(`/space/list/?sort=${sort}&user=${user}&page${pageParam}`, config)
+    return await api.get(`/space/list/?sort=${encodeURIComponent(sort)}&user=${encodeURIComponent(user)}&page${pageParam}`, config)
 }
 
 /* ----------------------------------- messages endpoints ------------------------- */

@@ -1,7 +1,7 @@
 
 const ENDPOINTS = {
 
-    spaceview: (space) => `space/${space}` 
+    spaceview: (space) => `/space/${space}/` 
 
 }
 

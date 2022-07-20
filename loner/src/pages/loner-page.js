@@ -66,7 +66,21 @@ export default function LonerPage(){
                 return lastPage.data.current + 1}
             
         },
-        staleTime: Infinity
+        staleTime: Infinity,
+        onSuccess: (data) => {
+            console.log("data: ", data)
+
+            let trending_data=[]
+
+            data.pages.forEach((x) => {
+                x.data.results.forEach( (x) =>{
+                    trending_data.push(x)
+                }
+                )      
+            })
+
+            setTrendingSpace(trending_data)
+        }
     }) 
 
 
@@ -78,7 +92,20 @@ export default function LonerPage(){
                 return lastPage.data.current + 1}
             
         },
-        staleTime: Infinity
+        staleTime: Infinity,
+
+        onSuccess: (data) => {
+            let recent_data=[]
+
+            data.pages.forEach((x) => {
+                x.data.results.forEach( (x) =>{
+                    recent_data.push(x)
+                }
+                )      
+            })
+
+            setRecentSpaces(recent_data)
+        }
 
     })
 
@@ -90,7 +117,19 @@ export default function LonerPage(){
                 return lastPage.data.current + 1}
             
         },
-        staleTime: Infinity
+        staleTime: Infinity,
+        onSuccess: (data) =>{
+            let recent_data=[]
+
+            data.pages.forEach((x) => {
+                x.data.results.forEach( (x) =>{
+                    recent_data.push(x)
+                }
+                )      
+            })
+
+            setModeratingSpaces(recent_data)
+        }
     })
 
     if (show404Page)
