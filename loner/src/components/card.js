@@ -30,8 +30,8 @@ export const SpaceCard = memo(({name="", tag_line="", icon="",
     return (
         <div className="space-card" onClick={handleNavigation}>
 
-            <div className="dashboard-container">
-                <img src={icon} alt="" className="dashboard" />
+            <div className="space-avatar-container">
+                <img src={icon} alt="" className="space-avatar" />
             </div>
 
             <div className="info-container column">

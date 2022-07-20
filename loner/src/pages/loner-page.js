@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react"
+import { memo, useState, useEffect, useMemo, useRef } from "react"
 import { useInfiniteQuery, useQuery } from "react-query"
 import { useParams } from "react-router-dom"
 
@@ -10,8 +10,58 @@ import {ReactComponent as EDIT} from "../icons/edit.svg"
 import {ReactComponent as SHARE} from "../icons/share.svg"
 import { BannedUserModal } from "../modals/info-modal"
 import { SpaceCreateModal } from "../modals/registration-modals"
+import { useScrollDirection } from "../utils/hooks"
 
 // import { default as logo } from "../icons/emoji.svg"
+
+
+const HorizontalSection = memo(({title, data=[]}) => {
+
+    console.log("Data: ", data)
+    const scrollRef = useRef()
+    const [showSpaceCreateModal, setShowSpaceCreateModal] = useState(false)
+
+    const scrollDirection = useScrollDirection(scrollRef)
+    console.log("scroll direction: ", scrollDirection)
+    return (
+        <div className="section" ref={scrollRef}>
+            <div className="title-22px">
+                {title}
+            </div>
+            
+            {
+             showSpaceCreateModal ?    
+                <SpaceCreateModal onClose={() => setShowSpaceCreateModal(false)}/>
+                :
+                null
+            }
+
+            <div className="space-cards-container">
+                {
+                    data.map((data) => {
+
+                        return (
+
+                            <li key={data.id}>
+                                <SpaceCard name={data.name} 
+                                            tag_line={data.tag_line}
+                                            icon={data.icon}
+                                />
+                            </li>
+
+                        )
+                    })
+                        
+                }
+                
+                <CreateSpaceCard onClick={() => setShowSpaceCreateModal(true)}/>
+            </div>
+                
+        </div>
+    )
+
+})
+
 
 
 export default function LonerPage(){
@@ -20,6 +70,7 @@ export default function LonerPage(){
 
     const [enabled, setEnabled] = useState(false)
     const [show404Page, setShow404Page] =useState(false)
+
     const [lonerData, setLonerData] = useState({
                                                 id: null,
                                                 name: "",
@@ -67,9 +118,9 @@ export default function LonerPage(){
                 return lastPage.data.current + 1}
             
         },
-        staleTime: Infinity,
+        // staleTime: Infinity,
+        // refetchOnMount: true,
         onSuccess: (data) => {
-            console.log("data: ", data)
 
             let trending_data=[]
 
@@ -93,8 +144,8 @@ export default function LonerPage(){
                 return lastPage.data.current + 1}
             
         },
-        staleTime: Infinity,
-
+        // staleTime: Infinity,
+        // refetchOnMount: true,
         onSuccess: (data) => {
             let recent_data=[]
 
@@ -119,6 +170,8 @@ export default function LonerPage(){
             
         },
         staleTime: Infinity,
+        refetchOnMount: true,
+
         onSuccess: (data) =>{
             let recent_data=[]
 
@@ -157,7 +210,6 @@ export default function LonerPage(){
                 }
             </div>
            
-            <SpaceCreateModal />
             <div className="margin-top column center">
                 <div className="row">
                     {loner ?
@@ -191,40 +243,10 @@ export default function LonerPage(){
                 
             <div className="section-container">
 
-                <div className="section">
-                    <div className="title-22px">
-                        Recently texted spaces
-                    </div>
-                    
-                    <div className="space-cards-container">
-                        <SpaceCard />
-                        <SpaceCard />
-                        <CreateSpaceCard />
-                    </div>
-                        
-                </div>
+                <HorizontalSection title="Recently texted spaces" data={recentSpaces} />
+                <HorizontalSection title="Trending spaces" data={trendingSpaces}/>
+                <HorizontalSection title="Moderating spaces" data={moderatingSpaces}/>
 
-                <div className="section">
-                    <div className="title-22px">
-                        Trending spaces
-                    </div>
-                    
-                    <div className="space-cards-container">
-                        <SpaceCard />
-                    </div>
-
-                </div>
-
-                <div className="section">
-                    <div className="title-22px">
-                        Moderating spaces
-                    </div>
-                    
-                    <div className="space-cards-container">
-                        <SpaceCard />
-                    </div>
-
-                </div>
 
                 <div className="section">
                     <div className="title">
@@ -238,6 +260,12 @@ export default function LonerPage(){
                 </div>
 
             </div>
+            
+            <div className="row center">
+                <a href="http://" target="_blank" className="font-18px margin-10px">View source on Github</a>
+                <a href="http://" target="_blank" className="font-18px margin-10px">Report a bug</a>
+            </div>
+
         </div>
     )
 }

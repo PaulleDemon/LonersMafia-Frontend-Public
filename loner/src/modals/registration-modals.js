@@ -326,83 +326,90 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
     }
 
     return (
-        <div className="modal registration-modal">
 
-            {
-                timedMessage ?
-                    <TimedMessageModal message={timedMessage} onTimeOut={() => setTimedMessage("")} />
-                    :
+        <div className="modal-background">
+            <div className="modal registration-modal">
 
-                null
+                {
+                    timedMessage ?
+                        <TimedMessageModal message={timedMessage} onTimeOut={() => setTimedMessage("")} />
+                        :
 
-            }
+                    null
 
-             <div className="close-container">
-                <CLOSE onClick={onClose} className="icon"/>
-            </div>
+                }
 
-            <div className="row center title-22px">
-                Think and make a space
-            </div>
-
-            <div className="column center">
-                
-                <div className="space-dashboard-container">
-                    {/* <img src={icon.url} alt="dashboard" className="space-dashboard margin-10px"/> */}
-                    <CropImage imgFile={icon.file} aspect={1/1} 
-                                startCrop={crop} 
-                                croppedImage={handleCroppedImage}/>
-                    
+                <div className="close-container">
+                    <CLOSE onClick={onClose} className="icon"/>
                 </div>
 
-                <label htmlFor="file-upload" className="row center">
-                        <UPLOAD fill="#6134C1" className="icon"/>
-                        <input id="file-upload" type="file" 
-                                        style={{display: "none"}}
-                                        onChange={handleImageUpload} 
-                                        accept="image/png, image/jpeg, image/svg+xml"
-                                        ref={mediaRef} 
-                                         />
-                </label>
+                <div className="row center title-22px">
+                    Create a space 
+                </div>
 
-            </div>
+                <div className="font-18px margin-10px">
+                 create a space and invite other loners
+                </div>
 
-            <p className={`row center font-14px ${error ? "error" : "hidden"}`}>{error}</p>
-            <div className="column center">
-               
-                <input type="text" className={`input margin-10px ${inputError ? "input-error": ""}`} 
-                        value={spaceForm.name} 
-                        placeholder="name (eg: space)"
-                        maxLength={MAX_LENGTH.space_name}
-                        onChange={handleNameChange}
-                        disabled={registerMutation.isLoading}
-                        name="name"
-                        autoFocus
-                        />
+                <div className="column center">
+                    
+                    <div className="space-dashboard-container">
+                        {/* <img src={icon.url} alt="dashboard" className="space-dashboard margin-10px"/> */}
+                        <CropImage imgFile={icon.file} aspect={1/1} 
+                                    startCrop={crop} 
+                                    croppedImage={handleCroppedImage}/>
+                        
+                    </div>
+
+                    <label htmlFor="file-upload" className="row center">
+                            <UPLOAD fill="#6134C1" className="icon"/>
+                            <input id="file-upload" type="file" 
+                                            style={{display: "none"}}
+                                            onChange={handleImageUpload} 
+                                            accept="image/png, image/jpeg, image/svg+xml"
+                                            ref={mediaRef} 
+                                            />
+                    </label>
+
+                </div>
+
+                <p className={`row center font-14px ${error ? "error" : "hidden"}`}>{error}</p>
+                <div className="column center">
                 
-                <input type="text" className={`input margin-10px`} 
-                        value={spaceForm.tag_line} 
-                        placeholder="tag line (eg: the happiest place on earth)"
-                        maxLength={MAX_LENGTH.space_tag_line}
-                        onChange={(e) => setSpaceForm({...spaceForm, tag_line: e.target.value})}
-                        disabled={registerMutation.isLoading}
-                        name="tag_line"
-                        autoFocus
-                        />
+                    <input type="text" className={`input margin-10px ${inputError ? "input-error": ""}`} 
+                            value={spaceForm.name} 
+                            placeholder="name (eg: space)"
+                            maxLength={MAX_LENGTH.space_name}
+                            onChange={handleNameChange}
+                            disabled={registerMutation.isLoading}
+                            name="name"
+                            autoFocus
+                            />
+                    
+                    <input type="text" className={`input margin-10px`} 
+                            value={spaceForm.tag_line} 
+                            placeholder="tag line (eg: the happiest place on earth)"
+                            maxLength={MAX_LENGTH.space_tag_line}
+                            onChange={(e) => setSpaceForm({...spaceForm, tag_line: e.target.value})}
+                            disabled={registerMutation.isLoading}
+                            name="tag_line"
+                            autoFocus
+                            />
 
-                <textarea name="" id="" placeholder="about" className="text-area"/>
+                    <textarea name="" id="" placeholder="about" className="text-area"/>
 
-            {
-            (registerMutation.status === "loading" && navigator.onLine) ?
-                <LoadingWheel />      
-                :
-                <button className="btn row center" 
-                        onClick={()=>setCrop(true)} 
-                        disabled={!submitBtnEnabled}>
-                            <NEXT fill="#fff"/>
-                </button>
-            }
-       
+                {
+                (registerMutation.status === "loading" && navigator.onLine) ?
+                    <LoadingWheel />      
+                    :
+                    <button className="btn row center" 
+                            onClick={()=>setCrop(true)} 
+                            disabled={!submitBtnEnabled}>
+                                <NEXT fill="#fff"/>
+                    </button>
+                }
+        
+                </div>
             </div>
         </div>
     )
