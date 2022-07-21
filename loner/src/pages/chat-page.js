@@ -2,6 +2,8 @@ import React, {useEffect, useMemo, useRef, useState} from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { useInfiniteQuery, useMutation, useQuery } from "react-query"
 import useWebSocket, {ReadyState} from "react-use-websocket"
+import useWebShare from "react-use-web-share"
+
 
 import {ReactComponent as BACK} from "../icons/back.svg"
 import {ReactComponent as SEND} from "../icons/send.svg"
@@ -24,12 +26,38 @@ function ChatHeader({props}){
     const {name, icon, tag_line, rules, mods} = props
     
     const history = useNavigate()
+    const webShare = useWebShare()
 
     const [showRules, setShowRules] = useState(false)
+    const [timedMesage, setTimedMessage] = useState("")
     
+    const handleShare = () => {
+
+        if (webShare.isSupported){
+            webShare.share({
+                title: `Hey there, here is your invitation to join the ${name}`,
+                text: `Special invite for you to speak your mind out on ${name} space on loners network; completely anonymously, no email, no password, just anonymity.`,
+                url: window.location
+            })
+        }
+        else{
+            // navigator.clipboard.writeText(process.env.REACT_APP_API_ENDPOINT)
+            navigator.clipboard.writeText(window.location)
+            setTimedMessage("Link copied to clipboard")
+        }
+
+    }
+
     return (
         <div className="chat-header">
             <BACK className="icon margin-10px" onClick={() => history("/loner")}/>
+
+            {
+                timedMesage !== ""?
+                    <TimedMessageModal message={timedMesage} timeout={2000} onTimeOut={() => setTimedMessage("")}/>
+                :
+                    null
+            }
 
             <div className="row center margin-10px">
                 <img src={icon} alt=" " className="space-icon"/>
@@ -43,7 +71,7 @@ function ChatHeader({props}){
                     </div>
                 </div>
             </div>
-            <SHARE className="margin-10px icon"/>
+            <SHARE className="margin-10px icon" onClick={handleShare}/>
 
             <div className="link font-18px" >
                 view rules
@@ -106,6 +134,7 @@ export default function Chat(){
 
     const [messages, setMessages] = useState([])
     const [socketCloseReason, setSocketCloseReason] = useState("")
+
 
     const [scrollToEnd, setScrollToEnd] = useState(true)
     const scrollRef = useRef() // refernce to chat body
@@ -365,6 +394,7 @@ export default function Chat(){
         }        
     }
 
+   
 
     return (
         <>

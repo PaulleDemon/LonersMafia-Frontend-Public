@@ -193,6 +193,7 @@ a{
 	background-color: var(--chat-header);
 	height: 60px;
 	align-items: center;
+    justify-content: space-between;
 }
 
 .peckspace-promo{
@@ -628,10 +629,10 @@ a{
     height: 40px;
     justify-content: space-evenly;
     align-items: center;
-    box-shadow: 0 4 4px #050f5fe1;
+    background-color: #fff;
+    box-shadow: 4px 0 4px #050f5fe1;
     z-index: 3;
     width: 100%;
-    background-color: red;
 }
 
 .space-content-container{
@@ -880,7 +881,7 @@ a{
 
 .registration-modal{
     max-width: 400px;
-    width: min-content;
+    width: max-content;
     text-align: center;
     margin: 20px;
 }
@@ -890,6 +891,7 @@ a{
     height: 250px;
     clip-path: circle(50%);
     background-color: #19adf8;
+    background: url("../icons/default-avatar.svg");
 }
 
 .registration-modal .space-dashboard-container{
@@ -978,7 +980,7 @@ a{
     min-height: 40px;
     background-color: #079cbd;
     border-radius: 5px;
-    box-shadow: 0 0 10px #8a8989;
+    box-shadow: 0 0 5px #434343;
 }
 
 .confirmation-modal{

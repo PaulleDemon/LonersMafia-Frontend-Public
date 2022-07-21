@@ -8,7 +8,7 @@ import Cookies from "js-cookie"
 //  axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 //  axios.defaults.xsrfCookieName = Cookies.get("csrftoken")
 
- axios.defaults.withCredentials = true
+//  axios.defaults.withCredentials = true
 
  const api = axios.create({
     baseURL: process.env.REACT_APP_API_ENDPOINT,

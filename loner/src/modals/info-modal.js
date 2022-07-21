@@ -1,5 +1,4 @@
 
-import Cookies from "js-cookie"
 import { memo, useEffect, useState } from "react"
 
 /**

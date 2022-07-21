@@ -33,7 +33,7 @@ export default async function randomAvatarGenerator(seed, showBgColor=true){
         const random_sprite = AttrFreeLicensedAvatars[randInt(0, AttrFreeLicensedAvatars.length - 1)]
 
         return await axios.get(AVATAR_APIS[random_avatar_api](random_sprite, seed, (showBgColor ? getRandomColor() : "#ffffff00") ), config)
-                .then(res =>  res.data).catch((e) => e)
+                .then(res => res.data)
     }
     else{
         return await axios.get(AVATAR_APIS[random_avatar_api](seed), axiosConfig)

@@ -1,14 +1,18 @@
 import { useRef, useEffect, useState, useMemo, useCallback } from "react"
 import { useInfiniteQuery } from "react-query"
-import { useNavigate, useParams, useSearchParams } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
+import useWebShare from "react-use-web-share"
 
 import { SpaceCard } from "../components/card"
 import { listSpaces } from "../apis/loner-apis"
 
 import {ReactComponent as BACK} from "../icons/back.svg"
+import {ReactComponent as SHARE} from "../icons/share.svg"
+
 import { useScrollBarVisible, useScrollDirection } from "../utils/hooks"
 import { LoadingWheel } from "../components/loading"
-import { SpaceCreateModal } from "../modals/registration-modals"
+import { RegistrationModal, SpaceCreateModal } from "../modals/registration-modals"
+import { TimedMessageModal } from "../modals/info-modal"
 
 
 /**
@@ -87,15 +91,21 @@ const SpacesPage = () => {
     
     const { sortParams } = useSearchParams()
     
+    const scrollRef = useRef()
     const history = useNavigate()
     
-    const scrollRef = useRef()
+    const webShare = useWebShare()
+    
     const scrollVisible = useScrollBarVisible(null)
     const scrollDirection = useScrollDirection(null)
 
     const [listQueries, setListQueries] = useState([])
-    const [createSpaceModal, setShowCreatSpaceModal] = useState()
+    const [showRegisterModal, setShowRegisterModal] = useState(false)
+    const [createSpaceModal, setShowCreatSpaceModal] = useState(false)
+
     const [sortOption, setSortOption] = useState(sortParams || "trending")
+    
+    const [timedMessage, setTimedMessage] = useState("")
 
     const sortOptions = useMemo(() => {return (
             {"trending": "Trending", 
@@ -147,7 +157,7 @@ const SpacesPage = () => {
     }, [])
 
     useEffect(() => {
-
+        // TODO: fetch until scrollbar is visible
         if (!scrollVisible.vertical){
             // fetch()
         }
@@ -179,6 +189,34 @@ const SpacesPage = () => {
         setListQueries([])
     }
 
+    const handleShare = () => {
+
+        if (webShare.isSupported){
+            webShare.share({
+                title: "Hey there, here is your invitation to join the loners network",
+                text: "Special invite for you to speak your mind out on loners network; completely anonymously, no email, no password, just anonymity.",
+                url: process.env.REACT_APP_API_ENDPOINT
+            })
+        }
+        else{
+            // navigator.clipboard.writeText(process.env.REACT_APP_API_ENDPOINT)
+            navigator.clipboard.writeText(window.location)
+            setTimedMessage("Link copied to clipboard")
+        }
+
+    }
+
+    const handleCreateSpace = () => {
+
+        if (sessionStorage.getItem("loggedIn") === "true"){
+            setShowCreatSpaceModal(true)
+        }
+        else{
+            setShowRegisterModal(true)
+        }
+
+    }
+
     return (
         <div className="spaces-page">
             
@@ -187,14 +225,33 @@ const SpacesPage = () => {
                 <BACK className="icon" onClick={() => history('/loner')}/>
                 <SortComponent values={sortOptions} defaultValue={"moderating"} onOptionChange={handleSortOptionChange}/>
                 
-                <a onClick={() => setShowCreatSpaceModal(true)}>create space</a>
+                <a onClick={handleCreateSpace}>create space</a>
                 
-                <div>share</div>
+                <div className="row center">
+                    <SHARE className="icon" onClick={handleShare}/>
+                </div>
             </div>
 
             {
                 createSpaceModal ?
-                    <SpaceCreateModal onClose={() => setShowCreateSpaceModal(false)}/>
+                    <SpaceCreateModal onClose={() => setShowCreatSpaceModal(false)}/>
+                :
+                null
+            }
+
+            {
+                showRegisterModal ?
+
+                <RegistrationModal onSuccess={() => setShowRegisterModal(false)} />
+
+                :
+
+                null
+            }
+
+            {
+                timedMessage ? 
+                    <TimedMessageModal message={timedMessage} onTimeOut={() => setTimedMessage("")}/>
                 :
                 null
             }
@@ -218,7 +275,7 @@ const SpacesPage = () => {
                     (sortListQuery.status === "success" &&  listQueries.length === 0)?
                         <div className="row center">
                             <div>Seems nothings here. Why not create a space?</div>
-                            <div>create space</div>
+                            <div className={handleCreateSpace}>create space</div>
                         </div>
                 
                     :

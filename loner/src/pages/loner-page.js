@@ -2,6 +2,8 @@ import { memo, useState, useEffect, useMemo, useRef } from "react"
 import { useInfiniteQuery, useQuery } from "react-query"
 import { useParams, Link } from "react-router-dom"
 
+import useWebShare from "react-use-web-share"
+
 import { getUser, listSpaces } from "../apis/loner-apis"
 import { CreateSpaceCard, SpaceCard } from "../components/card"
 import { LoadingWheel } from "../components/loading"
@@ -9,8 +11,8 @@ import { Error404 } from "../error-pages/errors"
 
 import {ReactComponent as EDIT} from "../icons/edit.svg"
 import {ReactComponent as SHARE} from "../icons/share.svg"
-import { BannedUserModal } from "../modals/info-modal"
-import { SpaceCreateModal } from "../modals/registration-modals"
+import { BannedUserModal, TimedMessageModal } from "../modals/info-modal"
+import { RegistrationModal, SpaceCreateModal } from "../modals/registration-modals"
 import { useScrollDirection } from "../utils/hooks"
 
 // import { default as logo } from "../icons/emoji.svg"
@@ -25,6 +27,7 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable}) =
 
 
     const scrollRef = useRef()
+    const [showRegisterModal, setShowRegisterModal] = useState(false)
     const [showSpaceCreateModal, setShowSpaceCreateModal] = useState(false)
 
     const scrollDirection = useScrollDirection(scrollRef)
@@ -42,6 +45,18 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable}) =
 
     }
 
+    const handleCreateSpace = () => {
+
+        if (sessionStorage.getItem("loggedIn") === "true"){
+            setShowSpaceCreateModal(true)
+        }
+        else{
+            setShowRegisterModal(true)
+        }
+
+    }
+
+
     return (
         <div className="section" >
             <div className="title-22px">
@@ -54,6 +69,17 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable}) =
                                   onSuccess={() => setShowSpaceCreateModal(false)}
                 />
                 :
+                null
+            }
+
+
+            {       
+                showRegisterModal ?
+                
+                    <RegistrationModal onSuccess={() => setShowRegisterModal(false)}/>
+
+                :
+
                 null
             }
 
@@ -75,7 +101,7 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable}) =
                         
                 }
                 
-                <CreateSpaceCard onClick={() => setShowSpaceCreateModal(true)}/>
+                <CreateSpaceCard onClick={handleCreateSpace}/>
 
                 {
                     isLoading ?
@@ -100,9 +126,11 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable}) =
 export default function LonerPage(){
     
     const {loner} = useParams()
+    const webShare = useWebShare()
 
     const [enabled, setEnabled] = useState(false)
     const [show404Page, setShow404Page] =useState(false)
+    const [timedMessage, setTimedMessage] = useState("")
 
     const [lonerData, setLonerData] = useState({
                                                 id: null,
@@ -114,9 +142,12 @@ export default function LonerPage(){
     const [trendingSpaces, setTrendingSpace] = useState([])
     const [recentSpaces, setRecentSpaces] = useState([])
     const [moderatingSpaces, setModeratingSpaces] = useState([])
+    
+    const [showRegisterModal, setShowRegisterModal] = useState(false)
+    const [showSpaceCreateModal, setShowSpaceCreateModal] = useState(false)
 
     const userid = useMemo(() => sessionStorage.getItem("user-id"), [sessionStorage.getItem("user-id")])
-
+    
     useEffect(() => {
         
         if (loner)
@@ -200,7 +231,7 @@ export default function LonerPage(){
     }, [lonerQuery.isSuccess, lonerQuery.isFetched])
 
     useEffect(() => {
-        console.log("Fetxhed: ", trendingListQuery.isFetched)
+      
         if (trendingListQuery.isSuccess || trendingListQuery.isFetched){
 
             const data = trendingListQuery.data
@@ -241,6 +272,35 @@ export default function LonerPage(){
 
     }, [moderatingListQuery.status])
 
+    const handleShare = () => {
+
+        if (webShare.isSupported){
+            webShare.share({
+                title: loner ? `hey quick check out ${loner}` : "Check out whats on loners network",
+                text: "Here is an invite for you to speak your mind out on loners network; completely anonymously, no email, no password, just anonymity.",
+                url: window.location
+            })
+        }
+        else{
+            // navigator.clipboard.writeText(process.env.REACT_APP_API_ENDPOINT)
+            navigator.clipboard.writeText(window.location)
+            setTimedMessage("Link copied to clipboard")
+        }
+
+    }
+
+    const handleCreateSpace = () => {
+
+        if (sessionStorage.getItem("loggedIn") === "true"){
+            setShowSpaceCreateModal(true)
+        }
+        else{
+            setShowRegisterModal(true)
+        }
+
+    }
+
+
     if (show404Page)
         return (
             <Error404 />
@@ -248,10 +308,39 @@ export default function LonerPage(){
 
     return (
         <div className="loner-home">
-            
+
+            {
+                showRegisterModal ?
+                
+                    <RegistrationModal onSuccess={() => setShowRegisterModal(false)}/>
+
+                :
+
+                null
+            }
+
+            {
+                timedMessage ?
+                    <TimedMessageModal message={timedMessage} onTimeOut={()=>setTimedMessage("")}/>
+                    :
+                    null
+            }
+
+            {
+                showSpaceCreateModal ?
+
+                    <SpaceCreateModal onSuccess={() => setShowSpaceCreateModal(false)}
+                                        onClose={() => setShowSpaceCreateModal(false)}
+                    />
+                :
+
+                null
+            }
+
+
             <div className="dashboard">
 
-                <div>
+                <div onClick={handleCreateSpace}>
                     Create Space
                 </div>
 
@@ -264,7 +353,7 @@ export default function LonerPage(){
                 null
                 }
             </div>
-           
+            
             <div className="margin-top column center">
                 <div className="row">
                     {loner ?
@@ -282,7 +371,7 @@ export default function LonerPage(){
                             }
                         </> 
                     :
-                        <div className="btn">
+                        <div className="btn" onClick={() => setShowRegisterModal(true)}>
                             Join Loners
                         </div>    
                     }
@@ -292,7 +381,7 @@ export default function LonerPage(){
                     {lonerData.tag_line}
                 </div>
                 <div className="margin-10px">
-                    <SHARE className="icon"/>
+                    <SHARE className="icon" onClick={handleShare}/>
                 </div>
             </div>
                 

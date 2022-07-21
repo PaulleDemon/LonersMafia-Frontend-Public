@@ -14,6 +14,7 @@ import {ReactComponent as RELOAD} from "../icons/reload.svg"
 import {ReactComponent as NEXT} from "../icons/next.svg"
 import {ReactComponent as UPLOAD} from "../icons/upload.svg"
 import {ReactComponent as CLOSE} from "../icons/close.svg"
+import {ReactComponent as DEFAULT_AVATAR} from "../icons/default-avatar.svg"
 
 
 import {MAX_LENGTH, MIN_LENGTH} from "../constants/lengths"
@@ -56,12 +57,19 @@ export const RegistrationModal = ({onSuccess}) => {
 
     const randomAvatar =  async () => {
         // fetches random avatar
-        const random_avatar = await randomAvatarGenerator(name).then(res => res).catch(err => console.log(err))
-     
-        setAvatar({
-            file: random_avatar,
-            url: URL.createObjectURL(random_avatar)
-        })
+        let random_avatar = await randomAvatarGenerator(name)
+                                .then(res => res)
+                                .catch(err => null)
+
+        if (random_avatar)
+            setAvatar({
+                file: random_avatar,
+                url: URL.createObjectURL(random_avatar)
+            })
+        
+        else{
+            setError("something went wrong you can't change the avatar now, you may change it later")
+        }
     }
 
     const handleSubmit = () => {
@@ -137,7 +145,7 @@ export const RegistrationModal = ({onSuccess}) => {
 
             <div className="column center">
                 <p>Avatar</p>
-                <img src={avatar.url} alt="avatar" className="avatar margin-10px"/>
+                <img src={avatar.url} alt=" " className="avatar margin-10px"/>
 
                 <button onClick={randomAvatar} disabled={registerMutation.isLoading} className="btn row center">
                     <RELOAD fill="#fff"/>
