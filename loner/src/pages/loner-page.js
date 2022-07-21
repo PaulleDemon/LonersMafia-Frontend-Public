@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom"
 
 import { getUser, listSpaces } from "../apis/loner-apis"
 import { CreateSpaceCard, SpaceCard } from "../components/card"
+import { LoadingWheel } from "../components/loading"
 import { Error404 } from "../error-pages/errors"
 
 import {ReactComponent as EDIT} from "../icons/edit.svg"
@@ -14,8 +15,13 @@ import { useScrollDirection } from "../utils/hooks"
 
 // import { default as logo } from "../icons/emoji.svg"
 
-
-const HorizontalSection = memo(({title, data=[]}) => {
+/**
+ * title: str - title of the section
+ * data: Array - loads the data into the section
+ * isLoading: bool - if set to true will show a loading wheel
+ * onLoadable: function - function thats called when the scrollbar reaches to the end.
+ */
+const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable}) => {
 
 
     const scrollRef = useRef()
@@ -23,14 +29,16 @@ const HorizontalSection = memo(({title, data=[]}) => {
 
     const scrollDirection = useScrollDirection(scrollRef)
 
+    console.log("data: ", data)
     // console.log(scrollRef.current?.scrollLeft, ((scrollRef.current?.scrollWidth - scrollRef.current?.clientWidth) - scrollRef.current?.scrollLeft))
 
     const handleScroll = (e) => {
 
         const current = e.target
 
-        if (((current.scrollWidth - current.clientWidth) - current.scrollLeft) < 400 && scrollDirection === "right"){
-            console.log("True")
+        if (((current.scrollWidth - current.clientWidth) - current.scrollLeft) < 200 && scrollDirection === "right"){
+            console.log("Lodable", onLoadable)
+            onLoadable()
         }
 
     }
@@ -69,6 +77,16 @@ const HorizontalSection = memo(({title, data=[]}) => {
                 }
                 
                 <CreateSpaceCard onClick={() => setShowSpaceCreateModal(true)}/>
+
+                {
+                    isLoading ?
+
+                        <LoadingWheel />
+                    :
+
+                    null
+                }
+
             </div>
                 
         </div>
@@ -257,9 +275,21 @@ export default function LonerPage(){
                 
             <div className="section-container">
 
-                <HorizontalSection title="Recently texted spaces" data={recentSpaces} />
-                <HorizontalSection title="Trending spaces" data={trendingSpaces}/>
-                <HorizontalSection title="Moderating spaces" data={moderatingSpaces}/>
+                <HorizontalSection  title="Recently texted spaces" 
+                                    data={recentSpaces}
+                                    isLoading={recentListQuery.isLoading||recentListQuery.isFetching}
+                                    onLoadable={()=>recentListQuery.fetchNextPage({cancelRefetch: false})}
+                                    />
+                <HorizontalSection  title="Trending spaces" 
+                                    data={trendingSpaces}
+                                    isLoading={trendingListQuery.isLoading||trendingListQuery.isFetching}
+                                    onLoadable={()=>trendingListQuery.fetchNextPage({cancelRefetch: false})}
+                                    />
+                <HorizontalSection title="Moderating spaces" 
+                                   data={moderatingSpaces}
+                                   isLoading={moderatingListQuery.isLoading||moderatingListQuery.isFetching}
+                                   onLoadable={()=>moderatingListQuery.fetchNextPage({cancelRefetch: false})}
+                                   />
 
 
                 <div className="section">

@@ -5,6 +5,7 @@ import { Error404 } from "../error-pages/errors";
 
 import Chat from "./chat-page"
 import LonerPage from "./loner-page";
+import SpacesPage from "./spaces-page";
 
 function Main(){
 
@@ -17,6 +18,7 @@ function Main(){
 		<Routes>
 			<Route path="/" exact element={<Navigate to="/loner" replace />} />
 
+			<Route path="/spaces/" element={<SpacesPage />}/>
 			<Route path="/space/:space" element={<Chat />}/>
 			<Route path="/loner/:loner" exact element={<LonerPage />}/>
 			

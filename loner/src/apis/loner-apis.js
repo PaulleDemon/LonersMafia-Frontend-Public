@@ -101,7 +101,6 @@ export const login = async () => {
 export const createSpace = async (data) => {
 
     const config = getFormConfig()
-    console.log("DATA: ", data)
     return await api.post(`/space/create/`, data, config)
 
 }
@@ -154,11 +153,14 @@ export const listSpaces = async ({queryKey, pageParam=1}) => {
 
     const [_, sort, user] = queryKey
     const config = getConfig()
-    
+
     if (user === null)
         user = ""
+    
+    if (sort === undefined)
+        sort = ""
 
-    return await api.get(`/space/list/?sort=${encodeURIComponent(sort)}&user=${encodeURIComponent(user)}&page${pageParam}`, config)
+    return await api.get(`/space/list/?sort=${encodeURIComponent(sort)}&user=${encodeURIComponent(user)}&page=${pageParam}`, config)
 }
 
 /* ----------------------------------- messages endpoints ------------------------- */

@@ -31,22 +31,43 @@ export const useScrollDirection = (ref) => {
 
     const [direction, setDirection] = useState(null)
 
+    const getScrollTop = (target) => {
+
+        if (target){
+            return target.scrollTop 
+        }else{
+            return window.scrollY || document.documentElement.scrollTop
+        }
+
+    }
+
+    const getScrollLeft = (target) => {
+
+        if (target){
+            return target.scrollLeft 
+        }else{
+            return window.scrollX || document.documentElement.scrollLeft
+        }
+
+    }
+
     useEffect(() => {
         
-        const currentElement = ref.current
+        const currentElement = ref?.current
 
         let timeout = 0
 
-        let lastScrollTop = 0
-        let lastScrollLeft = 0
+        let lastScrollTop = getScrollTop(currentElement?currentElement:null)
+        let lastScrollLeft = getScrollLeft(currentElement?currentElement:null)
+
 
         const handleNavigation = (e) =>{
 
             window.clearTimeout(timeout)
             timeout = setTimeout(() => setDirection(null), 100)
 
-            let st = currentElement.scrollTop  
-            let sh = currentElement.scrollLeft 
+            let st = getScrollTop(currentElement?currentElement:null) 
+            let sh = getScrollLeft(currentElement?currentElement:null)
 
             if (st < lastScrollTop){
                 setDirection("down")
