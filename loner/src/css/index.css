@@ -634,6 +634,20 @@ a{
     background-color: red;
 }
 
+.space-content-container{
+    position: relative;
+    top: 40px;
+    padding: 10px;
+    width: 100%;
+}
+
+.space-content{
+    display: grid;
+    gap: 5px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    list-style: none;
+    justify-content: center;
+}
 
 /* --------------------- space-card -------------- */
 

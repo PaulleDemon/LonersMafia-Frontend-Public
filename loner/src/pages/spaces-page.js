@@ -6,6 +6,7 @@ import { SpaceCard } from "../components/card"
 import { listSpaces } from "../apis/loner-apis"
 
 import {ReactComponent as BACK} from "../icons/back.svg"
+import { useScrollBarVisible } from "../utils/hooks"
 
 
 /**
@@ -39,7 +40,6 @@ const SortComponent = ({values, defaultValue, onOptionChange}) => {
     }, [ref])
 
     const handleOptionChange = (data) => {
-        console.log(data)
 
         if (onOptionChange)
             onOptionChange(data[0])
@@ -58,8 +58,7 @@ const SortComponent = ({values, defaultValue, onOptionChange}) => {
                 
                 <div className="dropdown sort-dropdown">
                     {Object.entries(values).map((data) => 
-                       { console.log("kets: ", data)
-                    
+                       {
                         return (
                             <div className="dropdown-btn" key={data[0]} 
                                 onClick={() => handleOptionChange(data)}>
@@ -85,8 +84,11 @@ const SortComponent = ({values, defaultValue, onOptionChange}) => {
 const SpacesPage = () => {
     
     const { sortParams } = useSearchParams()
-
+    
     const history = useNavigate()
+    
+    const scrollRef = useRef()
+    const scrollVisible = useScrollBarVisible(scrollRef)
 
     const [listQueries, setListQueries] = useState([])
     const [createSpaceModal, setShowCreatSpaceModal] = useState()
@@ -123,7 +125,14 @@ const SpacesPage = () => {
     })
 
 
+    useEffect(() => {
 
+        // console.log("Visible: ", scrollVisible)
+        
+    }, [scrollVisible])
+    console.log("HEi: ", window.innerHeight, document.body.scrollHeight)
+    
+    // console.log("Visible: ", scrollVisible)
     return (
         <div className="spaces-page">
             
@@ -134,31 +143,35 @@ const SpacesPage = () => {
                 <div>create space</div>
                 <div>share</div>
             </div>
-            {   listQueries ?
-            
-                <div>
-                    {listQueries.map((data) =>
 
-                        <li key={data.id}>
-                            <SpaceCard />
-                        </li>
-                    
-                    )}
-                        
+            <div className="space-content-container">
+                {  listQueries ?
                 
-                </div>
+                    <ul className="space-content" ref={scrollRef}>
+                        {listQueries.map((data) =>
 
-                :
+                            <li key={data.id}>
+                                <SpaceCard />
+                            </li>
+                        
+                        )}
+                            
+                    </ul>
 
-                <div className="row center">
-                    
-                    <div>Seems nothings here. Why not create a space?</div>
-                    
+                    :
 
-                    <div>create space</div>
-                </div>
+                    <div className="row center">
+                        
+                        <div>Seems nothings here. Why not create a space?</div>
+                        
 
-            }
+                        <div>create space</div>
+                    </div>
+
+                }
+
+            </div>
+        
         </div>
     )
 

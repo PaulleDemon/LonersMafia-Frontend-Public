@@ -102,3 +102,32 @@ export const useScrollDirection = (ref) => {
     return direction
 
 }
+
+/**
+ * 
+ * @param  ref - reference to the element 
+ * returns of the scroll bar is visible
+ */
+export const useScrollBarVisible = (ref) => {
+
+    const [scrollVisible, setScrollVisible] = useState({vertical: false, horizontal: false})
+
+    const element = useMemo(() => ref?.current, [ref?.current])
+
+    console.log("Element: ", element)
+    useEffect(() => {
+
+        if (element){
+
+            const scrollVertical = element?.scrollHeight > element.clientHeight
+            const scrollHorizontal = element?.scrollWidth > element.clientWidth
+
+            setScrollVisible({vertical: scrollVertical, horizontal: scrollHorizontal})
+        }
+        console.log("Yaaa: ", window.innerHeight, document.body.scrollHeight)
+
+    }, [element?.scrollHeight, element?.scrollWidth, window.innerHeight, document.body.scrollHeight])
+
+    return scrollVisible
+
+}
