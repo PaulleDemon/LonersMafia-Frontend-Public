@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useMemo } from "react"
+import { useRef, useEffect, useState, useMemo, useCallback } from "react"
 import { useInfiniteQuery } from "react-query"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 
@@ -6,7 +6,7 @@ import { SpaceCard } from "../components/card"
 import { listSpaces } from "../apis/loner-apis"
 
 import {ReactComponent as BACK} from "../icons/back.svg"
-import { useScrollBarVisible } from "../utils/hooks"
+import { useScrollBarVisible, useScrollDirection } from "../utils/hooks"
 
 
 /**
@@ -88,7 +88,8 @@ const SpacesPage = () => {
     const history = useNavigate()
     
     const scrollRef = useRef()
-    const scrollVisible = useScrollBarVisible(scrollRef)
+    const scrollVisible = useScrollBarVisible(null)
+    const scrollDirection = useScrollDirection(null)
 
     const [listQueries, setListQueries] = useState([])
     const [createSpaceModal, setShowCreatSpaceModal] = useState()
@@ -127,10 +128,24 @@ const SpacesPage = () => {
 
     useEffect(() => {
 
-        // console.log("Visible: ", scrollVisible)
+        if (!scrollVisible.vertical){
+            // fetch()
+        }
         
     }, [scrollVisible])
-    console.log("HEi: ", window.innerHeight, document.body.scrollHeight)
+
+
+    useEffect(() => {
+        
+        window.addEventListener("scroll", fetchNext)
+
+        return () => window.removeEventListener("scroll", fetchNext)
+
+    }, [])
+
+    const fetchNext = () => {
+        console.log("Fetch next", scrollDirection, scrollVisible)
+    }
     
     // console.log("Visible: ", scrollVisible)
     return (
@@ -144,7 +159,7 @@ const SpacesPage = () => {
                 <div>share</div>
             </div>
 
-            <div className="space-content-container">
+            <div className="space-content-container" >
                 {  listQueries ?
                 
                     <ul className="space-content" ref={scrollRef}>

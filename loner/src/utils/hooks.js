@@ -53,7 +53,9 @@ export const useScrollDirection = (ref) => {
 
     useEffect(() => {
         
+        // console.log("Current: ", ref?.current)
         const currentElement = ref?.current
+
 
         let timeout = 0
 
@@ -69,11 +71,11 @@ export const useScrollDirection = (ref) => {
             let st = getScrollTop(currentElement?currentElement:null) 
             let sh = getScrollLeft(currentElement?currentElement:null)
 
-            if (st < lastScrollTop){
+            if (st > lastScrollTop){
                 setDirection("down")
             }
 
-            else{
+            else if(st < lastScrollTop){
                 setDirection("up")
             }
 
@@ -81,7 +83,7 @@ export const useScrollDirection = (ref) => {
                 setDirection("left")
             }
 
-            else{
+            else if(sh > lastScrollLeft){
                 setDirection("right")
             }
 
@@ -95,9 +97,16 @@ export const useScrollDirection = (ref) => {
             currentElement.addEventListener("scroll", handleNavigation, false)
         }
 
-        return () => currentElement?.removeEventListener("scroll", handleNavigation)
+        else{
+            window.addEventListener("scroll", handleNavigation, false)
+        }
 
-    }, [ref.current])
+        return () => {
+            window.removeEventListener("scroll", handleNavigation, false)
+            currentElement?.removeEventListener("scroll", handleNavigation)
+        }
+
+    }, [ref?.current])
 
     return direction
 
@@ -114,19 +123,51 @@ export const useScrollBarVisible = (ref) => {
 
     const element = useMemo(() => ref?.current, [ref?.current])
 
-    console.log("Element: ", element)
     useEffect(() => {
 
-        if (element){
-
-            const scrollVertical = element?.scrollHeight > element.clientHeight
-            const scrollHorizontal = element?.scrollWidth > element.clientWidth
-
+        const handleResizeEvent = () => {
+            
+            console.log("scroll: ", window.innerHeight, document.body.scrollHeight)
+            console.log("scroll2: ", window.innerWidth, document.body.scrollWidth)
+            
+            const scrollVertical = window.innerHeight !== document.body.scrollHeight
+            const scrollHorizontal = window.innerWidth < document.body.scrollWidth
+            
+            console.log("scroll: ", scrollVertical)
             setScrollVisible({vertical: scrollVertical, horizontal: scrollHorizontal})
-        }
-        console.log("Yaaa: ", window.innerHeight, document.body.scrollHeight)
 
-    }, [element?.scrollHeight, element?.scrollWidth, window.innerHeight, document.body.scrollHeight])
+        }
+ 
+        if (!element)
+            window.addEventListener("resize", handleResizeEvent)
+
+        return () => window.removeEventListener("resize", handleResizeEvent)
+        
+
+    }, [window.innerWidth, window.innerHeight, 
+        document.body.scrollHeight, document.body.scrollWidth])
+    
+    useEffect(() => {
+
+        const handleResizeEvent = () => {
+            
+            let scrollVertical = 0
+            let scrollHorizontal = 0
+            
+            scrollVertical = element?.scrollHeight !== element.clientHeight
+            scrollHorizontal = element?.scrollWidth < element.clientWidth
+     
+            setScrollVisible({vertical: scrollVertical, horizontal: scrollHorizontal})
+        
+        }
+
+        if (element)
+            element.addEventListener("resize", handleResizeEvent)
+
+        return () => element?.removeEventListener("resize", handleResizeEvent)
+
+    }, [element?.scrollHeight, element?.clientHeight,
+        element?.scrollWidth, element?.clientWidth])
 
     return scrollVisible
 
