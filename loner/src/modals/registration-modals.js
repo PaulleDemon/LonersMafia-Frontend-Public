@@ -393,10 +393,12 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
                             onChange={(e) => setSpaceForm({...spaceForm, tag_line: e.target.value})}
                             disabled={registerMutation.isLoading}
                             name="tag_line"
-                            autoFocus
                             />
 
-                    <textarea name="" id="" placeholder="about" className="text-area"/>
+                    <textarea name="" id="" placeholder="about" 
+                            className="text-area"
+                            disabled={registerMutation.isLoading}
+                            />
 
                 {
                 (registerMutation.status === "loading" && navigator.onLine) ?

@@ -151,10 +151,10 @@ export const deleteAndBan = async ({data, deleteAll=false}) =>{
 
 export const listSpaces = async ({queryKey, pageParam=1}) => {
 
-    const [_, sort, user] = queryKey
+    let [_, sort, user] = queryKey
     const config = getConfig()
 
-    if (user === null)
+    if (user === null || user === undefined)
         user = ""
     
     if (sort === undefined)

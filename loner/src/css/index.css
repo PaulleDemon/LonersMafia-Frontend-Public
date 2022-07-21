@@ -506,9 +506,15 @@ a{
 }
 
 
+.sort-value{ /*unsets the dropdown font-size. to be made better*/
+    font-size: unset;
+    width: 150px;
+}
+
 .sort-dropdown{
     left: 80px;
 }
+
 
 /* --------------------- loner page ---------------- */
 
@@ -605,6 +611,29 @@ a{
     overflow-x: auto;
     overflow-y: hidden;
 }
+
+
+/* ---------------------- spaces page ------------------------- */
+
+.spaces-page{
+    display: flex;
+    flex-direction: column;
+}
+
+.spaces-header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    height: 40px;
+    justify-content: space-evenly;
+    align-items: center;
+    box-shadow: 0 4 4px #050f5fe1;
+    z-index: 3;
+    width: 100%;
+    background-color: red;
+}
+
 
 /* --------------------- space-card -------------- */
 

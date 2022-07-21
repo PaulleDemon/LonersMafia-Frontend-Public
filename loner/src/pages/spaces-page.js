@@ -1,9 +1,11 @@
-import { useRef, useEffect, useState } from "react"
+import { useRef, useEffect, useState, useMemo } from "react"
 import { useInfiniteQuery } from "react-query"
-import { useParams, useSearchParams } from "react-router-dom"
+import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 
-import { listSpaces } from "../apis/loner-apis"
 import { SpaceCard } from "../components/card"
+import { listSpaces } from "../apis/loner-apis"
+
+import {ReactComponent as BACK} from "../icons/back.svg"
 
 
 /**
@@ -12,11 +14,11 @@ import { SpaceCard } from "../components/card"
  * @param onOptionChange: function - the function to be called when the option changes 
  * 
  */
-const SortComponent = ({values, onOptionChange}) => {
+const SortComponent = ({values, defaultValue, onOptionChange}) => {
 
     const ref = useRef()
 
-    const [sort, setSort] = useState(Object.keys(values)[0])
+    const [sort, setSort] = useState(values[defaultValue] || Object.values(values)[0])
     const [showDropDown, setShowDropDown] = useState(false)
 
 
@@ -36,19 +38,20 @@ const SortComponent = ({values, onOptionChange}) => {
 
     }, [ref])
 
-    const handleOptionChange = (val) => {
-        console.log(val)
+    const handleOptionChange = (data) => {
+        console.log(data)
 
         if (onOptionChange)
-            onOptionChange(val)
-    
+            onOptionChange(data[0])
+        
+        setSort(data[1])
         setShowDropDown(false)
     }
 
     return (
 
         <div className="dropdown-container" ref={ref}>
-            <div className="row center" onClick={() => setShowDropDown(!showDropDown)}>
+            <div className="dropdown-btn sort-value" onClick={() => setShowDropDown(!showDropDown)}>
                 {sort} ▾
             </div>
             {showDropDown ?
@@ -58,7 +61,8 @@ const SortComponent = ({values, onOptionChange}) => {
                        { console.log("kets: ", data)
                     
                         return (
-                            <div className="dropdown-btn" key={data[0]} onClick={() => handleOptionChange(data[0])}>
+                            <div className="dropdown-btn" key={data[0]} 
+                                onClick={() => handleOptionChange(data)}>
                                 {data[1]}
                             </div>
                         )
@@ -82,9 +86,18 @@ const SpacesPage = () => {
     
     const { sortParams } = useSearchParams()
 
+    const history = useNavigate()
+
     const [listQueries, setListQueries] = useState([])
     const [createSpaceModal, setShowCreatSpaceModal] = useState()
 
+    const sortOptions = useMemo(() => {return (
+            {"trending": "Trending", 
+             "moderating": "Moderating",
+             "recent": "Recent"
+            })
+        },
+    [])
 
     const sortListQUery = useInfiniteQuery(["spaces", sortParams], listSpaces, {
         // enabled: enabled,
@@ -112,10 +125,14 @@ const SpacesPage = () => {
 
 
     return (
-        <div className="">
+        <div className="spaces-page">
             
-            <div className="row">
-                <SortComponent values={{"trending": "Trending"}} />
+
+            <div className="spaces-header">
+                <BACK className="icon" onClick={() => history('/loner')}/>
+                <SortComponent values={sortOptions} />
+                <div>create space</div>
+                <div>share</div>
             </div>
             {   listQueries ?
             
