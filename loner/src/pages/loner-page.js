@@ -1,6 +1,6 @@
 import { memo, useState, useEffect, useMemo, useRef } from "react"
 import { useInfiniteQuery, useQuery } from "react-query"
-import { useParams } from "react-router-dom"
+import { useParams, Link } from "react-router-dom"
 
 import { getUser, listSpaces } from "../apis/loner-apis"
 import { CreateSpaceCard, SpaceCard } from "../components/card"
@@ -29,7 +29,6 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable}) =
 
     const scrollDirection = useScrollDirection(scrollRef)
 
-    console.log("data: ", data)
     // console.log(scrollRef.current?.scrollLeft, ((scrollRef.current?.scrollWidth - scrollRef.current?.clientWidth) - scrollRef.current?.scrollLeft))
 
     const handleScroll = (e) => {
@@ -37,8 +36,8 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable}) =
         const current = e.target
 
         if (((current.scrollWidth - current.clientWidth) - current.scrollLeft) < 200 && scrollDirection === "right"){
-            console.log("Lodable", onLoadable)
             onLoadable()
+            console.log("Loadable")
         }
 
     }
@@ -88,7 +87,9 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable}) =
                 }
 
             </div>
-                
+            <Link className="btn" to={'/spaces'}>
+                see more
+            </Link>
         </div>
     )
 
@@ -125,15 +126,7 @@ export default function LonerPage(){
 
     const lonerQuery = useQuery(["loner", loner], () => getUser(loner), {
         enabled: enabled,
-        onSuccess: (data) => {
-
-            setLonerData({
-                id: data.data.id,
-                name: data.data.name,
-                avatar: data.data.avatar,
-                tag_line: data.data.tag_line
-            })
-        },
+        staleTime: 30 * 60 * 1000,
 
         onError: (err) => {
             
@@ -144,26 +137,12 @@ export default function LonerPage(){
 
     const trendingListQuery = useInfiniteQuery(["spaces", "trending", lonerData.id], listSpaces, {
         enabled: enabled,
+        staleTime: 5 * 60 * 1000, // 5 minutes
         getNextPageParam: (lastPage, ) => {
             // console.log("PAGE: ", lastPage)
             if (lastPage.data.current < lastPage.data.pages){
                 return lastPage.data.current + 1}
             
-        },
-        // staleTime: Infinity,
-        // refetchOnMount: true,
-        onSuccess: (data) => {
-
-            let trending_data=[]
-
-            data.pages.forEach((x) => {
-                x.data.results.forEach( (x) =>{
-                    trending_data.push(x)
-                }
-                )      
-            })
-
-            setTrendingSpace(trending_data)
         }
     }) 
 
@@ -201,22 +180,66 @@ export default function LonerPage(){
                 return lastPage.data.current + 1}
             
         },
-        staleTime: Infinity,
+        staleTime: 5 * 60 *1000, // 5 minutes
         refetchOnMount: true,
 
-        onSuccess: (data) =>{
-            let recent_data=[]
+    })
+
+    useEffect(() => {
+
+        if (lonerQuery.isSuccess || lonerQuery.isFetched){
+            const data = lonerQuery.data
+            setLonerData({
+                id: data.data.id,
+                name: data.data.name,
+                avatar: data.data.avatar,
+                tag_line: data.data.tag_line
+            })
+        }
+
+    }, [lonerQuery.isSuccess, lonerQuery.isFetched])
+
+    useEffect(() => {
+        console.log("Fetxhed: ", trendingListQuery.isFetched)
+        if (trendingListQuery.isSuccess || trendingListQuery.isFetched){
+
+            const data = trendingListQuery.data
+
+            let trending_data=[]
 
             data.pages.forEach((x) => {
                 x.data.results.forEach( (x) =>{
-                    recent_data.push(x)
+                    trending_data.push(x)
                 }
                 )      
             })
 
-            setModeratingSpaces(recent_data)
+            setTrendingSpace(trending_data)
+
         }
-    })
+
+    }, [trendingListQuery.status])
+
+    useEffect(() => {
+
+        if (moderatingListQuery.isSuccess){
+            
+            const data = moderatingListQuery.data
+
+            let moderating_data=[]
+
+            data.pages.forEach((x) => {
+                x.data.results.forEach( (x) =>{
+                    moderating_data.push(x)
+                }
+                )      
+            })
+            console.log("Success", moderating_data)
+            setModeratingSpaces(moderating_data)
+
+        }
+
+    }, [moderatingListQuery.status])
 
     if (show404Page)
         return (
@@ -306,8 +329,8 @@ export default function LonerPage(){
             </div>
             
             <div className="row center">
-                <a href="http://" target="_blank" className="font-18px margin-10px">View source on Github</a>
-                <a href="http://" target="_blank" className="font-18px margin-10px">Report a bug</a>
+                <a href="http://" target="_blank" rel="noreferrer" className="font-18px margin-10px">View source on Github</a>
+                <a href="http://" target="_blank" rel="noreferrer" className="font-18px margin-10px">Report a bug</a>
             </div>
 
         </div>

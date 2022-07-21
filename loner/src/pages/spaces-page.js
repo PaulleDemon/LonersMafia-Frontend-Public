@@ -7,6 +7,8 @@ import { listSpaces } from "../apis/loner-apis"
 
 import {ReactComponent as BACK} from "../icons/back.svg"
 import { useScrollBarVisible, useScrollDirection } from "../utils/hooks"
+import { LoadingWheel } from "../components/loading"
+import { SpaceCreateModal } from "../modals/registration-modals"
 
 
 /**
@@ -93,6 +95,7 @@ const SpacesPage = () => {
 
     const [listQueries, setListQueries] = useState([])
     const [createSpaceModal, setShowCreatSpaceModal] = useState()
+    const [sortOption, setSortOption] = useState(sortParams || "trending")
 
     const sortOptions = useMemo(() => {return (
             {"trending": "Trending", 
@@ -102,7 +105,7 @@ const SpacesPage = () => {
         },
     [])
 
-    const sortListQUery = useInfiniteQuery(["spaces", sortParams], listSpaces, {
+    const sortListQuery = useInfiniteQuery(["spaces", sortOption, sessionStorage.getItem("user-id")], listSpaces, {
         // enabled: enabled,
         getNextPageParam: (lastPage, ) => {
             // console.log("PAGE: ", lastPage)
@@ -110,8 +113,9 @@ const SpacesPage = () => {
                 return lastPage.data.current + 1}
             
         },
-        staleTime: Infinity,
-        onSuccess: (data) =>{
+        staleTime: sortOption !== "recent" ? 5 * 60 * 1000 : 0,
+        refetchOnMount: true,
+        onSuccess: (data) => {
             let recent_data=[]
 
             data.pages.forEach((x) => {
@@ -128,6 +132,22 @@ const SpacesPage = () => {
 
     useEffect(() => {
 
+        if (sortListQuery.isSuccess){
+                let recent_data=[]
+
+                sortListQuery.data.pages.forEach((x) => {
+                    x.data.results.forEach( (x) =>{
+                        recent_data.push(x)
+                    }
+                    )      
+                })
+
+                setListQueries(recent_data)
+            }
+    }, [])
+
+    useEffect(() => {
+
         if (!scrollVisible.vertical){
             // fetch()
         }
@@ -136,54 +156,81 @@ const SpacesPage = () => {
 
 
     useEffect(() => {
-        
-        window.addEventListener("scroll", fetchNext)
+
+        window.addEventListener("scroll", fetchNext, false)
 
         return () => window.removeEventListener("scroll", fetchNext)
 
-    }, [])
+    }, [scrollDirection])
 
-    const fetchNext = () => {
-        console.log("Fetch next", scrollDirection, scrollVisible)
-    }
+    const fetchNext = useCallback(() => {
+
+        if (scrollDirection === "down" && (document.body.scrollHeight - (window.innerHeight + window.scrollY)) < 400 &&
+            !sortListQuery.isFetching && !sortListQuery.isLoading && sortListQuery.hasNextPage){
+            sortListQuery.fetchNextPage({cancelRefetch: false})
+        }
+    }, [scrollDirection])
     
-    // console.log("Visible: ", scrollVisible)
+
+    const handleSortOptionChange = (value) => {
+        setSortOption(value)
+        sortListQuery.remove()
+        sortListQuery.refetch({cancelRefetch: true})
+        setListQueries([])
+    }
+
     return (
         <div className="spaces-page">
             
 
             <div className="spaces-header">
                 <BACK className="icon" onClick={() => history('/loner')}/>
-                <SortComponent values={sortOptions} />
-                <div>create space</div>
+                <SortComponent values={sortOptions} defaultValue={"moderating"} onOptionChange={handleSortOptionChange}/>
+                
+                <a onClick={() => setShowCreatSpaceModal(true)}>create space</a>
+                
                 <div>share</div>
             </div>
 
+            {
+                createSpaceModal ?
+                    <SpaceCreateModal onClose={() => setShowCreateSpaceModal(false)}/>
+                :
+                null
+            }
+
             <div className="space-content-container" >
-                {  listQueries ?
-                
-                    <ul className="space-content" ref={scrollRef}>
-                        {listQueries.map((data) =>
+          
+                <ul className="space-content" ref={scrollRef}>
 
-                            <li key={data.id}>
-                                <SpaceCard />
-                            </li>
+                    {
+                        listQueries.map((data) => {
+                            return (
+                                <li key={data.id}>
+                                    <SpaceCard name={data.name} icon={data.icon} tag_name={data.tag_name}/>
+                                </li>
+                            )
+                        })
+                    }
                         
-                        )}
-                            
-                    </ul>
-
+                </ul>
+                {
+                    (sortListQuery.status === "success" &&  listQueries.length === 0)?
+                        <div className="row center">
+                            <div>Seems nothings here. Why not create a space?</div>
+                            <div>create space</div>
+                        </div>
+                
                     :
 
-                    <div className="row center">
-                        
-                        <div>Seems nothings here. Why not create a space?</div>
-                        
-
-                        <div>create space</div>
-                    </div>
-
-                }
+                    null
+                }   
+                {
+                    (sortListQuery.isLoading || sortListQuery.isFetching) ?
+                        <LoadingWheel />
+                        :
+                        null
+                    }   
 
             </div>
         

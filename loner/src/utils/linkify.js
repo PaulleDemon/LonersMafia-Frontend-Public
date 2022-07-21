@@ -11,6 +11,7 @@ const linkifyConfig = [
                 return (<span key={key}>
                   <a
                     target="_blank"
+                    rel="noreferrer"
                     className="linkify-link-color"
                     onClick={(e) => e.stopPropagation()}
                     href={`mailto:${result[0]}`}
@@ -73,6 +74,7 @@ const linkifyConfig = [
                     <span key={key}>
                         <a
                             target="_blank"
+                            rel="noreferrer"
                             href={`${result[1]}://${result[2]}.${result[3]}${result[4]}`}
                             onClick={(e) => e.stopPropagation()}
                             className="linkify-link-color"

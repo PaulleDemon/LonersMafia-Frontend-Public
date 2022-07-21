@@ -150,19 +150,14 @@ export default function Chat(){
     const spaceQuery = useQuery(["space", space], () => getSpace(space), {
         refetchOnMount: true,
         refetchOnWindowFocus: true,
-        staleTime: Infinity,
+        staleTime: 60 * 60 * 1000, // 60 minutes
 
         onSuccess: (data) => {
             // console.log("Data: ", data.data)
             setSpaceDetails(data.data)
-            sessionStorage.setItem("is_staff", data.data?.is_staff.toString())
-            sessionStorage.setItem("is_mod", data.data?.is_mod.toString())
+            
         },
-        retry: (failureCount, error) => {
-
-            // if (err)
-            return 3
-        }
+        retry: 3
     })
 
     const chatQuery = useInfiniteQuery(["chat", space], getMessages, {
@@ -238,6 +233,17 @@ export default function Chat(){
 
     }, [space])
 
+    useEffect(() => {
+
+        if (spaceQuery.isSuccess){
+            const data = spaceQuery.data
+            
+            setSpaceDetails(data.data)
+            sessionStorage.setItem("is_staff", data.data?.is_staff.toString())
+            sessionStorage.setItem("is_mod", data.data?.is_mod.toString())
+        }
+
+    }, [spaceQuery.isSuccess])
 
     useEffect(() => {
         
