@@ -1,7 +1,16 @@
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 600px) {
+
+    .modal{
+        top: unset;
+        bottom: 10%;
+        transform: unset;
+        transform: translateX(-50%);
+    }
 
     .registration-modal{
+        /* bottom: auto; */
         max-width: 350px;
+        max-height: min-content;
     }
 
 }

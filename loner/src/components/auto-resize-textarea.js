@@ -9,6 +9,7 @@ import {ReactComponent as EMOJI} from "../icons/emoji.svg"
 import imageCompress from "../utils/image-compress"
 import { getFileType, getFileSize } from "../constants/file"
 import { MAX_LENGTH } from "../constants/lengths"
+import useWindowDimensions from "../utils/hooks"
 
 
 
@@ -28,6 +29,8 @@ const AutoHeightTextarea = ({  value, mediaRef=null, onStickerClick, onMediaUplo
                                 onInfo, onFileUploadError, onSendOnEnter, ...props }) => {
     
     const textareaRef = useRef(null)
+    
+    const {width} = useWindowDimensions()
 
     const [text, setText] = useState(value)
     const [showEmojiPicker, setShowEmojiPicker] = useState(false)
@@ -80,7 +83,7 @@ const AutoHeightTextarea = ({  value, mediaRef=null, onStickerClick, onMediaUplo
     }
 
     const handleMedia = (image) =>{
-        //
+        // compresses the image and check if the image is allowed
 
         const fileType = getFileType(image)
 
@@ -104,7 +107,7 @@ const AutoHeightTextarea = ({  value, mediaRef=null, onStickerClick, onMediaUplo
 
     const handleEnterEvent = (e) => {
 
-        if (e.key === "Enter" && onSendOnEnter && !e.shiftKey){
+        if (e.key === "Enter" && onSendOnEnter && !e.shiftKey && width > 700){
             e.preventDefault()
             onSendOnEnter()
         }

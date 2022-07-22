@@ -42,7 +42,7 @@ function ChatHeader({props}){
         }
         else{
             // navigator.clipboard.writeText(process.env.REACT_APP_API_ENDPOINT)
-            navigator.clipboard.writeText(window.location)
+            navigator.clipboard?.writeText(window.location)
             setTimedMessage("Link copied to clipboard")
         }
 
@@ -324,6 +324,10 @@ export default function Chat(){
         if (!navigator.onLine && process.env.NODE_ENV === "production"){
             setTimedMessage("You are offline :(")
             return 
+        }
+
+        if (sessionStorage.getItem("loggedIn") !== "true"){
+            return
         }
 
         if (readyState == ReadyState.CONNECTING){

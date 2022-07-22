@@ -26,7 +26,7 @@ function App() {
 			sessionStorage.setItem("loggedIn", "true")
 		},
 		onError: (err) => {
-			console.log("error: ", err)
+	
 			if (err.response?.status === 401)
 				setShowRegistrationModal(true)
 			
@@ -58,6 +58,11 @@ function App() {
 		setShowCookieModal(false)
     }
 
+	const handleRegistrationSuccess = () => {
+		loginQuery.refetch()
+		setShowRegistrationModal(false)
+	}
+
 	return (
 		<div className="App">
 			<Main />
@@ -73,7 +78,7 @@ function App() {
 
 			{
 				showRegistrationModal ? 
-					<RegistrationModal onSuccess={() => setShowRegistrationModal(false)}/>
+					<RegistrationModal onSuccess={handleRegistrationSuccess}/>
 				:
 				null
 			}

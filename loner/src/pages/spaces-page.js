@@ -211,7 +211,7 @@ const SpacesPage = () => {
 
     }
 
-    const handleShare = () => {
+    const handleShare = async () => {
         // handles the share format
         if (webShare.isSupported){
             webShare.share({
