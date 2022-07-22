@@ -136,7 +136,7 @@ export const useScrollBarVisible = (ref) => {
             setScrollVisible({vertical: scrollVertical, horizontal: scrollHorizontal})
 
         }
- 
+        
         if (!element)
             window.addEventListener("resize", handleResizeEvent)
 

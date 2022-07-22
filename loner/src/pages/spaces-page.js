@@ -158,11 +158,15 @@ const SpacesPage = () => {
 
     useEffect(() => {
         // TODO: fetch until scrollbar is visible
-        if (!scrollVisible.vertical){
-            // fetch()
+
+        const difference = window.innerHeight - document.body.scrollHeight
+        console.log("Difference: ", difference)
+        if (sortListQuery.status==="success" && [-1, 0, 1].includes(difference)){
+            console.log("trye: ", window.innerHeight, document.body.scrollHeight)
+            fetchNext()
         }
         
-    }, [scrollVisible])
+    }, [window.innerHeight, document.body.scrollHeight, sortListQuery.status, sortListQuery.data])
 
 
     useEffect(() => {
@@ -171,13 +175,14 @@ const SpacesPage = () => {
 
         return () => window.removeEventListener("scroll", fetchNext)
 
-    }, [scrollDirection])
+    }, [scrollDirection, window.innerHeight, document.body.scrollHeight])
 
     const fetchNext = useCallback(() => {
 
-        if (scrollDirection === "down" && (document.body.scrollHeight - (window.innerHeight + window.scrollY)) < 400 &&
-            !sortListQuery.isFetching && !sortListQuery.isLoading && sortListQuery.hasNextPage){
+        if ((scrollDirection === "down" || window.innerHeight === document.body.scrollHeight || (document.body.scrollHeight - (window.innerHeight + window.scrollY)) < 300)
+         && (sortListQuery.hasNextPage === undefined || sortListQuery.hasNextPage === true)){
             sortListQuery.fetchNextPage({cancelRefetch: false})
+            console.log("Called")
         }
     }, [scrollDirection])
     
