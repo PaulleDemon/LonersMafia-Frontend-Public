@@ -164,6 +164,7 @@ export const listSpaces = async ({queryKey, pageParam=1}) => {
 }
 
 /* ----------------------------------- messages endpoints ------------------------- */
+
 export const getMessages = async ({queryKey, pageParam=1}) => {
 
     const [_, space] = queryKey
@@ -180,28 +181,30 @@ export const uploadChatMedia = async (data) => {
 
 }
 
-export const reactToMessage = async (id, react) => {
-
-    const config = getConfig()
-
-    const body = JSON.stringify({
-        react: react
-    })
-
-    return await api.post(`/space/message/${id}/react/`, body, config)
-
-}
-
-export const deleteReact = async (id) => {
-
-    const config = getConfig()
-
-    return await api.delete(`/messages/react/${id}/`, config)
-}
-
 export const deleteMessage = async (msg_id) => {
 
     const config = getConfig()
 
     return await api.delete(`/space/message/delete/${msg_id}/`, config)
 } 
+
+
+/* ------------------------------ reaction endpoints ------------------------------ */
+
+export const reactToMessage = async (data) => {
+
+    const config = getConfig()
+
+    console.log("Data: ", data)
+    const body = JSON.stringify(data)
+
+    return await api.post(`/space/messages/react/`, body, config)
+}
+
+
+export const deleteReaction = async (id) => {
+
+    const config = getConfig()
+
+    return await api.post(`/space/messages/react/${id}/delete/`, config)
+}

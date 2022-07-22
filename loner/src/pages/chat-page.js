@@ -437,7 +437,8 @@ export default function Chat(){
                         messages.map((msg) => {
                     
                             return (<li key={msg.id}>
-                                        <ChatCard currentUserId={currentUserId}
+                                        <ChatCard 
+                                            currentUserId={currentUserId}
                                             user_is_mod={user_is_mod}
                                             user_is_staff={user_is_staff}
                                             props={msg}/>

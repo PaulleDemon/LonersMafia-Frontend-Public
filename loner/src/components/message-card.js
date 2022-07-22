@@ -1,21 +1,23 @@
 import { memo, useState, useEffect } from "react"
 import { useMutation } from "react-query"
+import { Link } from "react-router-dom";
 
 // import ZoomableImage from "./zoomable-image"
 import { toLocalTime } from "../utils/datetime"
 import {linkify} from "../utils/linkify"
 import { MoreChatOptions } from "./more-options";
 import { getFileTypeFromUrl } from "../constants/file" 
-import { assignMod, banUser, deleteAndBan, deleteMessage } from "../apis/loner-apis";
+import { assignMod, banUser, deleteAndBan, deleteMessage, deleteReaction, reactToMessage } from "../apis/loner-apis";
 import { TimedMessageModal } from "../modals/info-modal";
-import { Link } from "react-router-dom";
 
+import { formattNumber } from "../utils/formatted-number";
 
-const ReactionComponent = ({emoji, count=0, is_clicked=false, onClick}) => {
+const ReactionComponent = ({id=null, emoji, count=0, is_reacted=false, onClick}) => {
 
     return (
         <>
-            <div className={`reaction row center ${is_clicked ? "reaction-clicked": ""}`} onClick={onClick}>
+            <div className={`reaction row center ${is_reacted ? "reaction-clicked": ""}`} 
+                    onClick={() => onClick(emoji, is_reacted, id)}>
                 <div >
                     {emoji}
                 </div>
@@ -41,21 +43,27 @@ const ReactionComponent = ({emoji, count=0, is_clicked=false, onClick}) => {
  * user_is_mod: bool - the current requested user has mod previlages
  */
 
-const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false, props}) => {
+const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=false, props}) => {
 
     
     const {id, message, user, media_url, space,
         datetime, is_mod=false, is_staff=false, reactions} = props
+
+    console.log("ID: ", id)
 
     const {id: userid, name, avatar_url} = user
     
     const [showImageEnlarged, setShowImageEnlarged] = useState(false)
     const [timedMessageModal, setTimedMessageModal] = useState("")
     
+    const reactMessageMutate = useMutation(reactToMessage) 
+    const reactMessageDeleteMutate = useMutation(deleteReaction) 
+
     const banMutate = useMutation(banUser)
     const assignModMutate = useMutation(assignMod)
     const banFromSpaceMutate = useMutation(deleteAndBan)
     const deleteMessageMutate = useMutation(deleteMessage)
+
 
     let media_content = null
 
@@ -122,7 +130,26 @@ const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false,
         })
 
     }
-    console.log(reactions)
+
+    const onReactToMessage = (emoji, is_reacted, reaction_id) => {
+
+        console.log("reacting", emoji, is_reacted, reaction_id)
+        
+        // TODO: turn it into purple when success and test delete
+        if (currentUserId && reaction_id === null && is_reacted === false){
+            reactMessageMutate.mutate({
+                reaction: emoji,
+                user:  parseInt(currentUserId),
+                message: id
+            })
+        }
+
+        else{
+            reactMessageDeleteMutate.mutate({id: reaction_id})
+        }
+
+    }
+
     return ( 
         // the == is used instead of === because one is a string and other is an integer
         <div className={`chat-card ${currentUserId == userid? "right-end" : "left-end"}`}> 
@@ -136,7 +163,7 @@ const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false,
 
             { media_url ?
 
-                <div className={`row margin-10px ${currentUserId == userid? "right-end" : "left-end"}`}>
+                <div className={`row margin-10px ${currentUserId == userid ? "right-end" : "left-end"}`}>
                     {media_content}
                 </div>
                 :
@@ -205,10 +232,20 @@ const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false,
                 </div>
                 <div className="reactions-container">
                     
-                    <ReactionComponent emoji={"🚀"} count={2} is_clicked={false} onClick={() => console.log("clicked")}/>
-                    <ReactionComponent emoji={"😭"} count={2} is_clicked={false} onClick={() => console.log("clicked")}/>
-                    <ReactionComponent emoji={"🤣"} count={2} is_clicked={false} onClick={() => console.log("clicked")}/>
-                    <ReactionComponent emoji={"👎"} count={2} is_clicked={true} onClick={() => console.log("clicked")}/>
+                    {
+                        reactions.map((data, index) => {
+
+                            const {id, reaction, is_reacted, reaction_count} = data
+                            return (
+                                <ReactionComponent key={index} 
+                                                    id={id} 
+                                                    emoji={reaction} 
+                                                    count={formattNumber(reaction_count)} 
+                                                    is_reacted={is_reacted} 
+                                                    onClick={onReactToMessage}/>
+                            )
+                        })
+                    }
                   
                 </div>
             </div>
