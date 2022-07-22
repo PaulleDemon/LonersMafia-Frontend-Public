@@ -284,6 +284,35 @@ a{
     font-size: 14px;
 }
 
+/* --------------------- chat reaction ------------------ */
+
+.reactions-container{
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.reaction{
+    font-size: 16px;
+    background-color: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 3px;
+    border: 2px solid transparent;
+    box-shadow: 0 0 10px #4b779d;
+    margin: 2px;
+    height: 30px;
+}
+
+.reaction:hover{
+    border: 2px solid #065e8a;
+}
+
+.reaction-clicked{
+    background-color: #d000ec;
+    /* border: 2px solid #065e8a; */
+}
+
 /* ----------------- message input container --------------*/
 .message-container{
     width: 100%;

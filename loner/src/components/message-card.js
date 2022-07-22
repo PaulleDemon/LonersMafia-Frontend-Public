@@ -10,6 +10,25 @@ import { assignMod, banUser, deleteAndBan, deleteMessage } from "../apis/loner-a
 import { TimedMessageModal } from "../modals/info-modal";
 import { Link } from "react-router-dom";
 
+
+const ReactionComponent = ({emoji, count=0, is_clicked=false, onClick}) => {
+
+    return (
+        <>
+            <div className={`reaction row center ${is_clicked ? "reaction-clicked": ""}`} onClick={onClick}>
+                <div >
+                    {emoji}
+                </div>
+                <div className="margin-10px">
+                    {count}
+                </div>
+            </div>
+        </>
+    )
+
+}
+
+
 /**
  * message: str - message to be displayed
  * datetime: str - datetime when the message was sent
@@ -26,7 +45,7 @@ const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false,
 
     
     const {id, message, user, media_url, space,
-        datetime, is_mod=false, is_staff=false} = props
+        datetime, is_mod=false, is_staff=false, reactions} = props
 
     const {id: userid, name, avatar_url} = user
     
@@ -103,7 +122,7 @@ const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false,
         })
 
     }
-
+    console.log(reactions)
     return ( 
         // the == is used instead of === because one is a string and other is an integer
         <div className={`chat-card ${currentUserId == userid? "right-end" : "left-end"}`}> 
@@ -166,22 +185,32 @@ const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false,
                             null
                         }      
 
+
                     </>
                 }
                 
             </div>
-            
+        
+            <div className="column">
+                <div className="row">
 
-            <div className="row">
+                    <div className="left-end username-time">
+                        {toLocalTime(datetime)}
+                    </div>
+                    <div className="margin-10px" />
+                    <div className="right-end username-time">
+                        <Link to={`/loner/${name}/`}>l\{name}</Link>
+                    </div>
 
-                <div className="left-end username-time">
-                    {toLocalTime(datetime)}
                 </div>
-                <div className="margin-10px" />
-                <div className="right-end username-time">
-                    <Link to={`/loner/${name}/`}>l\{name}</Link>
+                <div className="reactions-container">
+                    
+                    <ReactionComponent emoji={"🚀"} count={2} is_clicked={false} onClick={() => console.log("clicked")}/>
+                    <ReactionComponent emoji={"😭"} count={2} is_clicked={false} onClick={() => console.log("clicked")}/>
+                    <ReactionComponent emoji={"🤣"} count={2} is_clicked={false} onClick={() => console.log("clicked")}/>
+                    <ReactionComponent emoji={"👎"} count={2} is_clicked={true} onClick={() => console.log("clicked")}/>
+                  
                 </div>
-
             </div>
 
             { 
