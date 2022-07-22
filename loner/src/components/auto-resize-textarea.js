@@ -24,7 +24,8 @@ const inputTypes = [ // used to trigger manual change event
  * Used to take input for chat app.
  * includes all the props available for textarea jsx(html) element
  */
-const AutoHeightTextarea = ({  value, mediaRef=null, onStickerClick, onMediaUpload, onInfo, onFileUploadError, ...props }) => {
+const AutoHeightTextarea = ({  value, mediaRef=null, onStickerClick, onMediaUpload, 
+                                onInfo, onFileUploadError, onSendOnEnter, ...props }) => {
     
     const textareaRef = useRef(null)
 
@@ -101,6 +102,21 @@ const AutoHeightTextarea = ({  value, mediaRef=null, onStickerClick, onMediaUplo
 
     }
 
+    const handleEnterEvent = (e) => {
+
+        if (e.key === "Enter" && onSendOnEnter && !e.shiftKey){
+            e.preventDefault()
+            onSendOnEnter()
+        }
+
+    }
+
+    const onChange = (e) => {
+
+        if (props.onChange)
+            props.onChange(e)
+    }
+
     return (
         <div className="autoresize-container">
 
@@ -115,7 +131,8 @@ const AutoHeightTextarea = ({  value, mediaRef=null, onStickerClick, onMediaUplo
                     value={text}
                     id="__auto_resize_text__"
                     // onInput={(e) => {props.onChange(e); console.log("chanegd: ", e.target.value)}}
-                    onChange={props.onChange}
+                    onChange={onChange}
+                    onKeyUp={handleEnterEvent}
                 />
     
                 { showEmojiPicker ? 

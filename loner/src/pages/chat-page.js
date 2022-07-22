@@ -487,6 +487,7 @@ export default function Chat(){
                             onFileUploadError={(err) => setTimedMessage(err)}
                             onInfo={(info) => setTimedMessage(info)}
                             disabled={uploadMediaMessageMutation.isLoading}
+                            onSendOnEnter={sumbitMessage}
                         />
                     
                         <button className="send-btn" onClick={sumbitMessage}> 

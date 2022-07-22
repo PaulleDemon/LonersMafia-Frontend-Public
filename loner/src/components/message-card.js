@@ -8,6 +8,7 @@ import { MoreChatOptions } from "./more-options";
 import { getFileTypeFromUrl } from "../constants/file" 
 import { assignMod, banUser, deleteAndBan, deleteMessage } from "../apis/loner-apis";
 import { TimedMessageModal } from "../modals/info-modal";
+import { Link } from "react-router-dom";
 
 /**
  * message: str - message to be displayed
@@ -143,14 +144,19 @@ const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false,
                             </div>
                             :
                             null
-                        }   
-                        <img className="user-icon" src={avatar_url} alt="" />
+                        } 
+
+                        <Link to={`/loner/${name}/`}>
+                            <img className="user-icon" src={avatar_url} alt="" />
+                        </Link>
                         
                     </>
 
                     :
                     <>
-                        <img className="user-icon" src={avatar_url} alt="" />
+                        <Link to={`/loner/${name}/`}>
+                            <img className="user-icon" src={avatar_url} alt="" />
+                        </Link>
                         {
                             message ?
                             <div className={`message-body ${currentUserId == userid ? "sender right-end" : "receiver left-end"}`}>
@@ -173,7 +179,7 @@ const ChatCard = memo(({currentUserId=1, user_is_mod=false, user_is_staff=false,
                 </div>
                 <div className="margin-10px" />
                 <div className="right-end username-time">
-                    l\{name}
+                    <Link to={`/loner/${name}/`}>l\{name}</Link>
                 </div>
 
             </div>

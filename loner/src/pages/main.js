@@ -7,6 +7,7 @@ import Chat from "./chat-page"
 import LonerPage from "./loner-page";
 import SpacesPage from "./spaces-page";
 
+
 function Main(){
 
 	const user_name = useMemo(() => sessionStorage.getItem("user-name"), [sessionStorage.getItem("user-name")])
@@ -26,7 +27,7 @@ function Main(){
 			<Route path="/loner" exact 
 				element={(logged_in === "true" ? 
 								<Navigate  replace  to={`/loner/${user_name}`}/> : 
-								<LonerPage />)}/>
+								<Navigate replace to={`/spaces/`} />)}/>
 		
 
 			<Route path="*" element={<Error404 />} />

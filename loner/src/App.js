@@ -26,7 +26,7 @@ function App() {
 			sessionStorage.setItem("loggedIn", "true")
 		},
 		onError: (err) => {
-
+			console.log("error: ", err)
 			if (err.response?.status === 401)
 				setShowRegistrationModal(true)
 			

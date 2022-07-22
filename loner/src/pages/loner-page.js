@@ -1,6 +1,6 @@
 import { memo, useState, useEffect, useMemo, useRef } from "react"
 import { useInfiniteQuery, useQuery } from "react-query"
-import { useParams, Link } from "react-router-dom"
+import { useParams, Link, useNavigate } from "react-router-dom"
 
 import useWebShare from "react-use-web-share"
 
@@ -23,10 +23,12 @@ import { useScrollDirection } from "../utils/hooks"
  * isLoading: bool - if set to true will show a loading wheel
  * onLoadable: function - function thats called when the scrollbar reaches to the end.
  */
-const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable}) => {
+const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable, sortType=""}) => {
 
 
     const scrollRef = useRef()
+    const history = useNavigate()
+
     const [showRegisterModal, setShowRegisterModal] = useState(false)
     const [showSpaceCreateModal, setShowSpaceCreateModal] = useState(false)
 
@@ -40,7 +42,6 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable}) =
 
         if (((current.scrollWidth - current.clientWidth) - current.scrollLeft) < 200 && scrollDirection === "right"){
             onLoadable()
-            console.log("Loadable")
         }
 
     }
@@ -56,6 +57,11 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable}) =
 
     }
 
+    const onSpaceCreate = (data) => {
+        history(`/space/${data.data.name}/`)
+        setShowSpaceCreateModal(false)
+    }
+
 
     return (
         <div className="section" >
@@ -66,7 +72,7 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable}) =
             {
              showSpaceCreateModal ?    
                 <SpaceCreateModal onClose={() => setShowSpaceCreateModal(false)}
-                                  onSuccess={() => setShowSpaceCreateModal(false)}
+                                  onSuccess={onSpaceCreate}
                 />
                 :
                 null
@@ -113,7 +119,7 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable}) =
                 }
 
             </div>
-            <Link className="btn" to={'/spaces'}>
+            <Link to={`/spaces?sort=${sortType}`}>
                 see more
             </Link>
         </div>
@@ -127,6 +133,8 @@ export default function LonerPage(){
     
     const {loner} = useParams()
     const webShare = useWebShare()
+
+    const history = useNavigate()
 
     const [enabled, setEnabled] = useState(false)
     const [show404Page, setShow404Page] =useState(false)
@@ -149,14 +157,13 @@ export default function LonerPage(){
     const userid = useMemo(() => sessionStorage.getItem("user-id"), [sessionStorage.getItem("user-id")])
     
     useEffect(() => {
-        
-        if (loner)
+        // if the loner id is available start fetching trending, modertaing spaces etc.
+        if (lonerData.id !== null)
             setEnabled(true)
     
-    }, [loner])
+    }, [lonerData])
 
     const lonerQuery = useQuery(["loner", loner], () => getUser(loner), {
-        enabled: enabled,
         staleTime: 30 * 60 * 1000,
 
         onError: (err) => {
@@ -217,7 +224,7 @@ export default function LonerPage(){
     })
 
     useEffect(() => {
-
+        // sets the loner data.
         if (lonerQuery.isSuccess || lonerQuery.isFetched){
             const data = lonerQuery.data
             setLonerData({
@@ -228,7 +235,7 @@ export default function LonerPage(){
             })
         }
 
-    }, [lonerQuery.isSuccess, lonerQuery.isFetched])
+    }, [lonerQuery.isSuccess, lonerQuery.data])
 
     useEffect(() => {
       
@@ -249,9 +256,11 @@ export default function LonerPage(){
 
         }
 
-    }, [trendingListQuery.status])
+    }, [trendingListQuery.status, trendingListQuery.data])
 
     useEffect(() => {
+
+        // upon mount the moderating data is filled
 
         if (moderatingListQuery.isSuccess){
             
@@ -265,12 +274,12 @@ export default function LonerPage(){
                 }
                 )      
             })
-            console.log("Success", moderating_data)
+
             setModeratingSpaces(moderating_data)
 
         }
 
-    }, [moderatingListQuery.status])
+    }, [moderatingListQuery.status, moderatingListQuery.data])
 
     const handleShare = () => {
 
@@ -291,6 +300,8 @@ export default function LonerPage(){
 
     const handleCreateSpace = () => {
 
+        // if user is logged in then the create space modal is shown else register modal is shown
+
         if (sessionStorage.getItem("loggedIn") === "true"){
             setShowSpaceCreateModal(true)
         }
@@ -298,6 +309,11 @@ export default function LonerPage(){
             setShowRegisterModal(true)
         }
 
+    }
+
+    const onSpaceCreate = (data) => {
+        history(`/space/${data.data.name}/`)
+        setShowSpaceCreateModal(false)
     }
 
 
@@ -329,7 +345,7 @@ export default function LonerPage(){
             {
                 showSpaceCreateModal ?
 
-                    <SpaceCreateModal onSuccess={() => setShowSpaceCreateModal(false)}
+                    <SpaceCreateModal onSuccess={onSpaceCreate}
                                         onClose={() => setShowSpaceCreateModal(false)}
                     />
                 :
@@ -340,7 +356,7 @@ export default function LonerPage(){
 
             <div className="dashboard">
 
-                <div onClick={handleCreateSpace}>
+                <div onClick={handleCreateSpace} className="btn">
                     Create Space
                 </div>
 
@@ -391,16 +407,20 @@ export default function LonerPage(){
                                     data={recentSpaces}
                                     isLoading={recentListQuery.isLoading||recentListQuery.isFetching}
                                     onLoadable={()=>recentListQuery.fetchNextPage({cancelRefetch: false})}
+                                    sortType={"recent"}
                                     />
+
                 <HorizontalSection  title="Trending spaces" 
                                     data={trendingSpaces}
                                     isLoading={trendingListQuery.isLoading||trendingListQuery.isFetching}
                                     onLoadable={()=>trendingListQuery.fetchNextPage({cancelRefetch: false})}
+                                    sortType={"trending"}
                                     />
                 <HorizontalSection title="Moderating spaces" 
                                    data={moderatingSpaces}
                                    isLoading={moderatingListQuery.isLoading||moderatingListQuery.isFetching}
                                    onLoadable={()=>moderatingListQuery.fetchNextPage({cancelRefetch: false})}
+                                   sortType={"moderating"}
                                    />
 
 

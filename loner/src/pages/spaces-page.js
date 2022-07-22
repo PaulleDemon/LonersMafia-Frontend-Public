@@ -9,7 +9,7 @@ import { listSpaces } from "../apis/loner-apis"
 import {ReactComponent as BACK} from "../icons/back.svg"
 import {ReactComponent as SHARE} from "../icons/share.svg"
 
-import { useScrollBarVisible, useScrollDirection } from "../utils/hooks"
+import { useScrollDirection } from "../utils/hooks"
 import { LoadingWheel } from "../components/loading"
 import { RegistrationModal, SpaceCreateModal } from "../modals/registration-modals"
 import { TimedMessageModal } from "../modals/info-modal"
@@ -32,7 +32,7 @@ const SortComponent = ({values, defaultValue, onOptionChange}) => {
     useEffect(() => {
 
         const handleClickOutside = (e) => {
-            
+            // if clicked outside then close the dropdown
             if (!ref.current?.contains(e.target)){
                 setShowDropDown(false)
             }
@@ -89,21 +89,21 @@ const SortComponent = ({values, defaultValue, onOptionChange}) => {
 
 const SpacesPage = () => {
     
-    const { sortParams } = useSearchParams()
-    
+    const [sortParams, setSortParam] = useSearchParams()
+
     const scrollRef = useRef()
     const history = useNavigate()
     
     const webShare = useWebShare()
     
-    const scrollVisible = useScrollBarVisible(null)
+    // const scrollVisible = useScrollBarVisible(null)
     const scrollDirection = useScrollDirection(null)
 
     const [listQueries, setListQueries] = useState([])
     const [showRegisterModal, setShowRegisterModal] = useState(false)
     const [createSpaceModal, setShowCreatSpaceModal] = useState(false)
 
-    const [sortOption, setSortOption] = useState(sortParams || "trending")
+    const [sortOption, setSortOption] = useState(sortParams.get("sort"))
     
     const [timedMessage, setTimedMessage] = useState("")
 
@@ -141,7 +141,20 @@ const SpacesPage = () => {
 
 
     useEffect(() => {
+        // will update sort options based on the query parameters of the url
+    
+        if (["trending", "recent", "moderating"].includes(sortParams.get("sort")))
+            setSortOption(sortParams.get("sort"))
+        
+        else{
+            setSortOption(sortParams.get("trending"))
+            setSortParam({"sort": "trending"})
+        }
 
+    }, [sortParams.get("sort")])
+
+    useEffect(() => {
+        // when the component is mounted fill the page with data
         if (sortListQuery.isSuccess){
                 let recent_data=[]
 
@@ -157,20 +170,19 @@ const SpacesPage = () => {
     }, [])
 
     useEffect(() => {
-        // TODO: fetch until scrollbar is visible
-
+        // keep fetching next page until the srollbar appears or is at the end of page
         const difference = window.innerHeight - document.body.scrollHeight
-        console.log("Difference: ", difference)
+      
         if (sortListQuery.status==="success" && [-1, 0, 1].includes(difference)){
-            console.log("trye: ", window.innerHeight, document.body.scrollHeight)
             fetchNext()
         }
         
-    }, [window.innerHeight, document.body.scrollHeight, sortListQuery.status, sortListQuery.data])
+    }, [window.innerHeight, document.body.scrollHeight, 
+        sortListQuery.status, sortListQuery.data, sortListQuery.isFetched])
 
 
     useEffect(() => {
-
+        // add event listener to fetch next pages when scrolling down
         window.addEventListener("scroll", fetchNext, false)
 
         return () => window.removeEventListener("scroll", fetchNext)
@@ -178,24 +190,29 @@ const SpacesPage = () => {
     }, [scrollDirection, window.innerHeight, document.body.scrollHeight])
 
     const fetchNext = useCallback(() => {
-
+        // fethes the next page only if the user is scrolling down or there is no scrollbar (to fill the page until the scrollbar appears)
         if ((scrollDirection === "down" || window.innerHeight === document.body.scrollHeight || (document.body.scrollHeight - (window.innerHeight + window.scrollY)) < 300)
          && (sortListQuery.hasNextPage === undefined || sortListQuery.hasNextPage === true)){
+            
             sortListQuery.fetchNextPage({cancelRefetch: false})
-            console.log("Called")
+        
         }
     }, [scrollDirection])
     
 
     const handleSortOptionChange = (value) => {
+        // updates the dropdown and query params
         setSortOption(value)
+        setSortParam({"sort": value})
         sortListQuery.remove()
         sortListQuery.refetch({cancelRefetch: true})
         setListQueries([])
+
+
     }
 
     const handleShare = () => {
-
+        // handles the share format
         if (webShare.isSupported){
             webShare.share({
                 title: "Hey there, here is your invitation to join the loners network",
@@ -222,13 +239,18 @@ const SpacesPage = () => {
 
     }
 
+    const onSpaceCreate = (data) => {
+        history(`/space/${data.data.name}/`)
+        setShowCreatSpaceModal(false)
+    }
+
     return (
         <div className="spaces-page">
             
 
             <div className="spaces-header">
                 <BACK className="icon" onClick={() => history('/loner')}/>
-                <SortComponent values={sortOptions} defaultValue={"moderating"} onOptionChange={handleSortOptionChange}/>
+                <SortComponent values={sortOptions} defaultValue={sortOption} onOptionChange={handleSortOptionChange}/>
                 
                 <a onClick={handleCreateSpace}>create space</a>
                 
@@ -239,7 +261,7 @@ const SpacesPage = () => {
 
             {
                 createSpaceModal ?
-                    <SpaceCreateModal onClose={() => setShowCreatSpaceModal(false)}/>
+                    <SpaceCreateModal onSuccess={onSpaceCreate} onClose={() => setShowCreatSpaceModal(false)}/>
                 :
                 null
             }
@@ -280,7 +302,7 @@ const SpacesPage = () => {
                     (sortListQuery.status === "success" &&  listQueries.length === 0)?
                         <div className="row center">
                             <div>Seems nothings here. Why not create a space?</div>
-                            <div className={handleCreateSpace}>create space</div>
+                            <div onClick={handleCreateSpace}>create space</div>
                         </div>
                 
                     :
