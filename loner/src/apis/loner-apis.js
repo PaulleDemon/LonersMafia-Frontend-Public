@@ -200,9 +200,9 @@ export const reactToMessage = async (data) => {
 }
 
 
-export const deleteReaction = async (id) => {
+export const deleteReaction = async ({message, reaction}) => {
 
     const config = getConfig()
 
-    return await api.delete(`/space/messages/react/${id}/delete/`, config)
+    return await api.delete(`/space/message/${message}/react/${encodeURIComponent(reaction)}/delete/`, config)
 }
