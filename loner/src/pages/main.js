@@ -13,8 +13,6 @@ function Main(){
 	const user_name = useMemo(() => sessionStorage.getItem("user-name"), [sessionStorage.getItem("user-name")])
 	const logged_in = useMemo(() => sessionStorage.getItem("loggedIn"), [sessionStorage.getItem("loggedIn")])
 
-	console.log("User_name: ", user_name, logged_in)
-
 	return (
 		<Routes>
 			<Route path="/" exact element={<Navigate to="/loner" replace />} />

@@ -84,7 +84,7 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable, so
             {       
                 showRegisterModal ?
                 
-                    <RegistrationModal onSuccess={() => setShowRegisterModal(false)}/>
+                    <Login />
 
                 :
 
@@ -154,6 +154,7 @@ export default function LonerPage(){
     const [moderatingSpaces, setModeratingSpaces] = useState([])
     
     const [showRegisterModal, setShowRegisterModal] = useState(false)
+    const [showUserEditModal, setShowUserEditModal] = useState(false)
     const [showSpaceCreateModal, setShowSpaceCreateModal] = useState(false)
 
     const userid = useMemo(() => sessionStorage.getItem("user-id"), [sessionStorage.getItem("user-id")])
@@ -305,6 +306,10 @@ export default function LonerPage(){
         setShowSpaceCreateModal(false)
     }
 
+    const onEditSuccess = () => {
+        setEnabled(true)
+        setShowUserEditModal(false)
+    }
 
     if (show404Page)
         return (
@@ -333,6 +338,21 @@ export default function LonerPage(){
                 null
             }
 
+            {       
+                showUserEditModal ?
+                
+                    <RegistrationModal 
+                        onSuccess={onEditSuccess}
+                        update={true}
+                        userName={lonerData.name}
+                        userAvatar={lonerData.avatar}
+                        onClose={() => setShowUserEditModal(false)}
+                        />
+
+                :
+
+                null
+            }
 
             <div className="dashboard">
 
@@ -360,7 +380,7 @@ export default function LonerPage(){
                            { 
                             userid == lonerData.id ?
                                 <div className="edit-container">
-                                    <EDIT className="edit"/>
+                                    <EDIT className="edit" onClick={() => setShowUserEditModal(true)}/>
                                 </div>
                                 :
                                 null

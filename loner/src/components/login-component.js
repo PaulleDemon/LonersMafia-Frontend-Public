@@ -45,6 +45,8 @@ export default function Login(){
 
     useEffect(() => {
 
+		console.log("Logged in? ", sessionStorage.getItem("loggedIn"))
+
         if (sessionStorage.getItem("loggedIn") !== "true"){
             setShowRegistrationModal(true)
         }

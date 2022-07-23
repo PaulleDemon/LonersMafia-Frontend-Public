@@ -19,6 +19,7 @@ import { randInt } from "../utils/random-generator"
 import { getMessages, getSpace, uploadChatMedia } from "../apis/loner-apis"
 import { Error404 } from "../error-pages/errors"
 import { LoadingWheel } from "../components/loading"
+import { MAX_LENGTH } from "../constants/lengths"
 
 
 function ChatHeader({props}){
@@ -488,7 +489,9 @@ export default function Chat(){
                     messagable ? 
                     <div className="message-container">
                     
-                        <AutoHeightTextarea value={text} 
+                        <AutoHeightTextarea 
+                            value={text}
+                            maxLength={MAX_LENGTH.chat_length} 
                             mediaRef={mediaRef}
                             onChange={e => {setText(e.target.value)}}
                             onMediaUpload={(media) => setMedia(media)}

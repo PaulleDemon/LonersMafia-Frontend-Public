@@ -241,7 +241,7 @@ const SpacesPage = () => {
                 <BACK className="icon" onClick={() => history('/loner')}/>
                 <SortComponent values={sortOptions} defaultValue={sortOption} onOptionChange={handleSortOptionChange}/>
                 
-                <a onClick={() => setShowCreatSpaceModal(true)}>create space</a>
+                <a onClick={() => setShowCreatSpaceModal(true)} style={{cursor: "pointer"}}>create space</a>
                 
                 <div className="row center">
                     <SHARE className="icon" onClick={handleShare}/>

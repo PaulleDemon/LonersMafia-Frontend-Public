@@ -5,7 +5,7 @@ import imageCompress from "../utils/image-compress"
 import { getFileType, getFileSize } from "../constants/file"
 import { getErrorCodeDescription } from "../error-pages/errors"
 
-import { createSpace, createUser } from "../apis/loner-apis"
+import { createSpace, createUser, updateUser } from "../apis/loner-apis"
 import { LoadingWheel } from "../components/loading"
 
 import randomAvatarGenerator from "../utils/avatar-gnerator"
@@ -24,17 +24,31 @@ import { CropImage } from "../components/cropper"
 import { TimedMessageModal } from "./info-modal"
 
 
-export const RegistrationModal = ({onSuccess}) => {
+/**
+ * Component used to update or register user
+ * 
+ * @param onSuccess: function - function to execute when the registration or update is successful
+ * @param userAvatar: str(url) - pass the url if update is set to True
+ * @param userName: str - pass the name if update is true
+ * @param tagLine: str - pass the tagline if update is true
+ * @param update: bool - updates the user
+ * @param onClose: function - function to execute when close button is clicked
+ * 
+ */
+
+export const RegistrationModal = ({onSuccess, userAvatar="", userName="", tagline="", update=false, onClose}) => {
     
     const [avatar, setAvatar] = useState({
                                             file: "",
-                                            url: ""
+                                            url: userAvatar
                                         })
-    const [name, setName] = useState("")
+    const [name, setName] = useState(userName)
+    const [tagLine, setTagLine] = useState(tagline)
+
     const [error, setError] = useState("")
     const [inputError, setInputError] = useState(false)
     
-    const registerMutation = useMutation(createUser, {
+    const registerMutation = useMutation(!update ? createUser: updateUser, {
         // onError: (err) => {
         //     console.log("error: ", err, ":")
             
@@ -51,7 +65,8 @@ export const RegistrationModal = ({onSuccess}) => {
 
     useEffect(() => {
 
-        randomAvatar("")
+        if (!update)
+            randomAvatar("")
 
     }, [])
 
@@ -96,9 +111,19 @@ export const RegistrationModal = ({onSuccess}) => {
             setError("You are not connected")
 
         let form_data = new FormData()
-        form_data.append("name", name)
-        form_data.append("avatar", avatar.file, `loner-${name || randInt(0, 10000)}.${FILE_TYPE_MAPPING[avatar.file.type]}`)
+        
+        if (!update)
+            form_data.append("name", name)
+        
+        if (update && userAvatar === avatar.url && tagLine === tagline)
+            return
 
+        if (userAvatar !== avatar.url)
+            form_data.append("avatar", avatar.file, `loner-${name || randInt(0, 10000)}.${FILE_TYPE_MAPPING[avatar.file.type]}`)
+
+        if (tagLine !== tagline){
+            form_data.append("tag_line", tagLine)
+        }
         
         registerMutation.mutate(form_data, {
             onError: (err) => {
@@ -138,7 +163,16 @@ export const RegistrationModal = ({onSuccess}) => {
     // console.log("status: ", registerMutation.status)
     return (
         <div className="modal registration-modal">
-        
+            
+            {
+                update ?
+                    <div className="close-container">
+                        <CLOSE onClick={onClose} className="icon"/>
+                    </div>
+                :
+                null
+            } 
+
             <div className="row center title-22px">
                 Quick enter a name and join the loners.
             </div>
@@ -154,14 +188,30 @@ export const RegistrationModal = ({onSuccess}) => {
             </div>
 
             <p className={`row center font-14px ${error ? "error" : "hidden"}`}>{error}</p>
-            <div className="row center">
-                <input type="text" className={`input margin-10px ${inputError ? "input-error": ""}`} value={name} 
-                        placeholder="nickname (eg: memer34)"
-                        maxLength={MAX_LENGTH.name}
-                        onChange={handleInputChange}
-                        disabled={registerMutation.isLoading}
-                        autoFocus
-                        />
+            <div className={`${update ? "column" : "row"} center `}>
+                
+                    <input type="text" className={`input margin-10px ${inputError ? "input-error": ""}`} 
+                            value={name} 
+                            placeholder="nickname (eg: memer34)"
+                            maxLength={MAX_LENGTH.name}
+                            onChange={handleInputChange}
+                            disabled={registerMutation.isLoading || update}
+                            autoFocus
+                            />
+
+                    {
+                        update ? 
+                            <input type="text" className={`input margin-10px ${inputError ? "input-error": ""}`}
+                                    value={tagLine} 
+                                    placeholder="tag line (memer since, 1685)"
+                                    maxLength={MAX_LENGTH.tag_line}
+                                    onChange={(e) => setTagLine(e.target.value)}
+                                    disabled={registerMutation.isLoading}
+                                    autoFocus
+                            />
+                        :
+                        null
+                    }
 
             {
             (registerMutation.status === "loading" && navigator.onLine) ?
