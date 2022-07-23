@@ -179,9 +179,16 @@ export const RegistrationModal = ({onSuccess, userAvatar="", userName="", taglin
                 null
             } 
 
-            <div className="row center title-22px">
-                Quick enter a name and join the loners.
-            </div>
+            {!update ? 
+                <div className="row center title-22px">
+                    Quick enter a name and join the loners.
+                </div>
+
+                :
+                <div className="row center title-22px">
+                    Update
+                </div>
+            }
 
             <div className="column center">
                 <p>Avatar</p>

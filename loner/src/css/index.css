@@ -992,6 +992,28 @@ a{
     height: 40px;
 }
 
+.space-info-modal{
+    width: 350px;
+    align-items: center;
+    padding: 10px;
+}
+
+.space-info-modal .space-avatar{
+    width: 250px;
+    height: 250px;
+    border-radius: 10px;
+}
+
+.space-info-modal .space-info-btns-container{
+    display: flex;
+    width: 100%;
+}
+
+.space-info-modal .about{
+    height: 100px;
+    overflow-y: auto;
+}
+
 .cookie-modal{
     padding: 10px;
     top: unset;

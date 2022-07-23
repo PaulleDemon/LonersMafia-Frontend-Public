@@ -106,25 +106,42 @@ export const BannedUserModal = () => {
 }
 
 
-export const SpaceInfoModal = ({icon, name="Anima", tag_line="coolest", about, rules, mods}) =>{
-
+export const SpaceInfoModal = ({icon, name="Anima", tag_line="coolest", about, 
+                                rules, mods, editable=true, onClose}) =>{
+    icon = "https://images.unsplash.com/photo-1508138221679-760a23a2285b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80"
     return (
-        <div className="modal registration-modal">
+        <div className="modal space-info-modal">
             
-            <div>
-                <div className="title-22px">
+            <div className="space-info-btns-container">
+                <CLOSE className="icon left-end" onClose={onClose}/>
+                {
+                    editable ?
+                    <EDIT className="icon right-end" onClose={onClose}/>
+                    
+                    :
+                    null
+                    
+                }
+            </div>
+
+            <div className="column center">
+                <div className="title-22px margin-10px">
                     Welcome to {name} mafia
                 </div>
 
                 <img src={icon} alt="" className="space-avatar"/>
 
-                <div className="tag-line">
+                <div className="tag-line margin-10px">
                     "{tag_line}"
                 </div>
 
-                <div>
+                <div className="margin-10px font-18px about">
                     {about}
                 </div>
+            </div>
+
+            <div className="column center">
+
             </div>
         </div>
     )

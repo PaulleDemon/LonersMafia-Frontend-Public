@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState} from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { useInfiniteQuery, useMutation, useQuery } from "react-query"
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "react-query"
 import useWebSocket, {ReadyState} from "react-use-websocket"
 import useWebShare from "react-use-web-share"
 
@@ -94,7 +94,7 @@ function ChatHeader({props}){
 
 // random texts to be filled for first time users.
 const randomTexts = [
-    "I am a memer and will send memes now to all the loners 🚀",
+    "I am a memer and will send memes to all the loners out there 🚀",
     "I am an artist and will show you my best works now!",
     "I am going to speak my mind out!",
     "I love you ❤️‍🔥",
@@ -115,6 +115,7 @@ export default function Chat(){
     const {space} = useParams() 
 
     const mediaRef = useRef()
+    const queryClient = useQueryClient()
 
     const [text, setText] = useState("")
     const [media, setMedia] = useState({
@@ -199,7 +200,7 @@ export default function Chat(){
     const chatQuery = useInfiniteQuery(["chat", spaceDetails.id], getMessages, {
         enabled: queryEnabled,
         getNextPageParam: (lastPage, ) => {
-            // console.log("PAGE: ", lastPage)
+            console.log("PAGE: ", lastPage)
             if (lastPage.data.current < lastPage.data.pages){
                 return lastPage.data.current + 1}
             
@@ -287,7 +288,24 @@ export default function Chat(){
         
         if (lastJsonMessage && !messages.some(msg => lastJsonMessage.id === msg.id)){
             // console.log("Last message: ", lastJsonMessage)
-            setMessages([...messages, lastJsonMessage])
+            // setMessages([...messages, lastJsonMessage])
+            //TODO: HERE
+            queryClient.setQueriesData(["chat", spaceDetails.id], (data) => {
+
+                const newPagesArray = data.pages.map((data) =>{
+                    // find and update the specific data
+                    data.data.results.push(lastJsonMessage)
+                
+                    return data
+                    }) 
+    
+                return {
+                    pages: newPagesArray,
+                    pageParams: data.pageParams
+                }
+
+
+            })  
            
         } 
 
