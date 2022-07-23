@@ -11,8 +11,9 @@ import {ReactComponent as SHARE} from "../icons/share.svg"
 
 import { useScrollDirection } from "../utils/hooks"
 import { LoadingWheel } from "../components/loading"
-import { RegistrationModal, SpaceCreateModal } from "../modals/registration-modals"
+import { SpaceCreateModal } from "../modals/registration-modals"
 import { TimedMessageModal } from "../modals/info-modal"
+import Login from "../components/login-component"
 
 
 /**
@@ -100,7 +101,6 @@ const SpacesPage = () => {
     const scrollDirection = useScrollDirection(null)
 
     const [listQueries, setListQueries] = useState([])
-    const [showRegisterModal, setShowRegisterModal] = useState(false)
     const [createSpaceModal, setShowCreatSpaceModal] = useState(false)
 
     const [sortOption, setSortOption] = useState(sortParams.get("sort"))
@@ -228,17 +228,6 @@ const SpacesPage = () => {
 
     }
 
-    const handleCreateSpace = () => {
-
-        if (sessionStorage.getItem("loggedIn") === "true"){
-            setShowCreatSpaceModal(true)
-        }
-        else{
-            setShowRegisterModal(true)
-        }
-
-    }
-
     const onSpaceCreate = (data) => {
         history(`/space/${data.data.name}/`)
         setShowCreatSpaceModal(false)
@@ -252,27 +241,19 @@ const SpacesPage = () => {
                 <BACK className="icon" onClick={() => history('/loner')}/>
                 <SortComponent values={sortOptions} defaultValue={sortOption} onOptionChange={handleSortOptionChange}/>
                 
-                <a onClick={handleCreateSpace}>create space</a>
+                <a onClick={() => setShowCreatSpaceModal(true)}>create space</a>
                 
                 <div className="row center">
                     <SHARE className="icon" onClick={handleShare}/>
                 </div>
             </div>
 
+            <Login />
+
             {
                 createSpaceModal ?
                     <SpaceCreateModal onSuccess={onSpaceCreate} onClose={() => setShowCreatSpaceModal(false)}/>
                 :
-                null
-            }
-
-            {
-                showRegisterModal ?
-
-                <RegistrationModal onSuccess={() => setShowRegisterModal(false)} />
-
-                :
-
                 null
             }
 
@@ -302,7 +283,7 @@ const SpacesPage = () => {
                     (sortListQuery.status === "success" &&  listQueries.length === 0)?
                         <div className="row center">
                             <div>Seems nothings here. Why not create a space?</div>
-                            <div onClick={handleCreateSpace}>create space</div>
+                            <div onClick={() => setShowCreatSpaceModal(true)}>create space</div>
                         </div>
                 
                     :

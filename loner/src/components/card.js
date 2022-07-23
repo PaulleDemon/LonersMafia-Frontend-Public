@@ -52,14 +52,14 @@ export const SpaceCard = memo(({name="", tag_line="", icon="",
 })
 
 
-export const CreateSpaceCard = ({onClick}) => {
+export const CreateSpaceCard = ({message="start mafia", onClick}) => {
 
     return (
         <div className="space-card create-space-card-container" onClick={onClick}>
             <div className="create-space-card">
                 <CREATE />
                 <div className="row center font-18px">
-                    create space
+                    {message}
                 </div>
             </div>
         </div>

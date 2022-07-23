@@ -11,6 +11,7 @@ import { assignMod, banUser, deleteAndBan, deleteMessage, deleteReaction, reactT
 import { TimedMessageModal } from "../modals/info-modal";
 
 import { formattNumber } from "../utils/formatted-number";
+import Login from "./login-component";
 
 const ReactionComponent = ({id=null, emoji, count=0, is_reacted=false, onClick}) => {
     
@@ -21,9 +22,14 @@ const ReactionComponent = ({id=null, emoji, count=0, is_reacted=false, onClick})
                 <div >
                     {emoji}
                 </div>
-                <div className="margin-10px">
-                    {count}
-                </div>
+                {
+                    count != 0 ?
+                    <div className="margin-10px">
+                        {count}
+                    </div>
+                    :
+                    null
+                }
             </div>
         </>
     )
@@ -55,6 +61,7 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
 
     const [timedMessageModal, setTimedMessageModal] = useState("")
     const [showImageEnlarged, setShowImageEnlarged] = useState(false)
+
     
     const banMutate = useMutation(banUser)
     const assignModMutate = useMutation(assignMod)
@@ -112,8 +119,6 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
 
                                         return val.id == id
                                     })
-                                    
-                                    console.log("DATA:::", index)
 
                                     if (index !== -1){
                                         // if the id exists in this page then update otherwise just
@@ -121,7 +126,6 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
                                         const reactions = data.data.results[index]['reactions']
                                         const reaction_index = reactions.findIndex(item  => item.id === removedReactionId)
                                         
-                                        console.log("Exists: ", reaction_index)
                                         // data.data.results[index]['reactions'][reaction_index].id = successData.data.id
                                         data.data.results[index]['reactions'][reaction_index].is_reacted = false
                                         data.data.results[index]['reactions'][reaction_index].reaction_count -= 1
@@ -211,6 +215,10 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
 
     const onReactToMessage = (emoji, is_reacted, reaction_id) => {
 
+        if (!sessionStorage.getItem("loggedIn")){
+            return 
+        }
+
         if (currentUserId && is_reacted === false){
             reactMessageMutate.mutate({
                 reaction: emoji,
@@ -229,7 +237,10 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
     return ( 
         // the == is used instead of === because one is a string and other is an integer
         <div className={`chat-card ${currentUserId == userid? "right-end" : "left-end"}`}> 
-            
+
+            <Login />
+
+
             {
                 timedMessageModal ?
                 <TimedMessageModal message={timedMessageModal} onTimeOut={() => setTimedMessageModal("")}/>

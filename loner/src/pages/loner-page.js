@@ -4,6 +4,7 @@ import { useParams, Link, useNavigate } from "react-router-dom"
 
 import useWebShare from "react-use-web-share"
 
+import Login from "../components/login-component"
 import { getUser, listSpaces } from "../apis/loner-apis"
 import { CreateSpaceCard, SpaceCard } from "../components/card"
 import { LoadingWheel } from "../components/loading"
@@ -11,8 +12,9 @@ import { Error404 } from "../error-pages/errors"
 
 import {ReactComponent as EDIT} from "../icons/edit.svg"
 import {ReactComponent as SHARE} from "../icons/share.svg"
+
 import { BannedUserModal, TimedMessageModal } from "../modals/info-modal"
-import { RegistrationModal, SpaceCreateModal } from "../modals/registration-modals"
+import { RegistrationModal ,SpaceCreateModal } from "../modals/registration-modals"
 import { useScrollDirection } from "../utils/hooks"
 
 // import { default as logo } from "../icons/emoji.svg"
@@ -298,19 +300,6 @@ export default function LonerPage(){
 
     }
 
-    const handleCreateSpace = () => {
-
-        // if user is logged in then the create space modal is shown else register modal is shown
-
-        if (sessionStorage.getItem("loggedIn") === "true"){
-            setShowSpaceCreateModal(true)
-        }
-        else{
-            setShowRegisterModal(true)
-        }
-
-    }
-
     const onSpaceCreate = (data) => {
         history(`/space/${data.data.name}/`)
         setShowSpaceCreateModal(false)
@@ -325,15 +314,6 @@ export default function LonerPage(){
     return (
         <div className="loner-home">
 
-            {
-                showRegisterModal ?
-                
-                    <RegistrationModal onSuccess={() => setShowRegisterModal(false)}/>
-
-                :
-
-                null
-            }
 
             {
                 timedMessage ?
@@ -356,7 +336,7 @@ export default function LonerPage(){
 
             <div className="dashboard">
 
-                <div onClick={handleCreateSpace} className="btn">
+                <div onClick={() => setShowSpaceCreateModal(false)} className="btn">
                     Create Space
                 </div>
 
@@ -388,7 +368,12 @@ export default function LonerPage(){
                         </> 
                     :
                         <div className="btn" onClick={() => setShowRegisterModal(true)}>
-                            Join Loners
+                            {
+                                showRegisterModal ?
+                                    <Login />
+                                :
+                                null
+                            }
                         </div>    
                     }
                 </div>
@@ -425,11 +410,18 @@ export default function LonerPage(){
 
 
                 <div className="section">
-                    <div className="title">
-                        Sponsor
+                    <div className="title-22px">
+                        Sponsored
                     </div>
 
-                    <div className="space-cards-container">
+                    <div className="space-cards-container" >
+                        <SpaceCard name={"Peckspace"} 
+                                    icon={require("../icons/sponsors-icons/peckspace-icon-white.png")}
+                                    tag_line={"Find your space on Peckspace"}
+                                    promoted_url={"https://peckspace.com/spaces"}
+                                    promoted={true}
+                                    />
+                        <CreateSpaceCard message="sponsor"/>
 
                     </div>
 
