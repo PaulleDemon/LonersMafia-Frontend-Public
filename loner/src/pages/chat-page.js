@@ -9,11 +9,12 @@ import {ReactComponent as BACK} from "../icons/back.svg"
 import {ReactComponent as SEND} from "../icons/send.svg"
 import {ReactComponent as SHARE} from "../icons/share.svg"
 import {ReactComponent as CLOSE} from "../icons/close.svg"
+import {ReactComponent as INFO} from "../icons/info.svg"
 
 import ChatCard from "../components/message-card"
 import AutoHeightTextarea from "../components/auto-resize-textarea"
 
-import {  TimedMessageModal  } from "../modals/info-modal"
+import {  SpaceInfoModal, TimedMessageModal  } from "../modals/info-modal"
 import { randInt } from "../utils/random-generator"
 
 import { getMessages, getSpace, uploadChatMedia } from "../apis/loner-apis"
@@ -49,34 +50,38 @@ function ChatHeader({props}){
 
     }
 
+    const handleInfoClick = () => {
+
+    }
+
     return (
         <div className="chat-header">
-            <BACK className="icon margin-10px" onClick={() => history("/loner")}/>
 
             {
                 timedMesage !== ""?
-                    <TimedMessageModal message={timedMesage} timeout={2000} onTimeOut={() => setTimedMessage("")}/>
+                <TimedMessageModal message={timedMesage} timeout={2000} onTimeOut={() => setTimedMessage("")}/>
                 :
-                    null
+                null
             }
+            <SpaceInfoModal />
 
             <div className="row center margin-10px">
+                <BACK className="icon margin-10px" onClick={() => history("/loner")}/>
                 <img src={icon} alt=" " className="space-icon"/>
-                <div className="column margin-10px">
+                <div className="info column margin-10px">
                     <div className="space-name">
                         {name}
                     </div>
 
-                    <div className="space-tag font-18px">
+                    <div className="space-tag">
                         {tag_line}
                     </div>
                 </div>
             </div>
             <SHARE className="margin-10px icon" onClick={handleShare}/>
 
-            <div className="link font-18px" >
-                view rules
-            </div>
+            <INFO className="margin-10px icon" onClick={handleInfoClick}/>
+
 
             <div className="peckspace-promo margin-10px">
                 visit <a href="https://peckspace.com/spaces" className="link">Peckspace</a>  Now!

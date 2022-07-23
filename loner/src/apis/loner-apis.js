@@ -67,11 +67,11 @@ export const getUser = async(user) => {
     return await api.get(`/user/${user}/get/`, config)
 }
 
-export const updateUser = async (formData) => {
+
+export const updateUser = async ({formData, id}) => {
 
     const config = getFormConfig()
-
-    return await api.put(`/user/update/`, formData.data, config)
+    return await api.put(`/user/${id}/update/`, formData, config)
 
 } 
 

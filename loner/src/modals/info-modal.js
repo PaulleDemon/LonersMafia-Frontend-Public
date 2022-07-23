@@ -1,6 +1,10 @@
 
 import { memo, useEffect, useState } from "react"
 
+import {ReactComponent as CLOSE} from "../icons/close.svg"
+import {ReactComponent as EDIT} from "../icons/edit.svg"
+
+
 /**
  * message: str - message to be displayed
  * onTimedOut: function - function to execute when the timer stops
@@ -91,7 +95,9 @@ export const BannedUserModal = () => {
                 <img src={require("../icons/illustrations/banned-icon.png")} alt="" className="img"/>
 
                 <div className="font-18px margin-10px">You have been banned for violating loners policy</div>
+                <div>
 
+                </div>
             </div>
         </div>
     
@@ -100,16 +106,32 @@ export const BannedUserModal = () => {
 }
 
 
-
-export const TermsModal = () => {
+export const SpaceInfoModal = ({icon, name="Anima", tag_line="coolest", about, rules, mods}) =>{
 
     return (
-        <div>
+        <div className="modal registration-modal">
             
+            <div>
+                <div className="title-22px">
+                    Welcome to {name} mafia
+                </div>
+
+                <img src={icon} alt="" className="space-avatar"/>
+
+                <div className="tag-line">
+                    "{tag_line}"
+                </div>
+
+                <div>
+                    {about}
+                </div>
+            </div>
         </div>
     )
 
 }
+
+
 
 
 export const RulesModal = ({rules=[]}) => {

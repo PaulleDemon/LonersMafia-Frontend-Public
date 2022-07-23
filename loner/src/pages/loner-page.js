@@ -1,5 +1,5 @@
 import { memo, useState, useEffect, useMemo, useRef } from "react"
-import { useInfiniteQuery, useQuery } from "react-query"
+import { useInfiniteQuery, useQuery, useQueryClient } from "react-query"
 import { useParams, Link, useNavigate } from "react-router-dom"
 
 import useWebShare from "react-use-web-share"
@@ -137,6 +137,7 @@ export default function LonerPage(){
     const webShare = useWebShare()
 
     const history = useNavigate()
+    const queryClient = useQueryClient()
 
     const [enabled, setEnabled] = useState(false)
     const [show404Page, setShow404Page] =useState(false)
@@ -306,8 +307,20 @@ export default function LonerPage(){
         setShowSpaceCreateModal(false)
     }
 
-    const onEditSuccess = () => {
-        setEnabled(true)
+    const onEditSuccess = (data) => {
+
+        queryClient.setQueryData(["loner", loner], (cache_data) => {
+            // update the cache
+            return {
+                data: {
+                    ...cache_data.data,
+                    avatar: data.data.avatar_url,
+                    tag_line: data.data.tag_line,
+                }
+            }
+
+        })
+
         setShowUserEditModal(false)
     }
 
@@ -346,6 +359,7 @@ export default function LonerPage(){
                         update={true}
                         userName={lonerData.name}
                         userAvatar={lonerData.avatar}
+                        tagline={lonerData.tag_line}
                         onClose={() => setShowUserEditModal(false)}
                         />
 
@@ -398,8 +412,8 @@ export default function LonerPage(){
                     }
                 </div>
 
-                <div className="">
-                    {lonerData.tag_line}
+                <div className="tag-line margin-10px">
+                    "{lonerData.tag_line}"
                 </div>
                 <div className="margin-10px">
                     <SHARE className="icon" onClick={handleShare}/>

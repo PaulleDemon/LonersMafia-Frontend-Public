@@ -7,10 +7,22 @@
         transform: translateX(-50%);
     }
 
+    .info{
+        max-width: 100px;
+    }
+
+    .space-name{
+        font-size: 18px;
+    }
+
     .registration-modal{
         /* bottom: auto; */
         max-width: 350px;
         max-height: min-content;
+    }
+
+    .peckspace-promo{
+        display: none;
     }
 
 }

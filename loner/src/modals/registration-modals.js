@@ -72,6 +72,7 @@ export const RegistrationModal = ({onSuccess, userAvatar="", userName="", taglin
 
     const randomAvatar =  async () => {
         // fetches random avatar
+
         let random_avatar = await randomAvatarGenerator(name)
                                 .then(res => res)
                                 .catch(err => null)
@@ -122,10 +123,15 @@ export const RegistrationModal = ({onSuccess, userAvatar="", userName="", taglin
             form_data.append("avatar", avatar.file, `loner-${name || randInt(0, 10000)}.${FILE_TYPE_MAPPING[avatar.file.type]}`)
 
         if (tagLine !== tagline){
-            form_data.append("tag_line", tagLine)
+            form_data.append("tag_line", tagLine.trim())
         }
         
-        registerMutation.mutate(form_data, {
+        let form = form_data
+
+        if (update)
+            form = {formData: form_data, id: sessionStorage.getItem("user-id")}
+
+        registerMutation.mutate(form, {
             onError: (err) => {
                 if (err.response?.data && typeof err.response.data === "object"){
                         setError(`${Object.values(err.response.data).join(" ")}`)
@@ -160,7 +166,7 @@ export const RegistrationModal = ({onSuccess, userAvatar="", userName="", taglin
         }
     }
 
-    // console.log("status: ", registerMutation.status)
+    console.log("status: ", registerMutation.status)
     return (
         <div className="modal registration-modal">
             
@@ -214,7 +220,7 @@ export const RegistrationModal = ({onSuccess, userAvatar="", userName="", taglin
                     }
 
             {
-            (registerMutation.status === "loading" && navigator.onLine) ?
+            (registerMutation.status === "loading" && registerMutation.status !== "error" && navigator.onLine) ?
                 <LoadingWheel />      
                 :
                 <button className="btn row center" onClick={handleSubmit}><NEXT fill="#fff"/></button>

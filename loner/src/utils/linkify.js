@@ -42,7 +42,7 @@ const linkifyConfig = [
             fn: (key, result) => {
                 console.log("usernme: ", result[0].slice(1))
                 return (<Link key={key} 
-                            to={ENDPOINTS.spaceview(result[0].slice(1, ))}
+                            to={ENDPOINTS.lonerview(result[0].slice(2, ))}
                             onClick={(e) => e.stopPropagation()}
                             className="linkify-link-color"
                             >

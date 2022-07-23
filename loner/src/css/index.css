@@ -133,6 +133,12 @@ a{
     margin-top: 50px;
 }
 
+.tag-line{
+    color: #6d6d6d;
+    font-size: 18px;
+    font-style: italic;
+}
+
 /* --------------------------- loading wheel ----------------------------- */
 
 .loading-wheel {
@@ -168,12 +174,23 @@ a{
     background-color: var(--chat-background);
 }
 
+.info{
+    max-width: 200px;
+    max-height: 100%;
+}
+
 .space-name{
 	font-weight: 400;
+    text-overflow: ellipsis;
+    font-size: 22px;
 }
 
 .space-tag{
 	color: #878585;
+    text-overflow: ellipsis;
+    white-space:nowrap;
+    overflow: hidden;
+    font-size: 14px;
 }
 
 .space-icon{
