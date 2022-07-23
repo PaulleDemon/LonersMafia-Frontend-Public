@@ -1,5 +1,5 @@
 import { memo, useState, useEffect } from "react"
-import { useMutation } from "react-query"
+import { useMutation, useQueryClient } from "react-query"
 import { Link } from "react-router-dom";
 
 // import ZoomableImage from "./zoomable-image"
@@ -13,7 +13,7 @@ import { TimedMessageModal } from "../modals/info-modal";
 import { formattNumber } from "../utils/formatted-number";
 
 const ReactionComponent = ({id=null, emoji, count=0, is_reacted=false, onClick}) => {
-
+    
     return (
         <>
             <div className={`reaction row center ${is_reacted ? "reaction-clicked": ""}`} 
@@ -48,21 +48,99 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
     
     const {id, message, user, media_url, space,
         datetime, is_mod=false, is_staff=false, reactions} = props
-
-    console.log("ID: ", id)
-
+    
     const {id: userid, name, avatar_url} = user
     
-    const [showImageEnlarged, setShowImageEnlarged] = useState(false)
-    const [timedMessageModal, setTimedMessageModal] = useState("")
-    
-    const reactMessageMutate = useMutation(reactToMessage) 
-    const reactMessageDeleteMutate = useMutation(deleteReaction) 
+    const queryClient = useQueryClient() 
 
+    const [timedMessageModal, setTimedMessageModal] = useState("")
+    const [showImageEnlarged, setShowImageEnlarged] = useState(false)
+    
     const banMutate = useMutation(banUser)
     const assignModMutate = useMutation(assignMod)
     const banFromSpaceMutate = useMutation(deleteAndBan)
     const deleteMessageMutate = useMutation(deleteMessage)
+    
+    let removedReactionId = null
+
+    const reactMessageMutate = useMutation(reactToMessage, {
+        onSuccess: (successData) => {
+
+            queryClient.setQueriesData(["chat", space], (data) => {
+            
+                // updates all the cached rooms to display the latest message and change the unread count
+                const newPagesArray = data.pages.map((data) =>{
+                                    // find and update the specific data
+                                    const index = data.data.results.findIndex((val) => {
+                                        // find the index and update the cache
+
+                                        return val.id == successData.data.message
+                                    })
+
+                                    if (index !== -1){
+                                        // if the id exists in this page then update otherwise just
+                                        // return the data 
+                                        const reactions = data.data.results[index]['reactions']
+                                        const reaction_index = reactions.findIndex(item  => item.reaction === successData.data.reaction)
+                                        
+                                        data.data.results[index]['reactions'][reaction_index].id = successData.data.id
+                                        data.data.results[index]['reactions'][reaction_index].is_reacted = true
+                                        data.data.results[index]['reactions'][reaction_index].reaction_count += 1
+                                      
+                                    }
+                                    return data
+                                    }) 
+                    
+                return {
+                    pages: newPagesArray,
+                    pageParams: data.pageParams
+                }
+            })
+        }
+    }) 
+    const reactMessageDeleteMutate = useMutation(deleteReaction, {
+        
+        onSuccess: (successData) => {
+            
+            queryClient.setQueriesData(["chat", space], (data) => {
+                
+                // updates all the cached rooms to display the latest message and change the unread count
+                const newPagesArray = data.pages.map((data) =>{
+                                    // find and update the specific data
+                                    const index = data.data.results.findIndex((val) => {
+                                        // find the index and update the cache
+
+                                        return val.id == id
+                                    })
+                                    
+                                    console.log("DATA:::", index)
+
+                                    if (index !== -1){
+                                        // if the id exists in this page then update otherwise just
+                                        // return the data 
+                                        const reactions = data.data.results[index]['reactions']
+                                        const reaction_index = reactions.findIndex(item  => item.id === removedReactionId)
+                                        
+                                        console.log("Exists: ", reaction_index)
+                                        // data.data.results[index]['reactions'][reaction_index].id = successData.data.id
+                                        data.data.results[index]['reactions'][reaction_index].is_reacted = false
+                                        data.data.results[index]['reactions'][reaction_index].reaction_count -= 1
+                                      
+                                    }
+                                    return data
+                                    }) 
+                    
+                return {
+                    pages: newPagesArray,
+                    pageParams: data.pageParams
+                }
+            })
+
+            removedReactionId = null
+        }
+
+    }) 
+
 
 
     let media_content = null
@@ -133,10 +211,7 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
 
     const onReactToMessage = (emoji, is_reacted, reaction_id) => {
 
-        console.log("reacting", emoji, is_reacted, reaction_id)
-        
-        // TODO: turn it into purple when success and test delete
-        if (currentUserId && reaction_id === null && is_reacted === false){
+        if (currentUserId && is_reacted === false){
             reactMessageMutate.mutate({
                 reaction: emoji,
                 user:  parseInt(currentUserId),
@@ -145,7 +220,8 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
         }
 
         else{
-            reactMessageDeleteMutate.mutate({id: reaction_id})
+            reactMessageDeleteMutate.mutate({message: id, reaction: emoji})
+            removedReactionId = reaction_id
         }
 
     }

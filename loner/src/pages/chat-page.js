@@ -121,6 +121,7 @@ export default function Chat(){
     const [timedMesage, setTimedMessage] = useState("")
     const [messagable, setMessageble] = useState(true)
     const [show404Page, setShow404Page] = useState(false)
+    const [queryEnabled, setQueryEnabled] = useState(false)
 
     const [spaceDetails, setSpaceDetails] =useState({
                                             id: null,
@@ -188,9 +189,9 @@ export default function Chat(){
         },
         retry: 3
     })
-
-    const chatQuery = useInfiniteQuery(["chat", space], getMessages, {
-
+ 
+    const chatQuery = useInfiniteQuery(["chat", spaceDetails.id], getMessages, {
+        enabled: queryEnabled,
         getNextPageParam: (lastPage, ) => {
             // console.log("PAGE: ", lastPage)
             if (lastPage.data.current < lastPage.data.pages){
@@ -270,6 +271,8 @@ export default function Chat(){
             setSpaceDetails(data.data)
             sessionStorage.setItem("is_staff", data.data?.is_staff.toString())
             sessionStorage.setItem("is_mod", data.data?.is_mod.toString())
+
+            setQueryEnabled(true)
         }
 
     }, [spaceQuery.isSuccess])

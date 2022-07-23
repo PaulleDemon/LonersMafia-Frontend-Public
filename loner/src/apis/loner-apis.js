@@ -194,8 +194,6 @@ export const deleteMessage = async (msg_id) => {
 export const reactToMessage = async (data) => {
 
     const config = getConfig()
-
-    console.log("Data: ", data)
     const body = JSON.stringify(data)
 
     return await api.post(`/space/messages/react/`, body, config)
@@ -206,5 +204,5 @@ export const deleteReaction = async (id) => {
 
     const config = getConfig()
 
-    return await api.post(`/space/messages/react/${id}/delete/`, config)
+    return await api.delete(`/space/messages/react/${id}/delete/`, config)
 }
