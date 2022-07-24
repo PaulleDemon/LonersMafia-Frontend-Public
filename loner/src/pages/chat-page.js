@@ -200,7 +200,7 @@ export default function Chat(){
     const chatQuery = useInfiniteQuery(["chat", spaceDetails.id], getMessages, {
         enabled: queryEnabled,
         getNextPageParam: (lastPage, ) => {
-            console.log("PAGE: ", lastPage)
+         
             if (lastPage.data.current < lastPage.data.pages){
                 return lastPage.data.current + 1}
             
@@ -230,6 +230,7 @@ export default function Chat(){
 
         const chatPages = []
     
+        console.log("Chat qyery: ", chatQuery.status, chatQuery.data)
         if (chatQuery.status === "success"){
             chatQuery.data.pages.forEach((x) => {
                 x.data.results.forEach( (x) =>{
@@ -252,6 +253,7 @@ export default function Chat(){
             )
 
             setMessages(chat_pages)
+            console.log("Messages: ", chat_pages)
             
         }
 
@@ -288,25 +290,29 @@ export default function Chat(){
         
         if (lastJsonMessage && !messages.some(msg => lastJsonMessage.id === msg.id)){
             // console.log("Last message: ", lastJsonMessage)
-            // setMessages([...messages, lastJsonMessage])
-            //TODO: HERE
-            queryClient.setQueriesData(["chat", spaceDetails.id], (data) => {
-
-                const newPagesArray = data.pages.map((data) =>{
-                    // find and update the specific data
-                    data.data.results.push(lastJsonMessage)
+            setMessages([...messages, lastJsonMessage])
+            
+            //NOTE
+            /**
+             * NOTE: HACK to update the cache. The cache is not perfectly updated, there will be
+             * ubnormalities in the cached data, but it works, so Ok. Updating paginated cache, 
+             * without invalidating the cache is hard. 
+             * I am not going to break my head anymore on this if you have a 
+             * better solution give a pull request
+             */ 
+            
+            queryClient.setQueryData(["chat", spaceDetails.id], ({pages, pagesParams}) => {
                 
-                    return data
-                    }) 
-    
-                return {
-                    pages: newPagesArray,
-                    pageParams: data.pageParams
+                pages[0].data.results.unshift(lastJsonMessage)
+                return ({
+                    pagesParams,
+                    pages: pages
+                    })
+
                 }
+            
+            )
 
-
-            })  
-           
         } 
 
     }, [lastJsonMessage])

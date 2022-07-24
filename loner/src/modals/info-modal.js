@@ -109,6 +109,14 @@ export const BannedUserModal = () => {
 export const SpaceInfoModal = ({icon, name="Anima", tag_line="coolest", about, 
                                 rules, mods, editable=true, onClose}) =>{
     icon = "https://images.unsplash.com/photo-1508138221679-760a23a2285b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80"
+    
+    const tabs = [{
+        tabName: "about",
+        tabValue: "about",
+        tabCompoent: ""
+    }]//TODO: tab component
+
+
     return (
         <div className="modal space-info-modal">
             
@@ -140,9 +148,7 @@ export const SpaceInfoModal = ({icon, name="Anima", tag_line="coolest", about,
                 </div>
             </div>
 
-            <div className="column center">
-
-            </div>
+            
         </div>
     )
 

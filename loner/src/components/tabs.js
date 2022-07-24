@@ -22,13 +22,13 @@ const Tabs = ({tabs}) => {
 
         <div className="tabs-container">
             
-            <div className="tabs">
+            <div className="tabs-header">
                 {
                     tabs.map((tabs) => {
                         
                         return (
                             <li key={tabs.tabValue} 
-                                className=""
+                                className={`tab ${tabs.tabValue === currentTab? "active-tab" : ""}`}
                                 onClick={()=>setCurrentTab(tabs.tabValue)}
                                 >
                                 
