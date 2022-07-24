@@ -123,9 +123,11 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable, so
                 }
 
             </div>
-            <Link to={`/spaces?sort=${sortType}`}>
-                see more
-            </Link>
+            <div className="right-end margin-10px">
+                <Link to={`/spaces?sort=${sortType}`}>
+                    see more {`>`}
+                </Link>
+            </div>
         </div>
     )
 

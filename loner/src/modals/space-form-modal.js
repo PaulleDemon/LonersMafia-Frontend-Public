@@ -202,7 +202,7 @@ const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
                         className="text-area"
                         disabled={isLoading}
                         />
-            <div className="margin-10px"/>
+            <div className="margin-5px"/>
             {
             (isLoading && navigator.onLine) ?
                 <LoadingWheel />      
@@ -236,9 +236,9 @@ const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", space_rules,
         url: bgImgUrl,
         file: bgImgFile
     })
-    console.log("Rules: ", space_rules )
+    console.log("Rules: ", space_rules, [...space_rules, ...Array(5 - space_rules.length).fill("")] )
 
-    const [rules, setRules]= useState([...space_rules, Array(5 - space_rules.length).fill("")])
+    const [rules, setRules]= useState([...space_rules, ...Array(5 - space_rules.length).fill("")])
 
 
     useEffect(() => {
@@ -322,7 +322,7 @@ const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", space_rules,
             }
 
             {
-                [rules, ...Array(5-rules.length)].map((_, index) => {
+                [...rules, ...Array(5-rules.length)].map((_, index) => {
                     return (
                         <div key={index}>
                             <input type="text"
@@ -463,10 +463,10 @@ export const SpaceFormModal = ({id=null, iconUrl="", bgImgUrl="",
         if (!update)
             form_data.append("name", spaceForm.name)
         
-        if (icon.file)
+        if (icon.file && iconUrl !== icon.url)
             form_data.append("icon", icon.file)
         
-        if (background.file)
+        if (background.file && background.url !== bgImgUrl)
             form_data.append("background_image", background.file)
 
         // if (spaceForm.tag_line)
@@ -474,7 +474,9 @@ export const SpaceFormModal = ({id=null, iconUrl="", bgImgUrl="",
         
         // if (spaceForm.about)
         form_data.append("about", spaceForm.about)
-        form_data.append("rules", JSON.stringify(spaceForm.rules))
+        
+        if (!spaceForm.rules.sort().every((val, idx) => val === rules.sort()[idx])) // if rules haven't changed don't upate
+            form_data.append("rules", JSON.stringify(spaceForm.rules))
         
         if (spaceForm.bgColor)
             form_data.append("color_theme", spaceForm.bgColor)
@@ -512,13 +514,15 @@ export const SpaceFormModal = ({id=null, iconUrl="", bgImgUrl="",
 
     }
 
+    console.log("Tag lnine: ", tag_line)
+
     const tabs = useMemo(() => [
         {
             tabName: "About",
             tabValue: "about",
             tabComponent: <SpaceModal onSubmitClick={handleSubmit} 
                                         onValueChange={handleAboutChange}
-                                        isLoading={registerMutation.isLoading}
+                                        isLoading={registerMutation.status === "loading"}
                                         icon_url={icon.url}
                                         icon_file={icon.file}
                                         name={spaceForm.name}
@@ -532,7 +536,7 @@ export const SpaceFormModal = ({id=null, iconUrl="", bgImgUrl="",
             tabValue: "rule",
             tabComponent: <RulesThemeModal 
                                 onValueChange={handleRuleThemeChange}
-                                isLoading={registerMutation.isLoading}
+                                isLoading={registerMutation.status === "loading"}
                                 space_rules={spaceForm.rules}
                                 bgColor={spaceForm.bgColor}
                                 bgImgUrl={background.url}
@@ -540,24 +544,29 @@ export const SpaceFormModal = ({id=null, iconUrl="", bgImgUrl="",
                                     />,
         }
 
-    ], [handleSubmit, registerMutation.isLoading, spaceForm, icon, background])
+    ], [handleSubmit, registerMutation.status, spaceForm, icon, background])
 
     return (
 
         <div className="modal-background">
-            <div className="modal registration-modal" style={{height: "720px"}}>
+            <div className="modal registration-modal" style={{height: "710px"}}>
 
                 <div className="close-container">
                     <CLOSE onClick={onClose} className="icon"/>
                 </div>
 
                 <div className="row center title-22px">
-                    Create a space 
+                   {!update ? "Create a space" : "Update the space" }
                 </div>
 
-                <div className="font-18px margin-10px">
-                 create a space and invite other loners
-                </div>
+                {
+                 !update ?
+                    <div className="font-18px margin-10px">
+                        create a space and invite other loners
+                    </div>
+                    :
+                    null
+                }
                 
                 {
                     error ? 

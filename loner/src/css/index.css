@@ -56,6 +56,10 @@ a{
 	display: flex;
 }
 
+.margin-5px{
+    margin: 5px;
+}
+
 .margin-10px{
 	margin: 10px;
 }
@@ -1074,6 +1078,7 @@ a{
     align-items: center;
     height: 400px;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .space-rules > .rule{

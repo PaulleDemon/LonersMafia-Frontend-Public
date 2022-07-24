@@ -24,7 +24,7 @@ import { MAX_LENGTH } from "../constants/lengths"
 import { SpaceFormModal } from "../modals/space-form-modal"
 
 
-function ChatHeader({props}){
+function ChatHeader({onSpaceUpdate, props}){
 
     const {name, icon, about, tag_line, rules} = props
     
@@ -51,6 +51,14 @@ function ChatHeader({props}){
         }
 
     }
+
+    const handleEditSuccess = () => {
+
+        if (onSpaceUpdate)
+            onSpaceUpdate()
+
+        setShowSpaceEditModal(false)
+    }   
 
     return (
         <div className="chat-header">
@@ -84,13 +92,16 @@ function ChatHeader({props}){
                 showSpaceEditModal ? 
 
                 <SpaceFormModal onClose={() => setShowSpaceEditModal(false)}
+                                id={props.id}
                                 name={name}
                                 iconUrl={icon}
                                 about={about}
+                                tag_line={tag_line}
                                 bgColor={props.color_theme}
-                                background={props.background_image}
-                                rules={rules}
+                                bgImgUrl={props.background_image}
+                                rules={rules.map(({ rule }) => rule)}
                                 update={true}
+                                onSuccess={handleEditSuccess}
                 />
                 :
 
@@ -471,7 +482,8 @@ export default function Chat(){
         
             <div className="chat-page">
                 
-                <ChatHeader props={spaceDetails}/>
+                <ChatHeader onSpaceUpdate={() => {spaceQuery.remove(); spaceQuery.refetch()}} 
+                                props={spaceDetails}/>
 
                 {
                     timedMesage !== ""?
