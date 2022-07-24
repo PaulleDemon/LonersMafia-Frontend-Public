@@ -11,28 +11,28 @@ import { useMemo, useState } from "react"
  *              }]
  */
 
-const Tabs = ({tabs}) => {
+const Tabs = ({tabs, className=""}) => {
 
     const [currentTab, setCurrentTab] = useState(tabs[0].tabValue)
-    const tabs = useMemo(() => tabs, [tabs])
+   
+    const navTabs = useMemo(() => tabs, [tabs])
 
-
-
+    // console.log("COMponent: ", navTabs[navTabs.findIndex(tab => tab.tabValue === currentTab)])
     return (
 
-        <div className="tabs-container">
+        <div className={`tabs-container ${className}`}>
             
             <div className="tabs-header">
                 {
-                    tabs.map((tabs) => {
+                    navTabs.map((tab) => {
                         
                         return (
-                            <li key={tabs.tabValue} 
-                                className={`tab ${tabs.tabValue === currentTab? "active-tab" : ""}`}
-                                onClick={()=>setCurrentTab(tabs.tabValue)}
+                            <li key={tab.tabValue} 
+                                className={`tab ${tab.tabValue === currentTab? "active-tab" : ""}`}
+                                onClick={()=>setCurrentTab(tab.tabValue)}
                                 >
                                 
-                                {tabs.tabName}
+                                {tab.tabName}
                             </li>
                         )
                     
@@ -40,8 +40,8 @@ const Tabs = ({tabs}) => {
                 }
             </div>
             
-            <div className="tab-content">
-                {tabs[tabs.findIndex(tab => tab.tabValue === currentTab)].tabComponent}
+            <div className={`tab-content`}>
+                {navTabs[navTabs.findIndex(tab => tab.tabValue === currentTab)].tabComponent}
             </div>
 
         </div>

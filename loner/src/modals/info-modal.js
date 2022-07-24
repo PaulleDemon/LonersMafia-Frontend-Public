@@ -1,5 +1,6 @@
 
-import { memo, useEffect, useState } from "react"
+import { memo, useEffect, useMemo, useState } from "react"
+import Tabs from "../components/tabs"
 
 import {ReactComponent as CLOSE} from "../icons/close.svg"
 import {ReactComponent as EDIT} from "../icons/edit.svg"
@@ -106,15 +107,68 @@ export const BannedUserModal = () => {
 }
 
 
+
+const SpaceInfo = ({icon, tag_line, about}) => {
+
+    return (
+        <div className="column center" style={{width: "100%", marginTop: "10px"}}>
+
+            <img src={icon} alt="" className="space-avatar"/>
+
+            <div className="tag-line margin-10px">
+                "{tag_line}"
+            </div>
+
+            <div className="margin-10px font-18px about">
+                {about}
+            </div>
+        </div>
+    )
+}
+
+const SpaceRules = ({rules=[]}) => {
+
+    return (
+        <div className="space-rules" style={{width: "100%", marginTop: "10px"}}>
+
+            {
+                rules.map(({rule, id}) => {
+                    return (
+                        <div className="rule" key={id}>
+                            {rule}
+                        </div>
+                    )
+                })
+            }
+            <div className="row center font-18px">
+                Make sure you don't break these rules in additional to Loners rules when in this space
+            </div>
+        </div>
+    )
+
+}
+
+
 export const SpaceInfoModal = ({icon, name="Anima", tag_line="coolest", about, 
                                 rules, mods, editable=true, onClose}) =>{
     icon = "https://images.unsplash.com/photo-1508138221679-760a23a2285b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80"
     
-    const tabs = [{
-        tabName: "about",
-        tabValue: "about",
-        tabCompoent: ""
-    }]//TODO: tab component
+    const tabs = useMemo(() => ([
+        
+        {
+            tabName: "About",
+            tabValue: "about",
+            tabComponent: <SpaceInfo icon={icon} tag_line={tag_line} about={about}/>
+        },
+
+        {
+            tabName: "Rules",
+            tabValue: "rules",
+            tabComponent: <SpaceRules rules={rules}/>
+        }
+
+
+    ]), [icon, tag_line, about, rules])
 
 
     return (
@@ -131,23 +185,10 @@ export const SpaceInfoModal = ({icon, name="Anima", tag_line="coolest", about,
                     
                 }
             </div>
-
-            <div className="column center">
-                <div className="title-22px margin-10px">
-                    Welcome to {name} mafia
-                </div>
-
-                <img src={icon} alt="" className="space-avatar"/>
-
-                <div className="tag-line margin-10px">
-                    "{tag_line}"
-                </div>
-
-                <div className="margin-10px font-18px about">
-                    {about}
-                </div>
+            <div className="title-22px margin-10px">
+                Welcome to {name} mafia
             </div>
-
+            <Tabs tabs={tabs} tabContentClassName={"conten"}/>
             
         </div>
     )
