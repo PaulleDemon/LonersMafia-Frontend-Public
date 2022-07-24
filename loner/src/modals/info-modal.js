@@ -141,7 +141,7 @@ const SpaceRules = ({rules=[]}) => {
                 })
             }
             <div className="row center font-18px">
-                Make sure you don't break these rules in additional to Loners rules when in this space
+                Make sure you don't break these mafia rules in additional to Loners rules when in this space
             </div>
         </div>
     )
@@ -149,10 +149,9 @@ const SpaceRules = ({rules=[]}) => {
 }
 
 
-export const SpaceInfoModal = ({icon, name="Anima", tag_line="coolest", about, 
+export const SpaceInfoModal = ({icon, name, tag_line, about, 
                                 rules, mods, editable, onClose, onEdit}) =>{
-    icon = "https://images.unsplash.com/photo-1508138221679-760a23a2285b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80"
-    
+   
     const tabs = useMemo(() => ([
         
         {

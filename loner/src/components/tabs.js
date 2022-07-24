@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { memo, useMemo, useState } from "react"
 
 
 /**
@@ -11,15 +11,12 @@ import { useMemo, useState } from "react"
  *              }]
  */
 
-const Tabs = ({tabs, className=""}) => {
-
-    console.log("Tabs: ", tabs)
+const Tabs = memo(({tabs, className=""}) => {
 
     const [currentTab, setCurrentTab] = useState(tabs[0].tabValue)
    
     const navTabs = useMemo(() => tabs, [tabs])
 
-    // console.log("COMponent: ", navTabs[navTabs.findIndex(tab => tab.tabValue === currentTab)])
     return (
 
         <div className={`tabs-container ${className}`}>
@@ -50,6 +47,6 @@ const Tabs = ({tabs, className=""}) => {
 
     )
 
-}
+})
 
 export default Tabs

@@ -25,7 +25,7 @@ import { MAX_LENGTH } from "../constants/lengths"
 
 function ChatHeader({props}){
 
-    const {name, icon, tag_line, rules, mods} = props
+    const {name, icon, about, tag_line, rules, mods} = props
     
     const history = useNavigate()
     const webShare = useWebShare()
@@ -50,10 +50,6 @@ function ChatHeader({props}){
 
     }
 
-    const handleInfoClick = () => {
-
-    }
-
     return (
         <div className="chat-header">
 
@@ -66,6 +62,11 @@ function ChatHeader({props}){
             
             {showInfoModal ?
                 <SpaceInfoModal onClose={() => setShowInfoModal(false)}
+                                name={name}
+                                icon={icon}
+                                about={about}
+                                tag_line={tag_line}
+                                rules={rules}
                                 editable={sessionStorage.getItem("is_mod")==="true"}
                                 onEdit={() => console.log("editing...")}
                 />

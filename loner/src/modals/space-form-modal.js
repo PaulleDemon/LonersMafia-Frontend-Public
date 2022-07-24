@@ -191,7 +191,7 @@ const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
                         className="text-area"
                         disabled={isLoading}
                         />
-
+            <div className="margin-10px"/>
             {
             (isLoading && navigator.onLine) ?
                 <LoadingWheel />      
@@ -453,7 +453,7 @@ export const SpaceFormModal = ({onSuccess, onClose, update=false}) => {
         
         // if (spaceForm.about)
         form_data.append("about", spaceForm.about)
-        form_data.append("rules", spaceForm.rules)
+        form_data.append("rules", JSON.stringify(spaceForm.rules))
         
         form_data.append("color_theme", spaceForm.bgColor)
 
