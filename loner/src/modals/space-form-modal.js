@@ -41,7 +41,7 @@ const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
                                     })
     
     const [error, setError] = useState("")
-    const [submitBtnEnabled, setSubmitBtnEnabled] = useState(false)
+
     const [inputError, setInputError] = useState(false)
     const [crop, setCrop] = useState(false) // when this is true the form is submitted
     const [timedMessage, setTimedMessage] = useState("")
@@ -56,17 +56,19 @@ const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
 
         const value = e.target.value.trim()
 
-        setSubmitBtnEnabled(false)
-
         setError("")
         setInputError(false)
-        setSpaceForm({
-            ...spaceForm,
-            name: value
-        })
-        onValueChange({spaceForm, icon})
 
-        if (spaceForm.name.length < MIN_LENGTH.space_name){
+        const new_val = {
+                            ...spaceForm,
+                            name: value
+                        }
+
+        setSpaceForm(new_val)
+        onValueChange({spaceForm: new_val, icon})
+
+        if (value.length < MIN_LENGTH.space_name){
+            setError(`Must be atleast of length ${MIN_LENGTH.space_name}`)
             return 
         }
 
@@ -76,7 +78,6 @@ const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
             return 
         }
 
-        setSubmitBtnEnabled(true)
     }
 
     const handleImageUpload = async (e) => {
@@ -197,7 +198,8 @@ const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
                 :
                 <button className="btn row center" 
                         onClick={()=>setCrop(true)} 
-                        disabled={!submitBtnEnabled}>
+                        // disabled={!submitBtnEnabled}
+                        >
                             <NEXT fill="#fff"/>
                 </button>
             }
@@ -209,7 +211,8 @@ const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
 } 
 
 
-const RulesThemeModal = ({bgImage="", bgColor="#fff", space_rules=Array(5).fill(""), onValueChange, isLoading}) => {
+const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="#fff", space_rules=Array(5).fill(""), 
+                            onValueChange, isLoading, }) => {
 
     const mediaRef = useRef()
 
@@ -217,8 +220,8 @@ const RulesThemeModal = ({bgImage="", bgColor="#fff", space_rules=Array(5).fill(
     const [error, setError] = useState("")
     const [backgroundTheme, setBackgroundTheme] = useState(bgColor)
     const [background, setBackground] = useState({
-        url: bgImage,
-        file: ""
+        url: bgImgUrl,
+        file: bgImgFile
     })
 
     const [rules, setRules]= useState(space_rules)
@@ -239,7 +242,7 @@ const RulesThemeModal = ({bgImage="", bgColor="#fff", space_rules=Array(5).fill(
         temp_rules[index] = e.target.value
         setRules(temp_rules)
 
-        onValueChange({rules, backgroundTheme, background})
+        onValueChange({rules: temp_rules, backgroundTheme, background})
 
     }
 
@@ -259,24 +262,26 @@ const RulesThemeModal = ({bgImage="", bgColor="#fff", space_rules=Array(5).fill(
 
         // const file_reader = new FileReader()
 
-        setBackground({
-            file: image,
-            url: URL.createObjectURL(image) 
-        })
+        const new_val = {
+                file: image,
+                url: URL.createObjectURL(image)
+        }
+        setBackground(new_val)
 
-        onValueChange({rules, backgroundTheme, background})
+        onValueChange({rules, backgroundTheme, background: new_val})
     }
 
     const handleBgThemeChange = (e) => {
 
-        if (!CSS.supports("background-color", e.target.value))
-            setError("Not a vaild color")
+        // if (!CSS.supports("background-color", e.target.value))
+        if (!/^#([0-9a-f]{3}){1,2}$/i.test(e.target.value)) // check if the color is a valid hex color
+            setError("Not a vaild hex color")
 
         else
             setError("")
 
         setBackgroundTheme(e.target.value)
-        onValueChange({rules, backgroundTheme, background})
+        onValueChange({rules, backgroundTheme: e.target.value}, background)
 
     }
 
@@ -384,7 +389,7 @@ export const SpaceFormModal = ({onSuccess, onClose, update=false}) => {
                                             about: "",
                                             tag_line: "",
                                             bgColor: "#fff",
-                                            rules: []
+                                            rules: Array(5).fill("")
                                         })
 
     const registerMutation = useMutation(createSpace, {
@@ -437,23 +442,26 @@ export const SpaceFormModal = ({onSuccess, onClose, update=false}) => {
         if (!update)
             form_data.append("name", spaceForm.name)
         
-        // if (icon.file)
-        form_data.append("icon", icon.file)
+        if (icon.file)
+            form_data.append("icon", icon.file)
         
+        if (background.file)
+            form_data.append("background_image", background.file)
+
         // if (spaceForm.tag_line)
         form_data.append("tag_line", spaceForm.tag_line)
         
         // if (spaceForm.about)
         form_data.append("about", spaceForm.about)
+        form_data.append("rules", spaceForm.rules)
         
         form_data.append("color_theme", spaceForm.bgColor)
-        form_data.append("background_image", background.file)
 
         registerMutation.mutate(form_data, )
     }
 
     const handleAboutChange = ({spaceForm: form, icon}) => {
-        console.log("chainging: ", form, icon)
+
         setSpaceForm({
             ...spaceForm,
             ...form
@@ -497,6 +505,10 @@ export const SpaceFormModal = ({onSuccess, onClose, update=false}) => {
             tabComponent: <RulesThemeModal 
                                 onValueChange={handleRuleThemeChange}
                                 isLoading={registerMutation.isLoading}
+                                space_rules={spaceForm.rules}
+                                bgColor={spaceForm.bgColor}
+                                bgImgUrl={background.url}
+                                bgImgFile={background.file}
                                     />,
         }
 
@@ -505,7 +517,7 @@ export const SpaceFormModal = ({onSuccess, onClose, update=false}) => {
     return (
 
         <div className="modal-background">
-            <div className="modal registration-modal" style={{height: "700px"}}>
+            <div className="modal registration-modal" style={{height: "720px"}}>
 
                 <div className="close-container">
                     <CLOSE onClick={onClose} className="icon"/>

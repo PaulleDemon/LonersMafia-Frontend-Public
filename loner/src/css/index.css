@@ -877,6 +877,7 @@ a{
 .tabs-header > .tab{
     cursor: pointer;
     width: 100%;
+    font-size: 20px;
     padding: 10px 10px 0px 10px;
     border-bottom: 2px transparent;
     text-align: center;
