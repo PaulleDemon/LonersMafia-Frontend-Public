@@ -150,7 +150,7 @@ const SpaceRules = ({rules=[]}) => {
 
 
 export const SpaceInfoModal = ({icon, name="Anima", tag_line="coolest", about, 
-                                rules, mods, editable=true, onClose}) =>{
+                                rules, mods, editable, onClose, onEdit}) =>{
     icon = "https://images.unsplash.com/photo-1508138221679-760a23a2285b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80"
     
     const tabs = useMemo(() => ([
@@ -175,10 +175,10 @@ export const SpaceInfoModal = ({icon, name="Anima", tag_line="coolest", about,
         <div className="modal space-info-modal">
             
             <div className="space-info-btns-container">
-                <CLOSE className="icon left-end" onClose={onClose}/>
+                <CLOSE className="icon left-end" onClick={onClose}/>
                 {
                     editable ?
-                    <EDIT className="icon right-end" onClose={onClose}/>
+                    <EDIT className="icon right-end" onClick={onEdit}/>
                     
                     :
                     null
@@ -195,26 +195,3 @@ export const SpaceInfoModal = ({icon, name="Anima", tag_line="coolest", about,
 
 }
 
-
-
-
-export const RulesModal = ({rules=[]}) => {
-
-    return (
-        <div className="modal">
-            
-            {
-                rules.map((rule) => {
-                 
-                    return (
-                        <div>
-                            {rule}
-                        </div>
-                    )
-                    
-                })
-            }
-
-        </div>
-    )
-}

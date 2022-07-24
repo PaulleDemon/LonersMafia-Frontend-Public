@@ -13,6 +13,8 @@ import { useMemo, useState } from "react"
 
 const Tabs = ({tabs, className=""}) => {
 
+    console.log("Tabs: ", tabs)
+
     const [currentTab, setCurrentTab] = useState(tabs[0].tabValue)
    
     const navTabs = useMemo(() => tabs, [tabs])

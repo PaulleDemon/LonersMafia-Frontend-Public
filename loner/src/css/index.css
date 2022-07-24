@@ -968,8 +968,7 @@ a{
 }
 
 .registration-modal{
-    max-width: 400px;
-    width: max-content;
+    width: 400px;
     text-align: center;
     margin: 20px;
     box-shadow: 0 0 4px #2f2f2f;
@@ -1022,7 +1021,7 @@ a{
     background-color: #858484c4;
 }
 
-.registration-modal .input{
+.registration-modal > .input{
     width: 80%;
 }
 

@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from "react"
+import { memo, useEffect, useMemo, useRef, useState } from "react"
 import {useMutation}from "react-query"
 
 import imageCompress from "../utils/image-compress"
@@ -22,6 +22,7 @@ import {FILE_TYPE_MAPPING} from "../constants/file"
 import { randInt } from "../utils/random-generator"
 import { CropImage } from "../components/cropper"
 import { TimedMessageModal } from "./info-modal"
+import Tabs from "../components/tabs"
 
 
 /**
@@ -166,7 +167,6 @@ export const RegistrationModal = ({onSuccess, userAvatar="", userName="", taglin
         }
     }
 
-    console.log("status: ", registerMutation.status)
     return (
         <div className="modal registration-modal">
             
@@ -235,29 +235,112 @@ export const RegistrationModal = ({onSuccess, userAvatar="", userName="", taglin
        
             </div>
 
-            <div className="row center font-14px">
-                by clicking on next button you agree to terms and conditions.
-            </div>
+            { 
+                !update ?
+                <div className="row center font-14px">
+                    by clicking on next button you agree to terms and conditions.
+                </div>
+                :
 
+                null
+            }
         </div>
     )
 } 
+
+
+
+
+const AboutSpaceModal = ({icon, crop, form, handleFormChange, handleCroppedImage, 
+                          handleImageUpload, isLoading, mediaRef, error,
+                          inputError
+                        }) => {
+
+    return (
+        <>  
+            <div className="column center" style={{width: "100%"}}>
+                <div className="column center">
+                        
+                    <div className="space-dashboard-container">
+                        {/* <img src={icon.url} alt="dashboard" className="space-dashboard margin-10px"/> */}
+                        <CropImage imgFile={icon.file} aspect={1/1} 
+                                    startCrop={crop} 
+                                    croppedImage={handleCroppedImage}/>
+                        
+                    </div>
+
+                    <label htmlFor="file-upload" className="row center">
+                            <UPLOAD fill="#6134C1" className="icon"/>
+                            <input id="file-upload" type="file" 
+                                            style={{display: "none"}}
+                                            onChange={handleImageUpload} 
+                                            accept="image/png, image/jpeg, image/svg+xml"
+                                            ref={mediaRef} 
+                                            />
+                    </label>
+
+                </div>
+
+                <p className={`row center font-14px ${error ? "error" : "hidden"}`}>{error}</p>
+                <div className="column center">
+                    
+                        <input type="text" className={`input margin-10px ${inputError ? "input-error": ""}`} 
+                                value={form.name} 
+                                placeholder="name (eg: space)"
+                                maxLength={MAX_LENGTH.space_name}
+                                onChange={handleFormChange}
+                                disabled={isLoading}
+                                name="name"
+                                id="name"
+                                autoFocus
+                                />
+                        
+                        <input type="text" className={`input margin-10px`} 
+                                value={form.tag_line} 
+                                placeholder="tag line (eg: the happiest place on earth)"
+                                maxLength={MAX_LENGTH.space_tag_line}
+                                onChange={handleFormChange}
+                                disabled={isLoading}
+                                name="tag_line"
+                                id="tag_line"
+                                />
+
+                        <textarea type="text" 
+                                id="about"
+                                placeholder="about" 
+                                className="text-area"
+                                onChange={handleFormChange}
+                                disabled={isLoading}
+                                />
+                        {/* <textarea name="" 
+                                id="" 
+                            
+                                /> */}
+            
+                </div>
+            </div>
+        </>
+    )
+
+}
+
 
 /**
  * Form used to create a space in loners
  */
 
-export const SpaceCreateModal = ({onSuccess, onClose}) => {
+export const SpaceCreateModal = ({onSuccess, icon_url="", name="", tag_line="", about="", rules=[], update=false, onClose}) => {
     
     const [icon, setIcon] = useState({
-                                        url: "",
+                                        url: icon_url,
                                         file: ""
                                     })
 
     const [spaceForm, setSpaceForm] = useState({
-                                        name: "",
-                                        tag_line: "",
-                                        about: ""
+                                        name: name,
+                                        tag_line: tag_line,
+                                        about: about,
+                                        rules: rules
                                     })
 
     const [error, setError] = useState("")
@@ -267,6 +350,7 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
     const [timedMessage, setTimedMessage] = useState("")
 
     const mediaRef = useRef()
+
     const registerMutation = useMutation(createSpace, {
         
         onError: (err) => {
@@ -331,30 +415,38 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
         registerMutation.mutate(form_data, )
     }
 
-    const handleNameChange = (e) => {
+    const handleAboutFormChange = (e) => {
 
         const value = e.target.value.trim()
 
-        setSubmitBtnEnabled(false)
+        if (e.target.id === "name"){
+            setError("")
+            setInputError(false)
+            setSpaceForm({
+                ...spaceForm,
+                name: value
+            })
 
-        setError("")
-        setInputError(false)
-        setSpaceForm({
-            ...spaceForm,
-            name: value
-        })
+            if (spaceForm.name.length < MIN_LENGTH.space_name){
+                return 
+            }
 
-        if (spaceForm.name.length < MIN_LENGTH.space_name){
-            return 
+            if (!/^[a-zA-Z][a-zA-Z0-9_-]+$/.test(value)){
+                setError("Must begin with alphabet and must contain only alpha numeric values")
+                setInputError(true)
+                return 
+            }
         }
 
-        if (!/^[a-zA-Z][a-zA-Z0-9_-]+$/.test(value)){
-            setError("Must begin with alphabet and must contain only alpha numeric values")
-            setInputError(true)
-            return 
-        }
+        else {   
 
-        setSubmitBtnEnabled(true)
+            const key = e.taget.id
+            setSpaceForm({
+                ...spaceForm,
+                key: e.target.value.trim()
+            })
+        
+        }
     }
 
 
@@ -396,6 +488,28 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
         handleSubmit()
     }
 
+
+
+    const tabs = useMemo(() => ([
+        {
+            tabName: "About",
+            tabValue: "About",
+            tabComponent: <AboutSpaceModal icon={icon} 
+                                           crop={crop} 
+                                           handleCroppedImage={handleCroppedImage}
+                                           handleImageUpload={handleImageUpload}
+                                           mediaRef={mediaRef}
+                                           error={error}
+                                           inputError={inputError}
+                                           form={spaceForm}
+                                           handleFormChange={handleAboutFormChange}
+                                        />,
+        }
+    
+    ]
+    ), [icon, crop, handleAboutFormChange, spaceForm, 
+            handleCroppedImage, handleImageUpload, mediaRef, error,])
+
     return (
 
         <div className="modal-background">
@@ -422,54 +536,7 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
                  create a space and invite other loners
                 </div>
 
-                <div className="column center">
-                    
-                    <div className="space-dashboard-container">
-                        {/* <img src={icon.url} alt="dashboard" className="space-dashboard margin-10px"/> */}
-                        <CropImage imgFile={icon.file} aspect={1/1} 
-                                    startCrop={crop} 
-                                    croppedImage={handleCroppedImage}/>
-                        
-                    </div>
-
-                    <label htmlFor="file-upload" className="row center">
-                            <UPLOAD fill="#6134C1" className="icon"/>
-                            <input id="file-upload" type="file" 
-                                            style={{display: "none"}}
-                                            onChange={handleImageUpload} 
-                                            accept="image/png, image/jpeg, image/svg+xml"
-                                            ref={mediaRef} 
-                                            />
-                    </label>
-
-                </div>
-
-                <p className={`row center font-14px ${error ? "error" : "hidden"}`}>{error}</p>
-                <div className="column center">
-                
-                    <input type="text" className={`input margin-10px ${inputError ? "input-error": ""}`} 
-                            value={spaceForm.name} 
-                            placeholder="name (eg: space)"
-                            maxLength={MAX_LENGTH.space_name}
-                            onChange={handleNameChange}
-                            disabled={registerMutation.isLoading}
-                            name="name"
-                            autoFocus
-                            />
-                    
-                    <input type="text" className={`input margin-10px`} 
-                            value={spaceForm.tag_line} 
-                            placeholder="tag line (eg: the happiest place on earth)"
-                            maxLength={MAX_LENGTH.space_tag_line}
-                            onChange={(e) => setSpaceForm({...spaceForm, tag_line: e.target.value})}
-                            disabled={registerMutation.isLoading}
-                            name="tag_line"
-                            />
-
-                    <textarea name="" id="" placeholder="about" 
-                            className="text-area"
-                            disabled={registerMutation.isLoading}
-                            />
+                <Tabs tabs={tabs}/>
 
                 {
                 (registerMutation.status === "loading" && navigator.onLine) ?
@@ -481,8 +548,7 @@ export const SpaceCreateModal = ({onSuccess, onClose}) => {
                                 <NEXT fill="#fff"/>
                     </button>
                 }
-        
-                </div>
+                
             </div>
         </div>
     )

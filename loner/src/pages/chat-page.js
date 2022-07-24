@@ -30,7 +30,7 @@ function ChatHeader({props}){
     const history = useNavigate()
     const webShare = useWebShare()
 
-    const [showRules, setShowRules] = useState(false)
+    const [showInfoModal, setShowInfoModal] = useState(false)
     const [timedMesage, setTimedMessage] = useState("")
     
     const handleShare = () => {
@@ -63,8 +63,16 @@ function ChatHeader({props}){
                 :
                 null
             }
-            <SpaceInfoModal />
-
+            
+            {showInfoModal ?
+                <SpaceInfoModal onClose={() => setShowInfoModal(false)}
+                                editable={sessionStorage.getItem("is_mod")==="true"}
+                                onEdit={() => console.log("editing...")}
+                />
+                
+                :
+                null
+            }
             <div className="row center margin-10px">
                 <BACK className="icon margin-10px" onClick={() => history("/loner")}/>
                 <img src={icon} alt=" " className="space-icon"/>
@@ -80,7 +88,7 @@ function ChatHeader({props}){
             </div>
             <SHARE className="margin-10px icon" onClick={handleShare}/>
 
-            <INFO className="margin-10px icon" onClick={handleInfoClick}/>
+            <INFO className="margin-10px icon" onClick={() =>setShowInfoModal(true)}/>
 
 
             <div className="peckspace-promo margin-10px">
