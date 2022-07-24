@@ -25,17 +25,18 @@ import {MAX_LENGTH, MIN_LENGTH} from "../constants/lengths"
  * Form used to create a space in loners
  */
 
-const SpaceModal = ({update=false, onSuccess, onClose}) => {
+const SpaceModal = ({icon_url="", name="", tag_line="", about="", 
+                    update=false, isLoading=false, onSubmitClick, onClose}) => {
     
     const [icon, setIcon] = useState({
-                                        url: "",
+                                        url: icon_url,
                                         file: ""
                                     })
 
     const [spaceForm, setSpaceForm] = useState({
-                                        name: "",
-                                        tag_line: "",
-                                        about: ""
+                                        name: name,
+                                        tag_line: tag_line,
+                                        about: about
                                     })
 
     const [error, setError] = useState("")
@@ -45,69 +46,7 @@ const SpaceModal = ({update=false, onSuccess, onClose}) => {
     const [timedMessage, setTimedMessage] = useState("")
 
     const mediaRef = useRef()
-    const registerMutation = useMutation(createSpace, {
-        
-        onError: (err) => {
-            if (err.response?.data && typeof err.response.data === "object"){
-                    setError(`${Object.values(err.response.data).join(" ")}`)
-                    return 
-                }
 
-            error = getErrorCodeDescription(err.code, err.response?.data)
-            setError(error.errorDescription)
-        },
-        onSuccess: (data) => {                
-
-            setIcon({
-                file: "",
-                url: ""
-            })
-
-            if (onSuccess){
-                onSuccess(data)
-            }
-        }
-    })
-
-    const handleSubmit = () => {
-        
-        if (!spaceForm.name.trim()){
-            setError("Enter a space name")
-            setInputError(true)
-            return 
-        } 
-
-        if (spaceForm.name.trim().length < MIN_LENGTH.space_name){
-            setError("name too short")
-            setInputError(true)
-            return 
-        }
-        
-        if (!/^[a-zA-Z][a-zA-Z0-9_-]+$/.test(spaceForm.name)){
-            setError("Must begin with alphabet and must contain only alpha numeric values")
-            setInputError(true)
-            return 
-        }
-        
-        if (!navigator.onLine){
-            setError("You are not connected")
-            return
-        }
-        let form_data = new FormData()
-
-        form_data.append("name", spaceForm.name)
-        
-        if (icon.file)
-            form_data.append("icon", icon.file)
-        
-        if (spaceForm.tag_line)
-            form_data.append("tag_line", spaceForm.tag_line)
-        
-        if (spaceForm.about)
-            form_data.append("about", spaceForm.about)
-        
-        registerMutation.mutate(form_data, )
-    }
 
     const handleNameChange = (e) => {
 
@@ -171,7 +110,7 @@ const SpaceModal = ({update=false, onSuccess, onClose}) => {
                 url: URL.createObjectURL(file)
             })
 
-        handleSubmit()
+        onSubmitClick()
     }
 
     return (
@@ -217,7 +156,7 @@ const SpaceModal = ({update=false, onSuccess, onClose}) => {
                         placeholder="name (eg: space)"
                         maxLength={MAX_LENGTH.space_name}
                         onChange={handleNameChange}
-                        disabled={registerMutation.isLoading}
+                        disabled={isLoading || update}
                         name="name"
                         autoFocus
                         />
@@ -227,17 +166,17 @@ const SpaceModal = ({update=false, onSuccess, onClose}) => {
                         placeholder="tag line (eg: the happiest place on earth)"
                         maxLength={MAX_LENGTH.space_tag_line}
                         onChange={(e) => setSpaceForm({...spaceForm, tag_line: e.target.value})}
-                        disabled={registerMutation.isLoading}
+                        disabled={isLoading}
                         name="tag_line"
                         />
 
                 <textarea name="" id="" placeholder="about" 
                         className="text-area"
-                        disabled={registerMutation.isLoading}
+                        disabled={isLoading}
                         />
 
             {
-            (registerMutation.status === "loading" && navigator.onLine) ?
+            (isLoading && navigator.onLine) ?
                 <LoadingWheel />      
                 :
                 <button className="btn row center" 
@@ -254,15 +193,22 @@ const SpaceModal = ({update=false, onSuccess, onClose}) => {
 } 
 
 
-const RulesThemeModal = ({rules=[], max=5}) => {
+const RulesThemeModal = ({bgImage="", bgColor="#fff", space_rules=Array(5).fill("")}) => {
 
     const [error, setError] = useState("")
+    const [backgroundTheme, setBackgroundTheme] = useState(bgColor)
     const [background, setBackground] = useState({
-        url: "",
+        url: bgImage,
         file: ""
     })
 
-    const handleRuleChange = () => {
+    const [rules, setRules]= useState(space_rules)
+
+    const handleRuleChange = ({e, index}) => {
+
+        const temp_rules = [...rules]
+        temp_rules[index] = e.target.value
+        setRules(temp_rules)
 
     }
 
@@ -288,6 +234,18 @@ const RulesThemeModal = ({rules=[], max=5}) => {
         })
     }
 
+    const handleBgThemeChange = (e) => {
+
+        if (!CSS.supports("background-color", e.target.value))
+            setError("Not a vaild color")
+
+        else
+            setError("")
+
+        setBackgroundTheme(e.target.value)
+
+    }
+
     return (
         <div style={{width: "100%", marginTop: "10px" }}>
 
@@ -296,19 +254,20 @@ const RulesThemeModal = ({rules=[], max=5}) => {
             </div>
             {
                 error ? 
-                    <div className="row center error">{error}</div>
+                    <div className="row center error font-14px">{error}</div>
                 :
                 null
             }
 
             {
-                Array.from({length: max}, (_, index) => {
+                rules.map((_, index) => {
                     return (
                         <div key={index}>
-                            <input type="text" 
+                            <input type="text"
+                                value={rules[index]}
                                 placeholder={`rule ${index+1}`}
                                 maxLength={MAX_LENGTH.space_rule_length}
-                                onChange={handleRuleChange} 
+                                onChange={(e) => handleRuleChange({e, index})} 
                                 className="input" 
                                 style={{marginTop: "10px"}}/>
                         </div>
@@ -318,8 +277,16 @@ const RulesThemeModal = ({rules=[], max=5}) => {
 
             <div className="font-14px margin-10px">Color theme</div>
             <div className="row center margin-10px">
-                <div style={{backgroundColor: "#ffff", width: "25px", height: "25px", border: "2px solid #a6a4a4"}} />
-                <input type="text" maxLength={10} className="input margin-10px" placeholder="#fff"/>
+                <div style={{backgroundColor: backgroundTheme, width: "25px", 
+                                height: "25px", border: "2px solid #a6a4a4", borderRadius: "5px"
+                                }} />
+                <input type="text" 
+                        maxLength={10} 
+                        className="input margin-10px" 
+                        placeholder="#fff"
+                        value={backgroundTheme}
+                        onChange={handleBgThemeChange}
+                        />
             </div>
 
             <div className="font-14px margin-10px">Background</div>
@@ -344,20 +311,101 @@ const RulesThemeModal = ({rules=[], max=5}) => {
 }
 
 
-export const SpaceFormModal = ({onSuccess, onClose}) => {
+export const SpaceFormModal = ({onSuccess, onClose, update=false}) => {
+
+    const [error, setError] = useState("")
+    const [icon, setIcon] = useState({
+                                        url: "",
+                                        file: ""
+                                    })
+
+    const [background, setBackground] = useState({
+                                                    url: "",
+                                                    file: ""
+                                                })
+
+    const [spaceForm, setSpaceForm] = useState({
+                                            name: "",
+                                            icon: "",
+                                            about: "",
+                                            bgColor: "#fff",
+                                            rules: []
+                                        })
+
+    const registerMutation = useMutation(createSpace, {
+        
+        onError: (err) => {
+            if (err.response?.data && typeof err.response.data === "object"){
+                    setError(`${Object.values(err.response.data).join(" ")}`)
+                    return 
+                }
+
+            error = getErrorCodeDescription(err.code, err.response?.data)
+            setError(error.errorDescription)
+        },
+        onSuccess: (data) => {                
+
+            setIcon({
+                file: "",
+                url: ""
+            })
+
+            if (onSuccess){
+                onSuccess(data)
+            }
+        }
+    })
+
+    const handleSubmit = () => {
+        
+        if (!spaceForm.name.trim()){
+            setError("Enter a space name")
+            return 
+        } 
+
+        if (spaceForm.name.trim().length < MIN_LENGTH.space_name){
+            setError("name too short")
+            return 
+        }
+        
+        if (!/^[a-zA-Z][a-zA-Z0-9_-]+$/.test(spaceForm.name)){
+            setError("Must begin with alphabet and must contain only alpha numeric values")
+            return 
+        }
+        
+        if (!navigator.onLine){
+            setError("You are not connected")
+            return
+        }
+        let form_data = new FormData()
+
+        form_data.append("name", spaceForm.name)
+        
+        if (icon.file)
+            form_data.append("icon", icon.file)
+        
+        if (spaceForm.tag_line)
+            form_data.append("tag_line", spaceForm.tag_line)
+        
+        if (spaceForm.about)
+            form_data.append("about", spaceForm.about)
+        
+        registerMutation.mutate(form_data, )
+    }
 
     const tabs = useMemo(() => [
         {
             tabName: "About",
             tabValue: "about",
-            tabComponent: <SpaceModal />,
+            tabComponent: <SpaceModal onSubmitClick={handleSubmit}/>,
         },
         {
-            tabName: "Rules",
+            tabName: "Rules & Themes",
             tabValue: "rule",
             tabComponent: <RulesThemeModal />,
         }
-    ], [])
+
+    ], [handleSubmit])
 
     return (
 
@@ -375,7 +423,13 @@ export const SpaceFormModal = ({onSuccess, onClose}) => {
                 <div className="font-18px margin-10px">
                  create a space and invite other loners
                 </div>
-
+                
+                {
+                    error ? 
+                        <div className="font-14px error">{error}</div>
+                        :
+                    null
+                }
 
                 <Tabs tabs={tabs}/>
 
