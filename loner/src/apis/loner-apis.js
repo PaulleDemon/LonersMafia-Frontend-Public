@@ -105,10 +105,10 @@ export const createSpace = async (data) => {
 
 }
 
-export const updateSpace = async (data) => {
+export const updateSpace = async ({formData, id}) => {
 
     const config = getFormConfig()
-    return await api.post(`/space/update/`, data.formData, config)
+    return await api.post(`/space/${id}/update/`, formData, config)
 
 }
 

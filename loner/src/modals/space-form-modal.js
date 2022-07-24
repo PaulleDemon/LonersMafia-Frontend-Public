@@ -26,8 +26,9 @@ import {MAX_LENGTH, MIN_LENGTH} from "../constants/lengths"
  */
 
 const SpaceModal = ({icon_url="", name="", tag_line="", about="", 
-                    update=false, isLoading=false, onSubmitClick, onClose}) => {
+                    update=false, isLoading=false, onSubmitClick, onValueChange}) => {
     
+    console.log("Icon: ", icon_url, name, tag_line, about)
     const [icon, setIcon] = useState({
                                         url: icon_url,
                                         file: ""
@@ -38,7 +39,7 @@ const SpaceModal = ({icon_url="", name="", tag_line="", about="",
                                         tag_line: tag_line,
                                         about: about
                                     })
-
+    
     const [error, setError] = useState("")
     const [submitBtnEnabled, setSubmitBtnEnabled] = useState(false)
     const [inputError, setInputError] = useState(false)
@@ -46,7 +47,10 @@ const SpaceModal = ({icon_url="", name="", tag_line="", about="",
     const [timedMessage, setTimedMessage] = useState("")
 
     const mediaRef = useRef()
-
+    
+    // useState(() => {
+    //     onValueChange({spaceForm, icon})
+    // }, [spaceForm, icon])
 
     const handleNameChange = (e) => {
 
@@ -60,6 +64,7 @@ const SpaceModal = ({icon_url="", name="", tag_line="", about="",
             ...spaceForm,
             name: value
         })
+        onValueChange({spaceForm, icon})
 
         if (spaceForm.name.length < MIN_LENGTH.space_name){
             return 
@@ -73,7 +78,6 @@ const SpaceModal = ({icon_url="", name="", tag_line="", about="",
 
         setSubmitBtnEnabled(true)
     }
-
 
     const handleImageUpload = async (e) => {
         
@@ -97,7 +101,7 @@ const SpaceModal = ({icon_url="", name="", tag_line="", about="",
             file: image,
             url: URL.createObjectURL(image) 
         })
-        
+        onValueChange({spaceForm, icon})
 
     }
 
@@ -165,12 +169,20 @@ const SpaceModal = ({icon_url="", name="", tag_line="", about="",
                         value={spaceForm.tag_line} 
                         placeholder="tag line (eg: the happiest place on earth)"
                         maxLength={MAX_LENGTH.space_tag_line}
-                        onChange={(e) => setSpaceForm({...spaceForm, tag_line: e.target.value})}
+                        onChange={(e) => {
+                                        setSpaceForm({...spaceForm, tag_line: e.target.value})
+                                        onValueChange({spaceForm, icon})
+                                        }}
                         disabled={isLoading}
                         name="tag_line"
                         />
 
-                <textarea name="" id="" placeholder="about" 
+                <textarea name="" placeholder="about" 
+                        value={spaceForm.about}
+                        onChange={(e) => {
+                            setSpaceForm({...spaceForm, about: e.target.value})
+                            onValueChange({spaceForm, icon})
+                        }}
                         className="text-area"
                         disabled={isLoading}
                         />
@@ -193,8 +205,11 @@ const SpaceModal = ({icon_url="", name="", tag_line="", about="",
 } 
 
 
-const RulesThemeModal = ({bgImage="", bgColor="#fff", space_rules=Array(5).fill("")}) => {
+const RulesThemeModal = ({bgImage="", bgColor="#fff", space_rules=Array(5).fill(""), onValueChange, isLoading}) => {
 
+    const mediaRef = useRef()
+
+    const [loading, setLoading] = useState(isLoading)
     const [error, setError] = useState("")
     const [backgroundTheme, setBackgroundTheme] = useState(bgColor)
     const [background, setBackground] = useState({
@@ -204,11 +219,23 @@ const RulesThemeModal = ({bgImage="", bgColor="#fff", space_rules=Array(5).fill(
 
     const [rules, setRules]= useState(space_rules)
 
+    useEffect(() => {
+        setLoading(isLoading)
+    }, [isLoading])
+
+    // useEffect(() => {
+       
+    //     onValueChange({rules, backgroundTheme, background})
+        
+    // }, [rules, backgroundTheme, background])
+
     const handleRuleChange = ({e, index}) => {
 
         const temp_rules = [...rules]
         temp_rules[index] = e.target.value
         setRules(temp_rules)
+
+        onValueChange({rules, backgroundTheme, background})
 
     }
 
@@ -232,6 +259,8 @@ const RulesThemeModal = ({bgImage="", bgColor="#fff", space_rules=Array(5).fill(
             file: image,
             url: URL.createObjectURL(image) 
         })
+
+        onValueChange({rules, backgroundTheme, background})
     }
 
     const handleBgThemeChange = (e) => {
@@ -243,6 +272,21 @@ const RulesThemeModal = ({bgImage="", bgColor="#fff", space_rules=Array(5).fill(
             setError("")
 
         setBackgroundTheme(e.target.value)
+        onValueChange({rules, backgroundTheme, background})
+
+    }
+
+    const removeBackground = () => {
+        
+        if (mediaRef.current)
+            mediaRef.current.value = null
+        
+        setBackground({
+            url: "",
+            file: ""
+        })
+
+        onValueChange({rules, backgroundTheme, background})
 
     }
 
@@ -269,6 +313,7 @@ const RulesThemeModal = ({bgImage="", bgColor="#fff", space_rules=Array(5).fill(
                                 maxLength={MAX_LENGTH.space_rule_length}
                                 onChange={(e) => handleRuleChange({e, index})} 
                                 className="input" 
+                                disabled={loading}
                                 style={{marginTop: "10px"}}/>
                         </div>
                     )
@@ -286,23 +331,29 @@ const RulesThemeModal = ({bgImage="", bgColor="#fff", space_rules=Array(5).fill(
                         placeholder="#fff"
                         value={backgroundTheme}
                         onChange={handleBgThemeChange}
+                        disabled={loading}
                         />
             </div>
 
             <div className="font-14px margin-10px">Background</div>
             <div className="column center">
                 <div className="space-reg-bg-img-container">
-                    <img src={background.url} alt="" srcset="" className="space-reg-bg-img"/>
+                    <img src={background.url} alt="" className="space-reg-bg-img"/>
                 </div>
-                <label htmlFor="file-upload" className="row center">
-                        <UPLOAD fill="#6134C1" className="icon"/>
-                        <input id="file-upload" type="file" 
-                                        style={{display: "none"}}
-                                        onChange={handleImageUpload} 
-                                        accept="image/png, image/jpeg, image/svg+xml"
-                                        // ref={mediaRef} 
-                                        />
-                </label>
+
+                <div className="row center">
+                    <label htmlFor="file-upload" className="row center">
+                            <UPLOAD fill="#6134C1" className="icon"/>
+                            <input id="file-upload" type="file" 
+                                            style={{display: "none"}}
+                                            onChange={handleImageUpload} 
+                                            accept="image/png, image/jpeg, image/svg+xml"
+                                            disabled={loading}
+                                            ref={mediaRef}
+                                            />
+                    </label>
+                    <CLOSE className="icon" onClick={removeBackground}/>
+                </div>
 
             </div>
 
@@ -326,7 +377,6 @@ export const SpaceFormModal = ({onSuccess, onClose, update=false}) => {
 
     const [spaceForm, setSpaceForm] = useState({
                                             name: "",
-                                            icon: "",
                                             about: "",
                                             bgColor: "#fff",
                                             rules: []
@@ -379,33 +429,72 @@ export const SpaceFormModal = ({onSuccess, onClose, update=false}) => {
         }
         let form_data = new FormData()
 
-        form_data.append("name", spaceForm.name)
+        if (!update)
+            form_data.append("name", spaceForm.name)
         
-        if (icon.file)
-            form_data.append("icon", icon.file)
+        // if (icon.file)
+        form_data.append("icon", icon.file)
         
-        if (spaceForm.tag_line)
-            form_data.append("tag_line", spaceForm.tag_line)
+        // if (spaceForm.tag_line)
+        form_data.append("tag_line", spaceForm.tag_line)
         
-        if (spaceForm.about)
-            form_data.append("about", spaceForm.about)
+        // if (spaceForm.about)
+        form_data.append("about", spaceForm.about)
         
+        form_data.append("color_theme", spaceForm.bgColor)
+        form_data.append("background_image", background.file)
+
         registerMutation.mutate(form_data, )
+    }
+
+    const handleAboutChange = ({spaceForm: form, icon}) => {
+        console.log("chainging: ", form, icon)
+        setSpaceForm({
+            ...spaceForm,
+            ...form
+        })
+
+        setIcon({
+            ...icon
+        })
+    }
+
+    const handleRuleThemeChange = ({rules, backgroundTheme, background: bgImage}) => {
+
+        setBackground({
+            ...bgImage
+        })
+        setSpaceForm({
+            ...spaceForm,
+            rules: rules,
+            bgColor: backgroundTheme
+        })
+
     }
 
     const tabs = useMemo(() => [
         {
             tabName: "About",
             tabValue: "about",
-            tabComponent: <SpaceModal onSubmitClick={handleSubmit}/>,
+            tabComponent: <SpaceModal onSubmitClick={handleSubmit} 
+                                        onValueChange={handleAboutChange}
+                                        isLoading={registerMutation.isLoading}
+                                        icon_url={icon.url}
+                                        name={spaceForm.name}
+                                        tag_line={spaceForm.tagLine}
+                                        about={spaceForm.about}
+                                        />,
         },
         {
             tabName: "Rules & Themes",
             tabValue: "rule",
-            tabComponent: <RulesThemeModal />,
+            tabComponent: <RulesThemeModal 
+                                onValueChange={handleRuleThemeChange}
+                                isLoading={registerMutation.isLoading}
+                                    />,
         }
 
-    ], [handleSubmit])
+    ], [handleSubmit, registerMutation.isLoading, spaceForm, icon, background])
 
     return (
 

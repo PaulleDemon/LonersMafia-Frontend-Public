@@ -1040,6 +1040,8 @@ a{
 .space-reg-bg-img{
     width: auto;
     height: auto;
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .space-info-modal{
