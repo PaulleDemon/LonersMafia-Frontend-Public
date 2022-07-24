@@ -13,10 +13,11 @@ import { Error404 } from "../error-pages/errors"
 import {ReactComponent as EDIT} from "../icons/edit.svg"
 import {ReactComponent as SHARE} from "../icons/share.svg"
 
+import { SpaceFormModal } from "../modals/space-form-modal"
+import { RegistrationModal } from "../modals/registration-modals"
 import { BannedUserModal, TimedMessageModal } from "../modals/info-modal"
-import { RegistrationModal ,SpaceCreateModal } from "../modals/registration-modals"
-import { useScrollDirection } from "../utils/hooks"
 
+import { useScrollDirection } from "../utils/hooks"
 // import { default as logo } from "../icons/emoji.svg"
 
 /**
@@ -73,8 +74,8 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable, so
             
             {
              showSpaceCreateModal ?    
-                <SpaceCreateModal onClose={() => setShowSpaceCreateModal(false)}
-                                  onSuccess={onSpaceCreate}
+                <SpaceFormModal onClose={() => setShowSpaceCreateModal(false)}
+                           onSuccess={onSpaceCreate}
                 />
                 :
                 null
@@ -343,7 +344,7 @@ export default function LonerPage(){
             {
                 showSpaceCreateModal ?
 
-                    <SpaceCreateModal onSuccess={onSpaceCreate}
+                    <SpaceFormModal onSuccess={onSpaceCreate}
                                         onClose={() => setShowSpaceCreateModal(false)}
                     />
                 :

@@ -11,7 +11,9 @@ export const MAX_LENGTH = {
     space_tag_line: 50,
     space_about: 50,
 
-    file_upload: 5242880
+    space_rule_length: 100,
+
+    file_upload: 5242880,
 }
 
 export const MIN_LENGTH = {

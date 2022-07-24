@@ -11,9 +11,9 @@ import {ReactComponent as SHARE} from "../icons/share.svg"
 
 import { useScrollDirection } from "../utils/hooks"
 import { LoadingWheel } from "../components/loading"
-import { SpaceCreateModal } from "../modals/registration-modals"
 import { TimedMessageModal } from "../modals/info-modal"
 import Login from "../components/login-component"
+import { SpaceFormModal } from "../modals/space-form-modal"
 
 
 /**
@@ -252,7 +252,7 @@ const SpacesPage = () => {
 
             {
                 createSpaceModal ?
-                    <SpaceCreateModal onSuccess={onSpaceCreate} onClose={() => setShowCreatSpaceModal(false)}/>
+                    <SpaceFormModal onSuccess={onSpaceCreate} onClose={() => setShowCreatSpaceModal(false)}/>
                 :
                 null
             }

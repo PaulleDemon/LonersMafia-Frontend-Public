@@ -972,7 +972,6 @@ a{
     text-align: center;
     margin: 20px;
     box-shadow: 0 0 4px #2f2f2f;
-
 }
 
 .registration-modal .avatar{
@@ -1021,13 +1020,26 @@ a{
     background-color: #858484c4;
 }
 
-.registration-modal > .input{
+.registration-modal .input{
     width: 80%;
 }
 
 .registration-modal .loading-wheel{
     width: 40px;
     height: 40px;
+}
+
+.space-reg-bg-img-container{
+    display: flex;
+    justify-content: center;
+    height: 120px;
+    width: 200px;
+    background-color: #000000;
+}
+
+.space-reg-bg-img{
+    width: auto;
+    height: auto;
 }
 
 .space-info-modal{
