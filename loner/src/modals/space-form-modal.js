@@ -25,13 +25,13 @@ import {MAX_LENGTH, MIN_LENGTH} from "../constants/lengths"
  * Form used to create a space in loners
  */
 
-const SpaceModal = ({icon_url="", name="", tag_line="", about="", 
+const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="", 
                     update=false, isLoading=false, onSubmitClick, onValueChange}) => {
     
     console.log("Icon: ", icon_url, name, tag_line, about)
     const [icon, setIcon] = useState({
                                         url: icon_url,
-                                        file: ""
+                                        file: icon_file
                                     })
 
     const [spaceForm, setSpaceForm] = useState({
@@ -96,12 +96,13 @@ const SpaceModal = ({icon_url="", name="", tag_line="", about="",
 		} 
 
         // const file_reader = new FileReader()
+        const new_img = {
+                            file: image,
+                            url: URL.createObjectURL(image) 
+                        }
 
-        setIcon({
-            file: image,
-            url: URL.createObjectURL(image) 
-        })
-        onValueChange({spaceForm, icon})
+        setIcon(new_img)
+        onValueChange({spaceForm, icon: new_img})
 
     }
 
@@ -170,18 +171,21 @@ const SpaceModal = ({icon_url="", name="", tag_line="", about="",
                         placeholder="tag line (eg: the happiest place on earth)"
                         maxLength={MAX_LENGTH.space_tag_line}
                         onChange={(e) => {
-                                        setSpaceForm({...spaceForm, tag_line: e.target.value})
-                                        onValueChange({spaceForm, icon})
+                                        const new_val = {...spaceForm, tag_line: e.target.value}
+                                        setSpaceForm(new_val)
+                                        onValueChange({spaceForm: new_val, icon})
                                         }}
                         disabled={isLoading}
                         name="tag_line"
                         />
 
-                <textarea name="" placeholder="about" 
+                <textarea name="about" placeholder="about" 
                         value={spaceForm.about}
+                        maxLength={MAX_LENGTH.space_about}
                         onChange={(e) => {
-                            setSpaceForm({...spaceForm, about: e.target.value})
-                            onValueChange({spaceForm, icon})
+                            const new_val = {...spaceForm, about: e.target.value}
+                            setSpaceForm(new_val)
+                            onValueChange({spaceForm: new_val, icon})
                         }}
                         className="text-area"
                         disabled={isLoading}
@@ -378,6 +382,7 @@ export const SpaceFormModal = ({onSuccess, onClose, update=false}) => {
     const [spaceForm, setSpaceForm] = useState({
                                             name: "",
                                             about: "",
+                                            tag_line: "",
                                             bgColor: "#fff",
                                             rules: []
                                         })
@@ -480,8 +485,9 @@ export const SpaceFormModal = ({onSuccess, onClose, update=false}) => {
                                         onValueChange={handleAboutChange}
                                         isLoading={registerMutation.isLoading}
                                         icon_url={icon.url}
+                                        icon_file={icon.file}
                                         name={spaceForm.name}
-                                        tag_line={spaceForm.tagLine}
+                                        tag_line={spaceForm.tag_line}
                                         about={spaceForm.about}
                                         />,
         },
