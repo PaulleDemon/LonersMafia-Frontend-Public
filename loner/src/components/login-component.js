@@ -9,10 +9,12 @@ import { TimedMessageModal } from "../modals/info-modal"
 export default function Login(){
 
 	const [timedMessage, setTimedMessage] = useState("")
+
+	const [loginEnabled, setLoginEnabled] = useState(false)
 	const [showRegistrationModal, setShowRegistrationModal] = useState(false)
 
     const loginQuery = useQuery("login", login, {
-		enabled: showRegistrationModal,
+		enabled: loginEnabled,
 		staleTime: Infinity,
 		cacheTime: 60 * 60 * 1000, // 1 hour
 		onSuccess: (data) => {
@@ -48,7 +50,7 @@ export default function Login(){
 		console.log("Logged in? ", sessionStorage.getItem("loggedIn"))
 
         if (sessionStorage.getItem("loggedIn") !== "true"){
-            setShowRegistrationModal(true)
+            setLoginEnabled(true)
         }
 
     }, [])
