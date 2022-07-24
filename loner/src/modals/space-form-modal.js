@@ -16,13 +16,13 @@ import {ReactComponent as UPLOAD} from "../icons/upload.svg"
 import imageCompress from "../utils/image-compress"
 import { getFileSize } from "../constants/file"
 
-import { createSpace } from "../apis/loner-apis"
+import { createSpace, updateSpace } from "../apis/loner-apis"
 import {MAX_LENGTH, MIN_LENGTH} from "../constants/lengths"
 
 
 
 /**
- * Form used to create a space in loners
+ * Form for about page to be embedded in the SpaceFormModal tab below
  */
 
 const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="", 
@@ -210,8 +210,10 @@ const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
     )
 } 
 
-
-const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="#fff", space_rules=Array(5).fill(""), 
+/**
+ * Rules to be set for the mafia, which is later to be embedded in the spaceFormModal tab below
+ */
+const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", space_rules=Array(5).fill(""), 
                             onValueChange, isLoading, }) => {
 
     const mediaRef = useRef()
@@ -371,28 +373,30 @@ const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="#fff", space_rules=Ar
 }
 
 
-export const SpaceFormModal = ({onSuccess, onClose, update=false}) => {
+export const SpaceFormModal = ({iconUrl="", bgImgUrl="", name="", about="", tag_line="", 
+                                bgColor="", rules=Array(5).fill(""),
+                                onSuccess, onClose, update=false}) => {
 
     const [error, setError] = useState("")
     const [icon, setIcon] = useState({
-                                        url: "",
+                                        url: iconUrl,
                                         file: ""
                                     })
 
     const [background, setBackground] = useState({
-                                                    url: "",
+                                                    url: bgImgUrl,
                                                     file: ""
                                                 })
 
     const [spaceForm, setSpaceForm] = useState({
-                                            name: "",
-                                            about: "",
-                                            tag_line: "",
-                                            bgColor: "#fff",
-                                            rules: Array(5).fill("")
+                                            name: name,
+                                            about: about,
+                                            tag_line: tag_line,
+                                            bgColor: bgColor,
+                                            rules: rules
                                         })
 
-    const registerMutation = useMutation(createSpace, {
+    const registerMutation = useMutation(!update ? createSpace : updateSpace, {
         
         onError: (err) => {
             if (err.response?.data && typeof err.response.data === "object"){
@@ -455,7 +459,8 @@ export const SpaceFormModal = ({onSuccess, onClose, update=false}) => {
         form_data.append("about", spaceForm.about)
         form_data.append("rules", JSON.stringify(spaceForm.rules))
         
-        form_data.append("color_theme", spaceForm.bgColor)
+        if (spaceForm.bgColor)
+            form_data.append("color_theme", spaceForm.bgColor)
 
         registerMutation.mutate(form_data, )
     }
