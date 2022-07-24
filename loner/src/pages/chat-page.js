@@ -21,24 +21,26 @@ import { getMessages, getSpace, uploadChatMedia } from "../apis/loner-apis"
 import { Error404 } from "../error-pages/errors"
 import { LoadingWheel } from "../components/loading"
 import { MAX_LENGTH } from "../constants/lengths"
+import { SpaceFormModal } from "../modals/space-form-modal"
 
 
 function ChatHeader({props}){
 
-    const {name, icon, about, tag_line, rules, mods} = props
+    const {name, icon, about, tag_line, rules} = props
     
     const history = useNavigate()
     const webShare = useWebShare()
 
-    const [showInfoModal, setShowInfoModal] = useState(false)
     const [timedMesage, setTimedMessage] = useState("")
-    
+    const [showInfoModal, setShowInfoModal] = useState(false)
+    const [showSpaceEditModal, setShowSpaceEditModal] = useState(false)
+
     const handleShare = () => {
 
         if (webShare.isSupported){
             webShare.share({
                 title: `Hey there, here is your invitation to join the ${name}`,
-                text: `Special invite for you to speak your mind out on ${name} space on loners network; completely anonymously, no email, no password, just anonymity.`,
+                text: `Special invite for you to speak your mind out at ${name} mafia on loners maifa; completely anonymously, no email, no password, just anonymity.`,
                 url: window.location
             })
         }
@@ -68,12 +70,33 @@ function ChatHeader({props}){
                                 tag_line={tag_line}
                                 rules={rules}
                                 editable={sessionStorage.getItem("is_mod")==="true"}
-                                onEdit={() => console.log("editing...")}
+                                onEdit={() => {
+                                    setShowInfoModal(false)
+                                    setShowSpaceEditModal(true)
+                                }}
                 />
                 
                 :
                 null
             }
+
+            {
+                showSpaceEditModal ? 
+
+                <SpaceFormModal onClose={() => setShowSpaceEditModal(false)}
+                                name={name}
+                                iconUrl={icon}
+                                about={about}
+                                bgColor={props.color_theme}
+                                background={props.background_image}
+                                rules={rules}
+                                update={true}
+                />
+                :
+
+                null
+            }
+
             <div className="row center margin-10px">
                 <BACK className="icon margin-10px" onClick={() => history("/loner")}/>
                 <img src={icon} alt=" " className="space-icon"/>
@@ -89,7 +112,7 @@ function ChatHeader({props}){
             </div>
             <SHARE className="margin-10px icon" onClick={handleShare}/>
 
-            <INFO className="margin-10px icon" onClick={() =>setShowInfoModal(true)}/>
+            <INFO className="margin-10px icon" onClick={() =>setShowInfoModal(!showInfoModal)}/>
 
 
             <div className="peckspace-promo margin-10px">

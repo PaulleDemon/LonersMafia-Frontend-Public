@@ -18,6 +18,7 @@ import { getFileSize } from "../constants/file"
 
 import { createSpace, updateSpace } from "../apis/loner-apis"
 import {MAX_LENGTH, MIN_LENGTH} from "../constants/lengths"
+import { getFileFromUrl } from "../utils/image"
 
 
 
@@ -28,7 +29,6 @@ import {MAX_LENGTH, MIN_LENGTH} from "../constants/lengths"
 const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="", 
                     update=false, isLoading=false, onSubmitClick, onValueChange}) => {
     
-    console.log("Icon: ", icon_url, name, tag_line, about)
     const [icon, setIcon] = useState({
                                         url: icon_url,
                                         file: icon_file
@@ -36,8 +36,8 @@ const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
 
     const [spaceForm, setSpaceForm] = useState({
                                         name: name,
-                                        tag_line: tag_line,
-                                        about: about
+                                        tag_line: tag_line === null ? "" : tag_line,
+                                        about: about === null? "" : about
                                     })
     
     const [error, setError] = useState("")
@@ -47,6 +47,15 @@ const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
     const [timedMessage, setTimedMessage] = useState("")
 
     const mediaRef = useRef()
+
+    useEffect(() => {
+
+        setIcon({
+                url: icon_url,
+                file: icon_file
+        })
+
+    }, [icon_file])
     
     // useState(() => {
     //     onValueChange({spaceForm, icon})
@@ -118,6 +127,8 @@ const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
 
         onSubmitClick()
     }
+
+    console.log("FORM data: ", spaceForm.about)
 
     return (
 
@@ -213,7 +224,7 @@ const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
 /**
  * Rules to be set for the mafia, which is later to be embedded in the spaceFormModal tab below
  */
-const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", space_rules=Array(5).fill(""), 
+const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", space_rules, 
                             onValueChange, isLoading, }) => {
 
     const mediaRef = useRef()
@@ -225,18 +236,14 @@ const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", space_rules=Array(
         url: bgImgUrl,
         file: bgImgFile
     })
+    console.log("Rules: ", space_rules )
 
-    const [rules, setRules]= useState(space_rules)
+    const [rules, setRules]= useState([...space_rules, Array(5 - space_rules.length).fill("")])
+
 
     useEffect(() => {
         setLoading(isLoading)
     }, [isLoading])
-
-    // useEffect(() => {
-       
-    //     onValueChange({rules, backgroundTheme, background})
-        
-    // }, [rules, backgroundTheme, background])
 
     const handleRuleChange = ({e, index}) => {
 
@@ -315,7 +322,7 @@ const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", space_rules=Array(
             }
 
             {
-                rules.map((_, index) => {
+                [rules, ...Array(5-rules.length)].map((_, index) => {
                     return (
                         <div key={index}>
                             <input type="text"
@@ -332,7 +339,7 @@ const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", space_rules=Array(
             }
 
             <div className="font-14px margin-10px">Color theme</div>
-            <div className="row center margin-10px">
+            <div className="row center">
                 <div style={{backgroundColor: backgroundTheme, width: "25px", 
                                 height: "25px", border: "2px solid #a6a4a4", borderRadius: "5px"
                                 }} />
@@ -346,7 +353,7 @@ const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", space_rules=Array(
                         />
             </div>
 
-            <div className="font-14px margin-10px">Background</div>
+            <div className="font-14px">Background</div>
             <div className="column center">
                 <div className="space-reg-bg-img-container">
                     <img src={background.url} alt="" className="space-reg-bg-img"/>
@@ -373,10 +380,11 @@ const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", space_rules=Array(
 }
 
 
-export const SpaceFormModal = ({iconUrl="", bgImgUrl="", name="", about="", tag_line="", 
-                                bgColor="", rules=Array(5).fill(""),
+export const SpaceFormModal = ({id=null, iconUrl="", bgImgUrl="", 
+                                name="", about="", tag_line="", bgColor="", rules,
                                 onSuccess, onClose, update=false}) => {
-
+    
+    // console.log("URL: ", iconUrl, )
     const [error, setError] = useState("")
     const [icon, setIcon] = useState({
                                         url: iconUrl,
@@ -387,13 +395,22 @@ export const SpaceFormModal = ({iconUrl="", bgImgUrl="", name="", about="", tag_
                                                     url: bgImgUrl,
                                                     file: ""
                                                 })
+    
+    useEffect(() => {
+
+        if (iconUrl)
+            getFileFromUrl(iconUrl).then(res => setIcon({...icon, file: res}))
+
+            
+        }, [iconUrl])
+        // getFileFromUrl(iconUrl).then(res => setIcon({...icon, file: res}))
 
     const [spaceForm, setSpaceForm] = useState({
                                             name: name,
                                             about: about,
                                             tag_line: tag_line,
                                             bgColor: bgColor,
-                                            rules: rules
+                                            rules: rules || Array(5).fill("")
                                         })
 
     const registerMutation = useMutation(!update ? createSpace : updateSpace, {
@@ -461,8 +478,13 @@ export const SpaceFormModal = ({iconUrl="", bgImgUrl="", name="", about="", tag_
         
         if (spaceForm.bgColor)
             form_data.append("color_theme", spaceForm.bgColor)
+        
+        let data = form_data
 
-        registerMutation.mutate(form_data, )
+        if (update)
+            data = {formData: form_data, id: id}
+
+        registerMutation.mutate(data)
     }
 
     const handleAboutChange = ({spaceForm: form, icon}) => {
@@ -502,6 +524,7 @@ export const SpaceFormModal = ({iconUrl="", bgImgUrl="", name="", about="", tag_
                                         name={spaceForm.name}
                                         tag_line={spaceForm.tag_line}
                                         about={spaceForm.about}
+                                        update={update}
                                         />,
         },
         {
