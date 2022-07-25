@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import useWebShare from "react-use-web-share"
 
 import { MafiaCard } from "../components/card"
-import { listSpaces } from "../apis/loner-apis"
+import { listMafias } from "../apis/loner-apis"
 
 import {ReactComponent as BACK} from "../icons/back.svg"
 import {ReactComponent as SHARE} from "../icons/share.svg"
@@ -14,6 +14,7 @@ import { LoadingWheel } from "../components/loading"
 import { TimedMessageModal } from "../modals/info-modal"
 import Login from "../components/login-component"
 import { MaifaFormModal } from "../modals/mafia-form-modal"
+import ENDPOINTS from "../constants/url-endpoints"
 
 
 /**
@@ -115,7 +116,7 @@ const MafiasPage = () => {
         },
     [])
 
-    const sortListQuery = useInfiniteQuery(["spaces", sortOption, sessionStorage.getItem("user-id")], listSpaces, {
+    const sortListQuery = useInfiniteQuery(["mafias", sortOption, sessionStorage.getItem("user-id")], listMafias, {
         // enabled: enabled,
         getNextPageParam: (lastPage, ) => {
             // console.log("PAGE: ", lastPage)
@@ -228,8 +229,8 @@ const MafiasPage = () => {
 
     }
 
-    const onSpaceCreate = (data) => {
-        history(`/space/${data.data.name}/`)
+    const onMafiaCreate = (data) => {
+        history(ENDPOINTS.mafiaview(data.data.name))
         setShowCreatMafiaModal(false)
     }
 
@@ -241,7 +242,7 @@ const MafiasPage = () => {
                 <BACK className="icon" onClick={() => history('/loner')}/>
                 <SortComponent values={sortOptions} defaultValue={sortOption} onOptionChange={handleSortOptionChange}/>
                 
-                <a onClick={() => setShowCreatMafiaModal(true)} style={{cursor: "pointer"}}>create space</a>
+                <a onClick={() => setShowCreatMafiaModal(true)} style={{cursor: "pointer"}}>start mafia</a>
                 
                 <div className="row center">
                     <SHARE className="icon" onClick={handleShare}/>
@@ -252,7 +253,7 @@ const MafiasPage = () => {
 
             {
                 createMafiaModal ?
-                    <MaifaFormModal onSuccess={onSpaceCreate} onClose={() => setShowCreatMafiaModal(false)}/>
+                    <MaifaFormModal onSuccess={onMafiaCreate} onClose={() => setShowCreatMafiaModal(false)}/>
                 :
                 null
             }
@@ -271,7 +272,7 @@ const MafiasPage = () => {
                     {
                         listQueries.map((data) => {
                             return (
-                                <li key={data.id}>
+                                <li key={data.id} style={{width: "max-content"}}>
                                     <MafiaCard name={data.name} icon={data.icon} tag_name={data.tag_name}/>
                                 </li>
                             )
@@ -282,8 +283,8 @@ const MafiasPage = () => {
                 {
                     (sortListQuery.status === "success" &&  listQueries.length === 0)?
                         <div className="row center">
-                            <div>Seems nothings here. Why not create a space?</div>
-                            <div onClick={() => setShowCreatMafiaModal(true)}>create space</div>
+                            <div>Seems nothings here. Why not start a mafia?</div>
+                            <div onClick={() => setShowCreatMafiaModal(true)}>create mafia</div>
                         </div>
                 
                     :

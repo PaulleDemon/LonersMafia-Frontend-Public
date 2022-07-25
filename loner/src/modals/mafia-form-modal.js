@@ -16,7 +16,7 @@ import {ReactComponent as UPLOAD} from "../icons/upload.svg"
 import imageCompress from "../utils/image-compress"
 import { getFileSize } from "../constants/file"
 
-import { createSpace, updateSpace } from "../apis/loner-apis"
+import { createMafia, updateMafia } from "../apis/loner-apis"
 import {MAX_LENGTH, MIN_LENGTH} from "../constants/lengths"
 import { getFileFromUrl } from "../utils/image"
 
@@ -34,7 +34,7 @@ const MaifaModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
                                         file: icon_file
                                     })
 
-    const [spaceForm, setSpaceForm] = useState({
+    const [mafiaForm, setMaifaForm] = useState({
                                         name: name,
                                         tag_line: tag_line === null ? "" : tag_line,
                                         about: about === null? "" : about
@@ -69,12 +69,12 @@ const MaifaModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
         setInputError(false)
 
         const new_val = {
-                            ...spaceForm,
+                            ...mafiaForm,
                             name: value
                         }
 
-        setSpaceForm(new_val)
-        onValueChange({spaceForm: new_val, icon})
+        setMaifaForm(new_val)
+        onValueChange({mafiaForm: new_val, icon})
 
         if (value.length < MIN_LENGTH.mafia_name){
             setError(`Must be atleast of length ${MIN_LENGTH.mafia_name}`)
@@ -112,7 +112,7 @@ const MaifaModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
                         }
 
         setIcon(new_img)
-        onValueChange({spaceForm, icon: new_img})
+        onValueChange({maifaForm: mafiaForm, icon: new_img})
 
     }
 
@@ -128,7 +128,7 @@ const MaifaModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
         onSubmitClick()
     }
 
-    console.log("FORM data: ", spaceForm.about)
+    console.log("FORM data: ", mafiaForm.about)
 
     return (
 
@@ -169,8 +169,8 @@ const MaifaModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
             <div className="column center">
             
                 <input type="text" className={`input margin-10px ${inputError ? "input-error": ""}`} 
-                        value={spaceForm.name} 
-                        placeholder="name (eg: space)"
+                        value={mafiaForm.name} 
+                        placeholder="name (eg: memers69)"
                         maxLength={MAX_LENGTH.mafia_name}
                         onChange={handleNameChange}
                         disabled={isLoading || update}
@@ -179,25 +179,25 @@ const MaifaModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
                         />
                 
                 <input type="text" className={`input margin-10px`} 
-                        value={spaceForm.tag_line} 
+                        value={mafiaForm.tag_line} 
                         placeholder="tag line (eg: the happiest place on earth)"
                         maxLength={MAX_LENGTH.mafia_tag_line}
                         onChange={(e) => {
-                                        const new_val = {...spaceForm, tag_line: e.target.value}
-                                        setSpaceForm(new_val)
-                                        onValueChange({spaceForm: new_val, icon})
+                                        const new_val = {...mafiaForm, tag_line: e.target.value}
+                                        setMaifaForm(new_val)
+                                        onValueChange({mafiaForm: new_val, icon})
                                         }}
                         disabled={isLoading}
                         name="tag_line"
                         />
 
                 <textarea name="about" placeholder="about" 
-                        value={spaceForm.about}
+                        value={mafiaForm.about}
                         maxLength={MAX_LENGTH.mafia_about}
                         onChange={(e) => {
-                            const new_val = {...spaceForm, about: e.target.value}
-                            setSpaceForm(new_val)
-                            onValueChange({spaceForm: new_val, icon})
+                            const new_val = {...mafiaForm, about: e.target.value}
+                            setMaifaForm(new_val)
+                            onValueChange({maifaForm: new_val, icon})
                         }}
                         className="text-area"
                         disabled={isLoading}
@@ -224,7 +224,7 @@ const MaifaModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
 /**
  * Rules to be set for the mafia, which is later to be embedded in the MafiaFormModal tab below
  */
-const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", space_rules, 
+const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", maifa_rules, 
                             onValueChange, isLoading, }) => {
 
     const mediaRef = useRef()
@@ -236,9 +236,9 @@ const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", space_rules,
         url: bgImgUrl,
         file: bgImgFile
     })
-    console.log("Rules: ", space_rules, [...space_rules, ...Array(5 - space_rules.length).fill("")] )
+    console.log("Rules: ", maifa_rules, [...maifa_rules, ...Array(5 - maifa_rules.length).fill("")] )
 
-    const [rules, setRules]= useState([...space_rules, ...Array(5 - space_rules.length).fill("")])
+    const [rules, setRules]= useState([...maifa_rules, ...Array(5 - maifa_rules.length).fill("")])
 
 
     useEffect(() => {
@@ -322,7 +322,7 @@ const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", space_rules,
             }
 
             {
-                [...rules, ...Array(5-rules.length)].map((_, index) => {
+                [...rules, ...Array(5-rules.length).fill("")].map((_, index) => {
                     return (
                         <div key={index}>
                             <input type="text"
@@ -413,7 +413,7 @@ export const MaifaFormModal = ({id=null, iconUrl="", bgImgUrl="",
                                             rules: rules || Array(5).fill("")
                                         })
 
-    const registerMutation = useMutation(!update ? createSpace : updateSpace, {
+    const registerMutation = useMutation(!update ? createMafia : updateMafia, {
         
         onError: (err) => {
             if (err.response?.data && typeof err.response.data === "object"){
@@ -489,7 +489,7 @@ export const MaifaFormModal = ({id=null, iconUrl="", bgImgUrl="",
         registerMutation.mutate(data)
     }
 
-    const handleAboutChange = ({spaceForm: form, icon}) => {
+    const handleAboutChange = ({maifaForm: form, icon}) => {
 
         setMafiaForm({
             ...maifaForm,
@@ -537,7 +537,7 @@ export const MaifaFormModal = ({id=null, iconUrl="", bgImgUrl="",
             tabComponent: <RulesThemeModal 
                                 onValueChange={handleRuleThemeChange}
                                 isLoading={registerMutation.status === "loading"}
-                                space_rules={maifaForm.rules}
+                                maifa_rules={maifaForm.rules}
                                 bgColor={maifaForm.bgColor}
                                 bgImgUrl={background.url}
                                 bgImgFile={background.file}

@@ -25,4 +25,12 @@
         display: none;
     }
 
+    .space-content{
+        display: flex;
+        grid-template-columns: unset;
+        flex-direction: column;
+        /* justify-content: center; */
+        justify-items: center;
+    }
+
 }

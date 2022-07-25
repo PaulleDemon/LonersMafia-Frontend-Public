@@ -96,28 +96,28 @@ export const login = async () => {
     return await api.get(`/user/login/`, config)
 }
 
-/* ----------------------------------- space endpoints --------------------------  */
+/* ----------------------------------- mafia endpoints --------------------------  */
 
-export const createSpace = async (data) => {
+export const createMafia = async (data) => {
 
     const config = getFormConfig()
-    return await api.post(`/space/create/`, data, config)
+    return await api.post(`/mafia/create/`, data, config)
 
 }
 
-export const updateSpace = async ({formData, id}) => {
+export const updateMafia = async ({formData, id}) => {
 
     const config = getFormConfig()
-    return await api.put(`/space/${id}/update/`, formData, config)
+    return await api.put(`/mafia/${id}/update/`, formData, config)
 
 }
 
 
-export const getSpace = async (space) => {
+export const getMafia = async (mafia) => {
 
-    // const [_, space] = queryKey
+    // const [_, mafia] = queryKey
     const config = getConfig()
-    return await api.get(`/space/${space}/get/`, config)
+    return await api.get(`/mafia/${mafia}/get/`, config)
 }
 
 
@@ -126,15 +126,15 @@ export const assignMod = async (data) => {
     const config = getConfig()
     const body = JSON.parse(data)
 
-    return await api.post(`/space/assign-mod/`, body, config)
+    return await api.post(`/mafia/assign-mod/`, body, config)
 }
 
 
-export const deleteSpace = async (space) => {
+export const deleteMafia = async (mafia) => {
 
     const config = getConfig()
 
-    return await api.delete(`/space/delete/${space}/`, config)
+    return await api.delete(`/mafia/delete/${mafia}/`, config)
 }
 
 
@@ -146,10 +146,10 @@ export const deleteAndBan = async ({data, deleteAll=false}) =>{
     const config = getConfig()
     const body = JSON.stringify(data)
     
-    return await api.post(`/space/delete-and-ban/?deleteAll=${deleteAll}`, body, config)
+    return await api.post(`/mafia/delete-and-ban/?deleteAll=${deleteAll}`, body, config)
 }
 
-export const listSpaces = async ({queryKey, pageParam=1}) => {
+export const listMafias = async ({queryKey, pageParam=1}) => {
 
     let [_, sort, user] = queryKey
     const config = getConfig()
@@ -160,24 +160,24 @@ export const listSpaces = async ({queryKey, pageParam=1}) => {
     if (sort === undefined)
         sort = ""
 
-    return await api.get(`/space/list/?sort=${encodeURIComponent(sort)}&user=${encodeURIComponent(user)}&page=${pageParam}`, config)
+    return await api.get(`/mafia/list/?sort=${encodeURIComponent(sort)}&user=${encodeURIComponent(user)}&page=${pageParam}`, config)
 }
 
 /* ----------------------------------- messages endpoints ------------------------- */
 
 export const getMessages = async ({queryKey, pageParam=1}) => {
 
-    const [_, space] = queryKey
+    const [_, mafia] = queryKey
 
     const config = getConfig()
-    return await api.get(`/space/${space}/messages/?page=${pageParam}`, config)
+    return await api.get(`/mafia/${mafia}/messages/?page=${pageParam}`, config)
 }
 
 export const uploadChatMedia = async (data) => {
 
     const config = getFormConfig()
     
-    return await api.post(`/space/message/create/`, data, config)
+    return await api.post(`/mafia/message/create/`, data, config)
 
 }
 
@@ -185,7 +185,7 @@ export const deleteMessage = async (msg_id) => {
 
     const config = getConfig()
 
-    return await api.delete(`/space/message/delete/${msg_id}/`, config)
+    return await api.delete(`/mafia/message/delete/${msg_id}/`, config)
 } 
 
 
@@ -196,7 +196,7 @@ export const reactToMessage = async (data) => {
     const config = getConfig()
     const body = JSON.stringify(data)
 
-    return await api.post(`/space/messages/react/`, body, config)
+    return await api.post(`/mafia/messages/react/`, body, config)
 }
 
 
@@ -204,5 +204,5 @@ export const deleteReaction = async ({message, reaction}) => {
 
     const config = getConfig()
 
-    return await api.delete(`/space/message/${message}/react/${encodeURIComponent(reaction)}/delete/`, config)
+    return await api.delete(`/mafia/message/${message}/react/${encodeURIComponent(reaction)}/delete/`, config)
 }

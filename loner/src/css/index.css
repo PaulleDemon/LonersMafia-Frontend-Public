@@ -697,9 +697,11 @@ a{
 
 .space-content{
     display: grid;
+    width: 100%;
     gap: 5px;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     list-style: none;
+    /* justify-items: center; */
     justify-content: center;
 }
 

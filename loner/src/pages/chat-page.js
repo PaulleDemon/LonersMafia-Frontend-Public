@@ -17,7 +17,7 @@ import AutoHeightTextarea from "../components/auto-resize-textarea"
 import {  MafiaInfoModal, TimedMessageModal  } from "../modals/info-modal"
 import { randInt } from "../utils/random-generator"
 
-import { getMessages, getSpace, uploadChatMedia } from "../apis/loner-apis"
+import { getMessages, getMafia, uploadChatMedia } from "../apis/loner-apis"
 import { Error404 } from "../error-pages/errors"
 import { LoadingWheel } from "../components/loading"
 import { MAX_LENGTH } from "../constants/lengths"
@@ -167,7 +167,7 @@ export default function Chat(){
         fileType: ''
     })
 
-    const [socketUrl, setSocketUrl] = useState(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/space/${mafia}/`)
+    const [socketUrl, setSocketUrl] = useState(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/mafia/${mafia}/`)
     const [timedMesage, setTimedMessage] = useState("")
     const [messagable, setMessageble] = useState(true)
     const [show404Page, setShow404Page] = useState(false)
@@ -227,7 +227,7 @@ export default function Chat(){
                                                                 }
                                                             })
     
-    const mafiaQuery = useQuery(["space", mafia], () => getSpace(mafia), {
+    const mafiaQuery = useQuery(["mafia", mafia], () => getMafia(mafia), {
         refetchOnMount: true,
         refetchOnWindowFocus: true,
         staleTime: 60 * 60 * 1000, // 60 minutes
@@ -311,7 +311,7 @@ export default function Chat(){
     
     useEffect(() => {
 
-        setSocketUrl(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/space/${mafia}/`) //eg: ws://localhost:8000/ws/space/space/
+        setSocketUrl(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/mafia/${mafia}/`) //eg: ws://localhost:8000/ws/mafia/space/
 
     }, [mafia])
 
@@ -421,7 +421,7 @@ export default function Chat(){
 
             const formData = new FormData()
            
-            formData.append("space", mafiaDetails.id)
+            formData.append("mafia", mafiaDetails.id)
             formData.append("media", media.fileObject)
             
             if (text.trim())

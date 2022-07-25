@@ -4,7 +4,7 @@ import { useParams, Link, useNavigate } from "react-router-dom"
 
 import useWebShare from "react-use-web-share"
 
-import { getUser, listSpaces } from "../apis/loner-apis"
+import { getUser, listMafias } from "../apis/loner-apis"
 
 import Login from "../components/login-component"
 import { LoadingWheel } from "../components/loading"
@@ -19,6 +19,7 @@ import { RegistrationModal } from "../modals/registration-modals"
 import { BannedUserModal, TimedMessageModal } from "../modals/info-modal"
 
 import { useScrollDirection } from "../utils/hooks"
+import ENDPOINTS from "../constants/url-endpoints"
 // import { default as logo } from "../icons/emoji.svg"
 
 /**
@@ -62,7 +63,7 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable, so
     }
 
     const onMafiaCreate = (data) => {
-        history(`/space/${data.data.name}/`)
+        history(ENDPOINTS.mafiaview(data.data.name))
         setShowMafiaCreateModal(false)
     }
 
@@ -181,7 +182,7 @@ export default function LonerPage(){
         }
     })
 
-    const trendingListQuery = useInfiniteQuery(["mafia", "trending", lonerData.id], listSpaces, {
+    const trendingListQuery = useInfiniteQuery(["mafia", "trending", lonerData.id], listMafias, {
         enabled: enabled,
         staleTime: 5 * 60 * 1000, // 5 minutes
         getNextPageParam: (lastPage, ) => {
@@ -193,7 +194,7 @@ export default function LonerPage(){
     }) 
 
 
-    const recentListQuery = useInfiniteQuery(["mafia", "recent", lonerData.id], listSpaces, {
+    const recentListQuery = useInfiniteQuery(["mafia", "recent", lonerData.id], listMafias, {
         enabled: enabled,
         getNextPageParam: (lastPage, ) => {
             // console.log("PAGE: ", lastPage)
@@ -218,7 +219,7 @@ export default function LonerPage(){
 
     })
 
-    const moderatingListQuery = useInfiniteQuery(["mafia", "moderating", lonerData.id], listSpaces, {
+    const moderatingListQuery = useInfiniteQuery(["mafia", "moderating", lonerData.id], listMafias, {
         enabled: enabled,
         getNextPageParam: (lastPage, ) => {
             // console.log("PAGE: ", lastPage)
@@ -253,7 +254,7 @@ export default function LonerPage(){
 
             let trending_data=[]
 
-            data.pages.forEach((x) => {
+            data?.pages?.forEach((x) => {
                 x.data.results.forEach( (x) =>{
                     trending_data.push(x)
                 }
@@ -276,7 +277,7 @@ export default function LonerPage(){
 
             let moderating_data=[]
 
-            data.pages.forEach((x) => {
+            data?.pages?.forEach((x) => {
                 x.data.results.forEach( (x) =>{
                     moderating_data.push(x)
                 }
@@ -307,7 +308,7 @@ export default function LonerPage(){
     }
 
     const onMafiaCreate = (data) => {
-        history(`/space/${data.data.name}/`)
+        history(ENDPOINTS.mafiaview(data.data.name))
         setShowMafiaCreateModal(false)
     }
 
@@ -426,7 +427,7 @@ export default function LonerPage(){
                 
             <div className="section-container">
 
-                <HorizontalSection  title="Recently texted maifas" 
+                <HorizontalSection  title="Recently texted mafias" 
                                     data={recentMaifas}
                                     isLoading={recentListQuery.isLoading||recentListQuery.isFetching}
                                     onLoadable={()=>recentListQuery.fetchNextPage({cancelRefetch: false})}

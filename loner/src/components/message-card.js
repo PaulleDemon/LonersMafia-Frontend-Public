@@ -52,7 +52,7 @@ const ReactionComponent = ({id=null, emoji, count=0, is_reacted=false, onClick})
 const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=false, props}) => {
 
     
-    const {id, message, user, media_url, space,
+    const {id, message, user, media_url, mafia,
         datetime, is_mod=false, is_staff=false, reactions} = props
     
     const {id: userid, name, avatar_url} = user
@@ -70,11 +70,13 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
     
     let removedReactionId = null
 
+    console.log("Mafia: ", props)
     const reactMessageMutate = useMutation(reactToMessage, {
         onSuccess: (successData) => {
-
-            queryClient.setQueriesData(["chat", space], (data) => {
-            
+            console.log("Success")
+            queryClient.setQueriesData(["chat", mafia], (data) => {
+                
+                console.log("Chat: ", data)
                 // updates all the cached rooms to display the latest message and change the unread count
                 const newPagesArray = data.pages.map((data) =>{
                                     // find and update the specific data
@@ -83,6 +85,7 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
 
                                         return val.id == successData.data.message
                                     })
+                                    console.log("YAa: ", data, index)
 
                                     if (index !== -1){
                                         // if the id exists in this page then update otherwise just
@@ -105,11 +108,12 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
             })
         }
     }) 
+
     const reactMessageDeleteMutate = useMutation(deleteReaction, {
         
         onSuccess: (successData) => {
             
-            queryClient.setQueriesData(["chat", space], (data) => {
+            queryClient.setQueriesData(["chat", mafia], (data) => {
                 
                 // updates all the cached rooms to display the latest message and change the unread count
                 const newPagesArray = data.pages.map((data) =>{
@@ -172,7 +176,7 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
 
         const data = {
             user: userid,
-            space: space
+            mafia: mafia
         }
         assignModMutate.mutate(data, {
             onError: () => {
@@ -196,7 +200,7 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
             data: {
                     id: id, 
                     user: userid,
-                    space: space
+                    mafia: mafia
                 },
             deleteAll: deleteAll
         }, {
