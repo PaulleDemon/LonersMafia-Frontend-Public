@@ -94,7 +94,7 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable, so
                 null
             }
 
-            <div className="space-cards-container" ref={scrollRef} onScroll={handleScroll}>
+            <div className="mafia-cards-container" ref={scrollRef} onScroll={handleScroll}>
                 {
                     data.map((data) => {
 
@@ -125,7 +125,7 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable, so
 
             </div>
             <div className="right-end margin-10px">
-                <Link to={`/spaces?sort=${sortType}`}>
+                <Link to={`/mafias?sort=${sortType}`}>
                     see more {`>`}
                 </Link>
             </div>
@@ -453,7 +453,7 @@ export default function LonerPage(){
                         Sponsored
                     </div>
 
-                    <div className="space-cards-container" >
+                    <div className="mafia-cards-container" >
                         <MafiaCard name={"Peckspace"} 
                                     icon={require("../icons/sponsors-icons/peckspace-icon-white.png")}
                                     tag_line={"Find your space on Peckspace"}

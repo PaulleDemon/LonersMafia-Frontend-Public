@@ -235,10 +235,10 @@ const MafiasPage = () => {
     }
 
     return (
-        <div className="spaces-page">
+        <div className="mafias-page">
             
 
-            <div className="spaces-header">
+            <div className="mafias-header">
                 <BACK className="icon" onClick={() => history('/loner')}/>
                 <SortComponent values={sortOptions} defaultValue={sortOption} onOptionChange={handleSortOptionChange}/>
                 
@@ -265,9 +265,9 @@ const MafiasPage = () => {
                 null
             }
 
-            <div className="space-content-container" >
+            <div className="mafia-content-container" >
           
-                <ul className="space-content" ref={scrollRef}>
+                <ul className="mafia-content" ref={scrollRef}>
 
                     {
                         listQueries.map((data) => {

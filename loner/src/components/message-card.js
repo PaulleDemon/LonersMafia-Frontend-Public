@@ -73,7 +73,7 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
     console.log("Mafia: ", props)
     const reactMessageMutate = useMutation(reactToMessage, {
         onSuccess: (successData) => {
-            console.log("Success")
+      
             queryClient.setQueriesData(["chat", mafia], (data) => {
                 
                 console.log("Chat: ", data)

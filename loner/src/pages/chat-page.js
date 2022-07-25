@@ -110,13 +110,13 @@ function ChatHeader({onMaifaUpdate, props}){
 
             <div className="row center margin-10px">
                 <BACK className="icon margin-10px" onClick={() => history("/loner")}/>
-                <img src={icon} alt=" " className="space-icon"/>
+                <img src={icon} alt=" " className="mafia-icon"/>
                 <div className="info column margin-10px">
-                    <div className="space-name">
+                    <div className="mafia-name">
                         {name}
                     </div>
 
-                    <div className="space-tag">
+                    <div className="mafia-tag">
                         {tag_line}
                     </div>
                 </div>
@@ -311,7 +311,7 @@ export default function Chat(){
     
     useEffect(() => {
 
-        setSocketUrl(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/mafia/${mafia}/`) //eg: ws://localhost:8000/ws/mafia/space/
+        setSocketUrl(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/mafia/${mafia}/`) //eg: ws://localhost:8000/ws/mafia/mafia/
 
     }, [mafia])
 

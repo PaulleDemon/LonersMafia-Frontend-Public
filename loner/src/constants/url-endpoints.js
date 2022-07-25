@@ -2,7 +2,7 @@
 const ENDPOINTS = {
 
     lonerview: (loner) => `/loner/${loner}`,
-    mafiaview: (space) => `/mafia/${space}/` 
+    mafiaview: (mafia) => `/mafia/${mafia}/` 
 }
 
 

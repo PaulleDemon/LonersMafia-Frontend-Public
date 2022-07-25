@@ -113,7 +113,7 @@ const MafiaInfo = ({icon, tag_line, about}) => {
     return (
         <div className="column center" style={{width: "100%", marginTop: "10px"}}>
 
-            <img src={icon} alt="" className="space-avatar"/>
+            <img src={icon} alt="" className="mafia-avatar"/>
 
             <div className="tag-line margin-10px">
                 "{tag_line}"
@@ -129,7 +129,7 @@ const MafiaInfo = ({icon, tag_line, about}) => {
 const MafiaRules = ({rules=[]}) => {
 
     return (
-        <div className="space-rules" style={{width: "100%", marginTop: "10px"}}>
+        <div className="mafia-rules" style={{width: "100%", marginTop: "10px"}}>
 
             {
                 rules.map(({rule, id}) => {
@@ -171,9 +171,9 @@ export const MafiaInfoModal = ({icon, name, tag_line, about,
 
 
     return (
-        <div className="modal space-info-modal">
+        <div className="modal mafia-info-modal">
             
-            <div className="space-info-btns-container">
+            <div className="mafia-info-btns-container">
                 <CLOSE className="icon left-end" onClick={onClose}/>
                 {
                     editable ?

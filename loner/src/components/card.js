@@ -28,10 +28,10 @@ export const MafiaCard = memo(({name="", tag_line="", icon="",
     }
 
     return (
-        <div className="space-card" onClick={handleNavigation}>
+        <div className="mafia-card" onClick={handleNavigation}>
 
-            <div className="space-avatar-container">
-                <img src={icon} alt="" className="space-avatar" />
+            <div className="mafia-avatar-container">
+                <img src={icon} alt="" className="mafia-avatar" />
             </div>
 
             <div className="info-container column">
@@ -55,8 +55,8 @@ export const MafiaCard = memo(({name="", tag_line="", icon="",
 export const CreateMafiaCard = ({message="start mafia", onClick}) => {
 
     return (
-        <div className="space-card create-space-card-container" onClick={onClick}>
-            <div className="create-space-card">
+        <div className="mafia-card create-mafia-card-container" onClick={onClick}>
+            <div className="create-mafia-card">
                 <CREATE />
                 <div className="row center font-18px">
                     {message}

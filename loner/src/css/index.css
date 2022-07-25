@@ -167,7 +167,7 @@ a{
   }
 
 
-/* ---------------- chat space ------------- */
+/* ---------------- chat mafia ------------- */
 
 .chat-page{
     display: flex;
@@ -183,13 +183,13 @@ a{
     max-height: 100%;
 }
 
-.space-name{
+.mafia-name{
 	font-weight: 400;
     text-overflow: ellipsis;
     font-size: 22px;
 }
 
-.space-tag{
+.mafia-tag{
 	color: #878585;
     text-overflow: ellipsis;
     white-space:nowrap;
@@ -197,7 +197,7 @@ a{
     font-size: 14px;
 }
 
-.space-icon{
+.mafia-icon{
 	width: 50px;
 	height: 50px;
 	clip-path: circle(50%);
@@ -660,21 +660,21 @@ a{
     list-style: none;
 }
 
-.space-cards-container{
+.mafia-cards-container{
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
 }
 
 
-/* ---------------------- spaces page ------------------------- */
+/* ---------------------- mafias page ------------------------- */
 
-.spaces-page{
+.mafias-page{
     display: flex;
     flex-direction: column;
 }
 
-.spaces-header{
+.mafias-header{
     position: fixed;
     top: 0;
     left: 0;
@@ -688,14 +688,14 @@ a{
     width: 100%;
 }
 
-.space-content-container{
+.mafia-content-container{
     position: relative;
     top: 40px;
     padding: 10px;
     width: 100%;
 }
 
-.space-content{
+.mafia-content{
     display: grid;
     width: 100%;
     gap: 5px;
@@ -705,9 +705,9 @@ a{
     justify-content: center;
 }
 
-/* --------------------- space-card -------------- */
+/* --------------------- mafia-card -------------- */
 
-.space-card{
+.mafia-card{
     display: flex;
     flex-direction: column;
     height: 300px;
@@ -718,7 +718,7 @@ a{
     flex-shrink: 0;
 }
 
-.space-card .space-avatar-container{
+.mafia-card .mafia-avatar-container{
     display: flex;
     width: 250px;
     height: 200px;
@@ -727,7 +727,7 @@ a{
     /* border-radius: 5px 5px 0px 0px; */
 }
 
-.space-card .space-avatar{
+.mafia-card .mafia-avatar{
     max-width: 100%;
     max-height: 100%;
     width: 100%;
@@ -735,35 +735,35 @@ a{
     /* border-radius: 5px 5px 0px 0px; */
 }
 
-.space-card .info-container{
+.mafia-card .info-container{
     padding: 10px;
 }
 
-.space-card .name{
+.mafia-card .name{
     font-size: 22px;
     font-weight: 550;
 }
 
-.space-card .tag-line{
+.mafia-card .tag-line{
     color: #6d6d6d;
     font-size: 16px;
 }
 
-.space-card .btn{
+.mafia-card .btn{
     text-align: center;
     background-color: #94108e;
     padding: 5px;
 }
 
-/* --------------------- create-space-card --------- */
+/* --------------------- create-mafia-card --------- */
 
-.create-space-card-container{
+.create-mafia-card-container{
 
     display: flex;
     padding: 10px;
 }   
 
-.create-space-card{
+.create-mafia-card{
     display: flex;
     height: 100%;
     width: 100%;
@@ -989,7 +989,7 @@ a{
     background: url("../icons/default-avatar.svg");
 }
 
-.registration-modal .space-dashboard-container{
+.registration-modal .mafia-dashboard-container{
     width: 350px;
     height: 250px;
     display: flex;
@@ -997,7 +997,7 @@ a{
     justify-content: center;
 }
 
-.registration-modal .space-dashboard{
+.registration-modal .mafia-dashboard{
     max-width: 100%;
     max-height: 100%;
     width: auto;
@@ -1036,7 +1036,7 @@ a{
     height: 40px;
 }
 
-.space-reg-bg-img-container{
+.mafia-reg-bg-img-container{
     display: flex;
     justify-content: center;
     height: 120px;
@@ -1044,37 +1044,37 @@ a{
     background-color: #000000;
 }
 
-.space-reg-bg-img{
+.mafia-reg-bg-img{
     width: auto;
     height: auto;
     max-width: 100%;
     max-height: 100%;
 }
 
-.space-info-modal{
+.mafia-info-modal{
     width: 350px;
     height: 600px;
     align-items: center;
     padding: 10px;
 }
 
-.space-info-modal .space-avatar{
+.mafia-info-modal .mafia-avatar{
     width: 250px;
     height: 250px;
     border-radius: 10px;
 }
 
-.space-info-modal .space-info-btns-container{
+.mafia-info-modal .mafia-info-btns-container{
     display: flex;
     width: 100%;
 }
 
-.space-info-modal .about{
+.mafia-info-modal .about{
     height: 100px;
     overflow-y: auto;
 }
 
-.space-rules{
+.mafia-rules{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1083,7 +1083,7 @@ a{
     overflow-x: hidden;
 }
 
-.space-rules > .rule{
+.mafia-rules > .rule{
     background-color: #d8d4d47a;
     width: 100%;
     min-height: 30px;

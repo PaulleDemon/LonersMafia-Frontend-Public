@@ -145,8 +145,8 @@ const MaifaModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
 
             <div className="column center">
                 
-                <div className="space-dashboard-container">
-                    {/* <img src={icon.url} alt="dashboard" className="space-dashboard margin-10px"/> */}
+                <div className="mafia-dashboard-container">
+                    {/* <img src={icon.url} alt="dashboard" className="mafia-dashboard margin-10px"/> */}
                     <CropImage imgFile={icon.file} aspect={1/1} 
                                 startCrop={crop} 
                                 croppedImage={handleCroppedImage}/>
@@ -283,7 +283,7 @@ const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", maifa_rules,
     const handleBgThemeChange = (e) => {
 
         // if (!CSS.supports("background-color", e.target.value))
-        if (!/^#([0-9a-f]{3}){1,2}$/i.test(e.target.value)) // check if the color is a valid hex color
+        if (!/^#(?:[0-9a-fA-F]{3,4}){1,2}$/i.test(e.target.value)) // check if the color is a valid hex color
             setError("Not a vaild hex color")
 
         else
@@ -355,8 +355,8 @@ const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", maifa_rules,
 
             <div className="font-14px">Background</div>
             <div className="column center">
-                <div className="space-reg-bg-img-container">
-                    <img src={background.url} alt="" className="space-reg-bg-img"/>
+                <div className="mafia-reg-bg-img-container">
+                    <img src={background.url} alt="" className="mafia-reg-bg-img"/>
                 </div>
 
                 <div className="row center">
@@ -475,7 +475,7 @@ export const MaifaFormModal = ({id=null, iconUrl="", bgImgUrl="",
         // if (spaceForm.about)
         form_data.append("about", maifaForm.about)
         
-        if (!maifaForm.rules.sort().every((val, idx) => val === rules.sort()[idx])) // if rules haven't changed don't upate
+        if (!maifaForm.rules.sort().every((val, idx) => val === rules?.sort()[idx])) // if rules haven't changed don't upate
             form_data.append("rules", JSON.stringify(maifaForm.rules))
         
         if (maifaForm.bgColor)
