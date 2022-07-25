@@ -23,10 +23,10 @@ import { getFileFromUrl } from "../utils/image"
 
 
 /**
- * Form for about page to be embedded in the SpaceFormModal tab below
+ * Form for about page to be embedded in the MafiaFormModal tab below
  */
 
-const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="", 
+const MaifaModal = ({icon_url="", icon_file="", name="", tag_line="", about="", 
                     update=false, isLoading=false, onSubmitClick, onValueChange}) => {
     
     const [icon, setIcon] = useState({
@@ -76,8 +76,8 @@ const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
         setSpaceForm(new_val)
         onValueChange({spaceForm: new_val, icon})
 
-        if (value.length < MIN_LENGTH.space_name){
-            setError(`Must be atleast of length ${MIN_LENGTH.space_name}`)
+        if (value.length < MIN_LENGTH.mafia_name){
+            setError(`Must be atleast of length ${MIN_LENGTH.mafia_name}`)
             return 
         }
 
@@ -171,7 +171,7 @@ const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
                 <input type="text" className={`input margin-10px ${inputError ? "input-error": ""}`} 
                         value={spaceForm.name} 
                         placeholder="name (eg: space)"
-                        maxLength={MAX_LENGTH.space_name}
+                        maxLength={MAX_LENGTH.mafia_name}
                         onChange={handleNameChange}
                         disabled={isLoading || update}
                         name="name"
@@ -181,7 +181,7 @@ const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
                 <input type="text" className={`input margin-10px`} 
                         value={spaceForm.tag_line} 
                         placeholder="tag line (eg: the happiest place on earth)"
-                        maxLength={MAX_LENGTH.space_tag_line}
+                        maxLength={MAX_LENGTH.mafia_tag_line}
                         onChange={(e) => {
                                         const new_val = {...spaceForm, tag_line: e.target.value}
                                         setSpaceForm(new_val)
@@ -193,7 +193,7 @@ const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
 
                 <textarea name="about" placeholder="about" 
                         value={spaceForm.about}
-                        maxLength={MAX_LENGTH.space_about}
+                        maxLength={MAX_LENGTH.mafia_about}
                         onChange={(e) => {
                             const new_val = {...spaceForm, about: e.target.value}
                             setSpaceForm(new_val)
@@ -222,7 +222,7 @@ const SpaceModal = ({icon_url="", icon_file="", name="", tag_line="", about="",
 } 
 
 /**
- * Rules to be set for the mafia, which is later to be embedded in the spaceFormModal tab below
+ * Rules to be set for the mafia, which is later to be embedded in the MafiaFormModal tab below
  */
 const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", space_rules, 
                             onValueChange, isLoading, }) => {
@@ -328,7 +328,7 @@ const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", space_rules,
                             <input type="text"
                                 value={rules[index]}
                                 placeholder={`rule ${index+1}`}
-                                maxLength={MAX_LENGTH.space_rule_length}
+                                maxLength={MAX_LENGTH.mafia_rule_length}
                                 onChange={(e) => handleRuleChange({e, index})} 
                                 className="input" 
                                 disabled={loading}
@@ -380,7 +380,7 @@ const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", space_rules,
 }
 
 
-export const SpaceFormModal = ({id=null, iconUrl="", bgImgUrl="", 
+export const MaifaFormModal = ({id=null, iconUrl="", bgImgUrl="", 
                                 name="", about="", tag_line="", bgColor="", rules,
                                 onSuccess, onClose, update=false}) => {
     
@@ -405,7 +405,7 @@ export const SpaceFormModal = ({id=null, iconUrl="", bgImgUrl="",
         }, [iconUrl])
         // getFileFromUrl(iconUrl).then(res => setIcon({...icon, file: res}))
 
-    const [spaceForm, setSpaceForm] = useState({
+    const [maifaForm, setMafiaForm] = useState({
                                             name: name,
                                             about: about,
                                             tag_line: tag_line,
@@ -439,17 +439,17 @@ export const SpaceFormModal = ({id=null, iconUrl="", bgImgUrl="",
 
     const handleSubmit = () => {
         
-        if (!spaceForm.name.trim()){
-            setError("Enter a space name")
+        if (!maifaForm.name.trim()){
+            setError("Enter a mafia name")
             return 
         } 
 
-        if (spaceForm.name.trim().length < MIN_LENGTH.space_name){
+        if (maifaForm.name.trim().length < MIN_LENGTH.mafia_name){
             setError("name too short")
             return 
         }
         
-        if (!/^[a-zA-Z][a-zA-Z0-9_-]+$/.test(spaceForm.name)){
+        if (!/^[a-zA-Z][a-zA-Z0-9_-]+$/.test(maifaForm.name)){
             setError("Must begin with alphabet and must contain only alpha numeric values")
             return 
         }
@@ -461,7 +461,7 @@ export const SpaceFormModal = ({id=null, iconUrl="", bgImgUrl="",
         let form_data = new FormData()
 
         if (!update)
-            form_data.append("name", spaceForm.name)
+            form_data.append("name", maifaForm.name)
         
         if (icon.file && iconUrl !== icon.url)
             form_data.append("icon", icon.file)
@@ -470,16 +470,16 @@ export const SpaceFormModal = ({id=null, iconUrl="", bgImgUrl="",
             form_data.append("background_image", background.file)
 
         // if (spaceForm.tag_line)
-        form_data.append("tag_line", spaceForm.tag_line)
+        form_data.append("tag_line", maifaForm.tag_line)
         
         // if (spaceForm.about)
-        form_data.append("about", spaceForm.about)
+        form_data.append("about", maifaForm.about)
         
-        if (!spaceForm.rules.sort().every((val, idx) => val === rules.sort()[idx])) // if rules haven't changed don't upate
-            form_data.append("rules", JSON.stringify(spaceForm.rules))
+        if (!maifaForm.rules.sort().every((val, idx) => val === rules.sort()[idx])) // if rules haven't changed don't upate
+            form_data.append("rules", JSON.stringify(maifaForm.rules))
         
-        if (spaceForm.bgColor)
-            form_data.append("color_theme", spaceForm.bgColor)
+        if (maifaForm.bgColor)
+            form_data.append("color_theme", maifaForm.bgColor)
         
         let data = form_data
 
@@ -491,8 +491,8 @@ export const SpaceFormModal = ({id=null, iconUrl="", bgImgUrl="",
 
     const handleAboutChange = ({spaceForm: form, icon}) => {
 
-        setSpaceForm({
-            ...spaceForm,
+        setMafiaForm({
+            ...maifaForm,
             ...form
         })
 
@@ -506,8 +506,8 @@ export const SpaceFormModal = ({id=null, iconUrl="", bgImgUrl="",
         setBackground({
             ...bgImage
         })
-        setSpaceForm({
-            ...spaceForm,
+        setMafiaForm({
+            ...maifaForm,
             rules: rules,
             bgColor: backgroundTheme
         })
@@ -520,14 +520,14 @@ export const SpaceFormModal = ({id=null, iconUrl="", bgImgUrl="",
         {
             tabName: "About",
             tabValue: "about",
-            tabComponent: <SpaceModal onSubmitClick={handleSubmit} 
+            tabComponent: <MaifaModal onSubmitClick={handleSubmit} 
                                         onValueChange={handleAboutChange}
                                         isLoading={registerMutation.status === "loading"}
                                         icon_url={icon.url}
                                         icon_file={icon.file}
-                                        name={spaceForm.name}
-                                        tag_line={spaceForm.tag_line}
-                                        about={spaceForm.about}
+                                        name={maifaForm.name}
+                                        tag_line={maifaForm.tag_line}
+                                        about={maifaForm.about}
                                         update={update}
                                         />,
         },
@@ -537,14 +537,14 @@ export const SpaceFormModal = ({id=null, iconUrl="", bgImgUrl="",
             tabComponent: <RulesThemeModal 
                                 onValueChange={handleRuleThemeChange}
                                 isLoading={registerMutation.status === "loading"}
-                                space_rules={spaceForm.rules}
-                                bgColor={spaceForm.bgColor}
+                                space_rules={maifaForm.rules}
+                                bgColor={maifaForm.bgColor}
                                 bgImgUrl={background.url}
                                 bgImgFile={background.file}
                                     />,
         }
 
-    ], [handleSubmit, registerMutation.status, spaceForm, icon, background])
+    ], [handleSubmit, registerMutation.status, maifaForm, icon, background])
 
     return (
 
@@ -556,13 +556,13 @@ export const SpaceFormModal = ({id=null, iconUrl="", bgImgUrl="",
                 </div>
 
                 <div className="row center title-22px">
-                   {!update ? "Create a space" : "Update the space" }
+                   {!update ? "Start a Mafia" : "Update the Mafia" }
                 </div>
 
                 {
                  !update ?
                     <div className="font-18px margin-10px">
-                        create a space and invite other loners
+                        start a mafia and invite other loners
                     </div>
                     :
                     null

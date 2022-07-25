@@ -25,11 +25,11 @@ const linkifyConfig = [
         },
         ,
         {
-            regex: /\bS\/\w+/gm, //regex to match a Spaces
+            regex: /\bm\/\w+/gm, //regex to match a mafias
             fn: (key, result) => {
-                // console.log("space: ", result)
+   
                 return (<Link key={key} 
-                            to={ENDPOINTS.spaceviewposts(result[0].slice(2, ))}
+                            to={ENDPOINTS.mafiaview(result[0].slice(2, ))}
                             onClick={(e) => e.stopPropagation()}
                             className="linkify-link-color"
                             >

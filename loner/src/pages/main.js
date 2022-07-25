@@ -5,7 +5,7 @@ import { Error404 } from "../error-pages/errors";
 
 import Chat from "./chat-page"
 import LonerPage from "./loner-page";
-import SpacesPage from "./spaces-page";
+import MafiasPage from "./mafias-page";
 
 
 function Main(){
@@ -17,15 +17,15 @@ function Main(){
 		<Routes>
 			<Route path="/" exact element={<Navigate to="/loner" replace />} />
 
-			<Route path="/spaces/" element={<SpacesPage />}/>
-			<Route path="/space/:space" element={<Chat />}/>
+			<Route path="/mafias/" element={<MafiasPage />}/>
+			<Route path="/mafia/:mafia" element={<Chat />}/>
 			<Route path="/loner/:loner" exact element={<LonerPage />}/>
 			
 	
 			<Route path="/loner" exact 
 				element={(logged_in === "true" ? 
 								<Navigate  replace  to={`/loner/${user_name}`}/> : 
-								<Navigate replace to={`/spaces/`} />)}/>
+								<Navigate replace to={`/mafias/`} />)}/>
 		
 
 			<Route path="*" element={<Error404 />} />

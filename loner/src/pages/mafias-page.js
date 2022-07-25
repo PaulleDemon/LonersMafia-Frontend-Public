@@ -3,7 +3,7 @@ import { useInfiniteQuery } from "react-query"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import useWebShare from "react-use-web-share"
 
-import { SpaceCard } from "../components/card"
+import { MafiaCard } from "../components/card"
 import { listSpaces } from "../apis/loner-apis"
 
 import {ReactComponent as BACK} from "../icons/back.svg"
@@ -13,7 +13,7 @@ import { useScrollDirection } from "../utils/hooks"
 import { LoadingWheel } from "../components/loading"
 import { TimedMessageModal } from "../modals/info-modal"
 import Login from "../components/login-component"
-import { SpaceFormModal } from "../modals/space-form-modal"
+import { MaifaFormModal } from "../modals/mafia-form-modal"
 
 
 /**
@@ -85,10 +85,10 @@ const SortComponent = ({values, defaultValue, onOptionChange}) => {
 
 
 /**
- * will display all the spaces according to the sorting
+ * will display all the mafias according to the sorting
  */
 
-const SpacesPage = () => {
+const MafiasPage = () => {
     
     const [sortParams, setSortParam] = useSearchParams()
 
@@ -101,7 +101,7 @@ const SpacesPage = () => {
     const scrollDirection = useScrollDirection(null)
 
     const [listQueries, setListQueries] = useState([])
-    const [createSpaceModal, setShowCreatSpaceModal] = useState(false)
+    const [createMafiaModal, setShowCreatMafiaModal] = useState(false)
 
     const [sortOption, setSortOption] = useState(sortParams.get("sort"))
     
@@ -230,7 +230,7 @@ const SpacesPage = () => {
 
     const onSpaceCreate = (data) => {
         history(`/space/${data.data.name}/`)
-        setShowCreatSpaceModal(false)
+        setShowCreatMafiaModal(false)
     }
 
     return (
@@ -241,7 +241,7 @@ const SpacesPage = () => {
                 <BACK className="icon" onClick={() => history('/loner')}/>
                 <SortComponent values={sortOptions} defaultValue={sortOption} onOptionChange={handleSortOptionChange}/>
                 
-                <a onClick={() => setShowCreatSpaceModal(true)} style={{cursor: "pointer"}}>create space</a>
+                <a onClick={() => setShowCreatMafiaModal(true)} style={{cursor: "pointer"}}>create space</a>
                 
                 <div className="row center">
                     <SHARE className="icon" onClick={handleShare}/>
@@ -251,8 +251,8 @@ const SpacesPage = () => {
             <Login />
 
             {
-                createSpaceModal ?
-                    <SpaceFormModal onSuccess={onSpaceCreate} onClose={() => setShowCreatSpaceModal(false)}/>
+                createMafiaModal ?
+                    <MaifaFormModal onSuccess={onSpaceCreate} onClose={() => setShowCreatMafiaModal(false)}/>
                 :
                 null
             }
@@ -272,7 +272,7 @@ const SpacesPage = () => {
                         listQueries.map((data) => {
                             return (
                                 <li key={data.id}>
-                                    <SpaceCard name={data.name} icon={data.icon} tag_name={data.tag_name}/>
+                                    <MafiaCard name={data.name} icon={data.icon} tag_name={data.tag_name}/>
                                 </li>
                             )
                         })
@@ -283,7 +283,7 @@ const SpacesPage = () => {
                     (sortListQuery.status === "success" &&  listQueries.length === 0)?
                         <div className="row center">
                             <div>Seems nothings here. Why not create a space?</div>
-                            <div onClick={() => setShowCreatSpaceModal(true)}>create space</div>
+                            <div onClick={() => setShowCreatMafiaModal(true)}>create space</div>
                         </div>
                 
                     :
@@ -305,4 +305,4 @@ const SpacesPage = () => {
 }
 
 
-export default SpacesPage
+export default MafiasPage

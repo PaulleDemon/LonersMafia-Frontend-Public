@@ -65,7 +65,7 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
     
     const banMutate = useMutation(banUser)
     const assignModMutate = useMutation(assignMod)
-    const banFromSpaceMutate = useMutation(deleteAndBan)
+    const banFromMafiaMutate = useMutation(deleteAndBan)
     const deleteMessageMutate = useMutation(deleteMessage)
     
     let removedReactionId = null
@@ -192,7 +192,7 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
 
     const onDeleteAndBan = (deleteAll=false) => {
 
-        banFromSpaceMutate.mutate({
+        banFromMafiaMutate.mutate({
             data: {
                     id: id, 
                     user: userid,

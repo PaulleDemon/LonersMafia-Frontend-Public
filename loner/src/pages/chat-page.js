@@ -14,17 +14,17 @@ import {ReactComponent as INFO} from "../icons/info.svg"
 import ChatCard from "../components/message-card"
 import AutoHeightTextarea from "../components/auto-resize-textarea"
 
-import {  SpaceInfoModal, TimedMessageModal  } from "../modals/info-modal"
+import {  MafiaInfoModal, TimedMessageModal  } from "../modals/info-modal"
 import { randInt } from "../utils/random-generator"
 
 import { getMessages, getSpace, uploadChatMedia } from "../apis/loner-apis"
 import { Error404 } from "../error-pages/errors"
 import { LoadingWheel } from "../components/loading"
 import { MAX_LENGTH } from "../constants/lengths"
-import { SpaceFormModal } from "../modals/space-form-modal"
+import { MaifaFormModal } from "../modals/mafia-form-modal"
 
 
-function ChatHeader({onSpaceUpdate, props}){
+function ChatHeader({onMaifaUpdate, props}){
 
     const {name, icon, about, tag_line, rules} = props
     
@@ -33,7 +33,7 @@ function ChatHeader({onSpaceUpdate, props}){
 
     const [timedMesage, setTimedMessage] = useState("")
     const [showInfoModal, setShowInfoModal] = useState(false)
-    const [showSpaceEditModal, setShowSpaceEditModal] = useState(false)
+    const [showMafiaEditModal, setShowMafiaEditModal] = useState(false)
 
     const handleShare = () => {
 
@@ -54,10 +54,10 @@ function ChatHeader({onSpaceUpdate, props}){
 
     const handleEditSuccess = () => {
 
-        if (onSpaceUpdate)
-            onSpaceUpdate()
+        if (onMaifaUpdate)
+            onMaifaUpdate()
 
-        setShowSpaceEditModal(false)
+        setShowMafiaEditModal(false)
     }   
 
     return (
@@ -71,7 +71,7 @@ function ChatHeader({onSpaceUpdate, props}){
             }
             
             {showInfoModal ?
-                <SpaceInfoModal onClose={() => setShowInfoModal(false)}
+                <MafiaInfoModal onClose={() => setShowInfoModal(false)}
                                 name={name}
                                 icon={icon}
                                 about={about}
@@ -80,7 +80,7 @@ function ChatHeader({onSpaceUpdate, props}){
                                 editable={sessionStorage.getItem("is_mod")==="true"}
                                 onEdit={() => {
                                     setShowInfoModal(false)
-                                    setShowSpaceEditModal(true)
+                                    setShowMafiaEditModal(true)
                                 }}
                 />
                 
@@ -89,9 +89,9 @@ function ChatHeader({onSpaceUpdate, props}){
             }
 
             {
-                showSpaceEditModal ? 
+                showMafiaEditModal ? 
 
-                <SpaceFormModal onClose={() => setShowSpaceEditModal(false)}
+                <MaifaFormModal onClose={() => setShowMafiaEditModal(false)}
                                 id={props.id}
                                 name={name}
                                 iconUrl={icon}
@@ -155,7 +155,7 @@ const randomTexts = [
 
 export default function Chat(){
 
-    const {space} = useParams() 
+    const {mafia} = useParams() 
 
     const mediaRef = useRef()
     const queryClient = useQueryClient()
@@ -167,13 +167,13 @@ export default function Chat(){
         fileType: ''
     })
 
-    const [socketUrl, setSocketUrl] = useState(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/space/${space}/`)
+    const [socketUrl, setSocketUrl] = useState(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/space/${mafia}/`)
     const [timedMesage, setTimedMessage] = useState("")
     const [messagable, setMessageble] = useState(true)
     const [show404Page, setShow404Page] = useState(false)
     const [queryEnabled, setQueryEnabled] = useState(false)
 
-    const [spaceDetails, setSpaceDetails] =useState({
+    const [mafiaDetails, setMafiaDetails] =useState({
                                             id: null,
                                             name: "",
                                             icon: "",
@@ -203,7 +203,7 @@ export default function Chat(){
                                                                     
                                                                     else if (closeEvent.code === 3404){
                                                                         setTimedMessage("You cannot connect to this socket")
-                                                                        setSocketCloseReason("This space doesn't exist. But you can always create one :)")
+                                                                        setSocketCloseReason("This mafia doesn't exist. But you can always create one :)")
                                                                         setMessageble(false)
 
                                                                     }
@@ -227,20 +227,20 @@ export default function Chat(){
                                                                 }
                                                             })
     
-    const spaceQuery = useQuery(["space", space], () => getSpace(space), {
+    const mafiaQuery = useQuery(["space", mafia], () => getSpace(mafia), {
         refetchOnMount: true,
         refetchOnWindowFocus: true,
         staleTime: 60 * 60 * 1000, // 60 minutes
 
         onSuccess: (data) => {
             // console.log("Data: ", data.data)
-            setSpaceDetails(data.data)
+            setMafiaDetails(data.data)
             
         },
         retry: 3
     })
  
-    const chatQuery = useInfiniteQuery(["chat", spaceDetails.id], getMessages, {
+    const chatQuery = useInfiniteQuery(["chat", mafiaDetails.id], getMessages, {
         enabled: queryEnabled,
         getNextPageParam: (lastPage, ) => {
          
@@ -311,23 +311,23 @@ export default function Chat(){
     
     useEffect(() => {
 
-        setSocketUrl(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/space/${space}/`) //eg: ws://localhost:8000/ws/space/space/
+        setSocketUrl(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/space/${mafia}/`) //eg: ws://localhost:8000/ws/space/space/
 
-    }, [space])
+    }, [mafia])
 
     useEffect(() => {
 
-        if (spaceQuery.isSuccess){
-            const data = spaceQuery.data
+        if (mafiaQuery.isSuccess){
+            const data = mafiaQuery.data
             
-            setSpaceDetails(data.data)
+            setMafiaDetails(data.data)
             sessionStorage.setItem("is_staff", data.data?.is_staff.toString())
             sessionStorage.setItem("is_mod", data.data?.is_mod.toString())
 
             setQueryEnabled(true)
         }
 
-    }, [spaceQuery.isSuccess])
+    }, [mafiaQuery.isSuccess])
 
     useEffect(() => {
         
@@ -344,7 +344,7 @@ export default function Chat(){
              * better solution give a pull request
              */ 
             
-            queryClient.setQueryData(["chat", spaceDetails.id], ({pages, pagesParams}) => {
+            queryClient.setQueryData(["chat", mafiaDetails.id], ({pages, pagesParams}) => {
                 
                 pages[0].data.results.unshift(lastJsonMessage)
                 return ({
@@ -421,7 +421,7 @@ export default function Chat(){
 
             const formData = new FormData()
            
-            formData.append("space", spaceDetails.id)
+            formData.append("space", mafiaDetails.id)
             formData.append("media", media.fileObject)
             
             if (text.trim())
@@ -482,8 +482,8 @@ export default function Chat(){
         
             <div className="chat-page">
                 
-                <ChatHeader onSpaceUpdate={() => {spaceQuery.remove(); spaceQuery.refetch()}} 
-                                props={spaceDetails}/>
+                <ChatHeader onMaifaUpdate={() => {mafiaQuery.remove(); mafiaQuery.refetch()}} 
+                                props={mafiaDetails}/>
 
                 {
                     timedMesage !== ""?

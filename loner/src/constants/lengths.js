@@ -7,16 +7,16 @@ export const MAX_LENGTH = {
 
     chat_length: 2000,
 
-    space_name: 25,
-    space_tag_line: 50,
-    space_about: 50,
+    mafia_name: 25,
+    mafia_tag_line: 50,
+    mafia_about: 50,
 
-    space_rule_length: 100,
+    mafia_rule_length: 100,
 
     file_upload: 5242880,
 }
 
 export const MIN_LENGTH = {
     name: 3,
-    space_name: 3
+    mafia_name: 3
 }

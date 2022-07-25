@@ -108,7 +108,7 @@ export const BannedUserModal = () => {
 
 
 
-const SpaceInfo = ({icon, tag_line, about}) => {
+const MafiaInfo = ({icon, tag_line, about}) => {
 
     return (
         <div className="column center" style={{width: "100%", marginTop: "10px"}}>
@@ -126,7 +126,7 @@ const SpaceInfo = ({icon, tag_line, about}) => {
     )
 }
 
-const SpaceRules = ({rules=[]}) => {
+const MafiaRules = ({rules=[]}) => {
 
     return (
         <div className="space-rules" style={{width: "100%", marginTop: "10px"}}>
@@ -141,7 +141,7 @@ const SpaceRules = ({rules=[]}) => {
                 })
             }
             <div className="row center font-18px">
-                Make sure you don't break these mafia rules in additional to Loners rules when in this space
+                Make sure you don't break these mafia rules in additional to Loners rules when in this maifa
             </div>
         </div>
     )
@@ -149,7 +149,7 @@ const SpaceRules = ({rules=[]}) => {
 }
 
 
-export const SpaceInfoModal = ({icon, name, tag_line, about, 
+export const MafiaInfoModal = ({icon, name, tag_line, about, 
                                 rules, mods, editable, onClose, onEdit}) =>{
    
     const tabs = useMemo(() => ([
@@ -157,13 +157,13 @@ export const SpaceInfoModal = ({icon, name, tag_line, about,
         {
             tabName: "About",
             tabValue: "about",
-            tabComponent: <SpaceInfo icon={icon} tag_line={tag_line} about={about}/>
+            tabComponent: <MafiaInfo icon={icon} tag_line={tag_line} about={about}/>
         },
 
         {
             tabName: "Rules",
             tabValue: "rules",
-            tabComponent: <SpaceRules rules={rules}/>
+            tabComponent: <MafiaRules rules={rules}/>
         }
 
 

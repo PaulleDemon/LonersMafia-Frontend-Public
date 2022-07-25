@@ -8,13 +8,13 @@ import { getUser, listSpaces } from "../apis/loner-apis"
 
 import Login from "../components/login-component"
 import { LoadingWheel } from "../components/loading"
-import { CreateSpaceCard, SpaceCard } from "../components/card"
+import { CreateMafiaCard, MafiaCard } from "../components/card"
 import { Error404 } from "../error-pages/errors"
 
 import {ReactComponent as EDIT} from "../icons/edit.svg"
 import {ReactComponent as SHARE} from "../icons/share.svg"
 
-import { SpaceFormModal } from "../modals/space-form-modal"
+import { MaifaFormModal } from "../modals/mafia-form-modal"
 import { RegistrationModal } from "../modals/registration-modals"
 import { BannedUserModal, TimedMessageModal } from "../modals/info-modal"
 
@@ -34,7 +34,7 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable, so
     const history = useNavigate()
 
     const [showRegisterModal, setShowRegisterModal] = useState(false)
-    const [showSpaceCreateModal, setShowSpaceCreateModal] = useState(false)
+    const [showMafiaCreateModal, setShowMafiaCreateModal] = useState(false)
 
     const scrollDirection = useScrollDirection(scrollRef)
 
@@ -50,10 +50,10 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable, so
 
     }
 
-    const handleCreateSpace = () => {
+    const handleCreateMafia = () => {
 
         if (sessionStorage.getItem("loggedIn") === "true"){
-            setShowSpaceCreateModal(true)
+            setShowMafiaCreateModal(true)
         }
         else{
             setShowRegisterModal(true)
@@ -61,9 +61,9 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable, so
 
     }
 
-    const onSpaceCreate = (data) => {
+    const onMafiaCreate = (data) => {
         history(`/space/${data.data.name}/`)
-        setShowSpaceCreateModal(false)
+        setShowMafiaCreateModal(false)
     }
 
 
@@ -74,9 +74,9 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable, so
             </div>
             
             {
-             showSpaceCreateModal ?    
-                <SpaceFormModal onClose={() => setShowSpaceCreateModal(false)}
-                           onSuccess={onSpaceCreate}
+             showMafiaCreateModal ?    
+                <MaifaFormModal onClose={() => setShowMafiaCreateModal(false)}
+                           onSuccess={onMafiaCreate}
                 />
                 :
                 null
@@ -100,7 +100,7 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable, so
                         return (
 
                             <li key={data.id}>
-                                <SpaceCard name={data.name} 
+                                <MafiaCard name={data.name} 
                                             tag_line={data.tag_line}
                                             icon={data.icon}
                                 />
@@ -111,7 +111,7 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable, so
                         
                 }
                 
-                <CreateSpaceCard onClick={handleCreateSpace}/>
+                <CreateMafiaCard onClick={handleCreateMafia}/>
 
                 {
                     isLoading ?
@@ -154,18 +154,18 @@ export default function LonerPage(){
                                                 tag_line: ""
                                             })
     
-    const [trendingSpaces, setTrendingSpace] = useState([])
-    const [recentSpaces, setRecentSpaces] = useState([])
-    const [moderatingSpaces, setModeratingSpaces] = useState([])
+    const [trendingMafias, setTrendingMafias] = useState([])
+    const [recentMaifas, setRecentMafia] = useState([])
+    const [moderatingMafia, setModeratingMafia] = useState([])
     
     const [showRegisterModal, setShowRegisterModal] = useState(false)
     const [showUserEditModal, setShowUserEditModal] = useState(false)
-    const [showSpaceCreateModal, setShowSpaceCreateModal] = useState(false)
+    const [showMafiaCreateModal, setShowMafiaCreateModal] = useState(false)
 
     const userid = useMemo(() => sessionStorage.getItem("user-id"), [sessionStorage.getItem("user-id")])
     
     useEffect(() => {
-        // if the loner id is available start fetching trending, modertaing spaces etc.
+        // if the loner id is available start fetching trending, modertaing mafias etc.
         if (lonerData.id !== null)
             setEnabled(true)
     
@@ -181,7 +181,7 @@ export default function LonerPage(){
         }
     })
 
-    const trendingListQuery = useInfiniteQuery(["spaces", "trending", lonerData.id], listSpaces, {
+    const trendingListQuery = useInfiniteQuery(["mafia", "trending", lonerData.id], listSpaces, {
         enabled: enabled,
         staleTime: 5 * 60 * 1000, // 5 minutes
         getNextPageParam: (lastPage, ) => {
@@ -193,7 +193,7 @@ export default function LonerPage(){
     }) 
 
 
-    const recentListQuery = useInfiniteQuery(["spaces", "recent", lonerData.id], listSpaces, {
+    const recentListQuery = useInfiniteQuery(["mafia", "recent", lonerData.id], listSpaces, {
         enabled: enabled,
         getNextPageParam: (lastPage, ) => {
             // console.log("PAGE: ", lastPage)
@@ -213,12 +213,12 @@ export default function LonerPage(){
                 )      
             })
 
-            setRecentSpaces(recent_data)
+            setRecentMafia(recent_data)
         }
 
     })
 
-    const moderatingListQuery = useInfiniteQuery(["spaces", "moderating", lonerData.id], listSpaces, {
+    const moderatingListQuery = useInfiniteQuery(["mafia", "moderating", lonerData.id], listSpaces, {
         enabled: enabled,
         getNextPageParam: (lastPage, ) => {
             // console.log("PAGE: ", lastPage)
@@ -260,7 +260,7 @@ export default function LonerPage(){
                 )      
             })
 
-            setTrendingSpace(trending_data)
+            setTrendingMafias(trending_data)
 
         }
 
@@ -283,7 +283,7 @@ export default function LonerPage(){
                 )      
             })
 
-            setModeratingSpaces(moderating_data)
+            setModeratingMafia(moderating_data)
 
         }
 
@@ -306,9 +306,9 @@ export default function LonerPage(){
 
     }
 
-    const onSpaceCreate = (data) => {
+    const onMafiaCreate = (data) => {
         history(`/space/${data.data.name}/`)
-        setShowSpaceCreateModal(false)
+        setShowMafiaCreateModal(false)
     }
 
     const onEditSuccess = (data) => {
@@ -345,10 +345,10 @@ export default function LonerPage(){
             }
 
             {
-                showSpaceCreateModal ?
+                showMafiaCreateModal ?
 
-                    <SpaceFormModal onSuccess={onSpaceCreate}
-                                        onClose={() => setShowSpaceCreateModal(false)}
+                    <MaifaFormModal onSuccess={onMafiaCreate}
+                                        onClose={() => setShowMafiaCreateModal(false)}
                     />
                 :
 
@@ -374,8 +374,8 @@ export default function LonerPage(){
 
             <div className="dashboard">
 
-                <div onClick={() => setShowSpaceCreateModal(false)} className="btn">
-                    Create Space
+                <div onClick={() => setShowMafiaCreateModal(false)} className="btn">
+                    Start Mafia
                 </div>
 
                 { 
@@ -426,21 +426,21 @@ export default function LonerPage(){
                 
             <div className="section-container">
 
-                <HorizontalSection  title="Recently texted spaces" 
-                                    data={recentSpaces}
+                <HorizontalSection  title="Recently texted maifas" 
+                                    data={recentMaifas}
                                     isLoading={recentListQuery.isLoading||recentListQuery.isFetching}
                                     onLoadable={()=>recentListQuery.fetchNextPage({cancelRefetch: false})}
                                     sortType={"recent"}
                                     />
 
-                <HorizontalSection  title="Trending spaces" 
-                                    data={trendingSpaces}
+                <HorizontalSection  title="Trending mafias" 
+                                    data={trendingMafias}
                                     isLoading={trendingListQuery.isLoading||trendingListQuery.isFetching}
                                     onLoadable={()=>trendingListQuery.fetchNextPage({cancelRefetch: false})}
                                     sortType={"trending"}
                                     />
-                <HorizontalSection title="Moderating spaces" 
-                                   data={moderatingSpaces}
+                <HorizontalSection title="Moderating mafias" 
+                                   data={moderatingMafia}
                                    isLoading={moderatingListQuery.isLoading||moderatingListQuery.isFetching}
                                    onLoadable={()=>moderatingListQuery.fetchNextPage({cancelRefetch: false})}
                                    sortType={"moderating"}
@@ -453,13 +453,13 @@ export default function LonerPage(){
                     </div>
 
                     <div className="space-cards-container" >
-                        <SpaceCard name={"Peckspace"} 
+                        <MafiaCard name={"Peckspace"} 
                                     icon={require("../icons/sponsors-icons/peckspace-icon-white.png")}
                                     tag_line={"Find your space on Peckspace"}
                                     promoted_url={"https://peckspace.com/spaces"}
                                     promoted={true}
                                     />
-                        <CreateSpaceCard message="sponsor"/>
+                        <CreateMafiaCard message="sponsor"/>
 
                     </div>
 

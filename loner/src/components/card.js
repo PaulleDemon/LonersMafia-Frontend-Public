@@ -7,11 +7,11 @@ import ENDPOINTS from "../constants/url-endpoints"
 
 
 /**
- * name: str - name of the space
- * tag_line: str -tag line of the space
+ * name: str - name of the mafia
+ * tag_line: str -tag line of the mafia
  */
 
-export const SpaceCard = memo(({name="", tag_line="", icon="", 
+export const MafiaCard = memo(({name="", tag_line="", icon="", 
                             promoted_url="", promoted=false, ...props}) => {
 
     const history = useNavigate()
@@ -20,7 +20,7 @@ export const SpaceCard = memo(({name="", tag_line="", icon="",
     const handleNavigation = () => {
 
         if (!promoted)
-            history(ENDPOINTS.spaceview(name))
+            history(ENDPOINTS.mafiaview(name))
 
         else
             window.open(promoted_url, '_blank').focus()
@@ -52,7 +52,7 @@ export const SpaceCard = memo(({name="", tag_line="", icon="",
 })
 
 
-export const CreateSpaceCard = ({message="start mafia", onClick}) => {
+export const CreateMafiaCard = ({message="start mafia", onClick}) => {
 
     return (
         <div className="space-card create-space-card-container" onClick={onClick}>
