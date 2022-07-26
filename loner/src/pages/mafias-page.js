@@ -9,10 +9,11 @@ import { listMafias } from "../apis/loner-apis"
 import {ReactComponent as BACK} from "../icons/back.svg"
 import {ReactComponent as SHARE} from "../icons/share.svg"
 
+import Login from "../components/login-component"
+import ThemeSwitcher from "../components/theme-switch"
 import { useScrollDirection } from "../utils/hooks"
 import { LoadingWheel } from "../components/loading"
 import { TimedMessageModal } from "../modals/info-modal"
-import Login from "../components/login-component"
 import { MaifaFormModal } from "../modals/mafia-form-modal"
 import ENDPOINTS from "../constants/url-endpoints"
 
@@ -247,6 +248,7 @@ const MafiasPage = () => {
                 <div className="row center">
                     <SHARE className="icon" onClick={handleShare}/>
                 </div>
+                <ThemeSwitcher />
             </div>
 
             <Login />
@@ -282,9 +284,9 @@ const MafiasPage = () => {
                 </ul>
                 {
                     (sortListQuery.status === "success" &&  listQueries.length === 0)?
-                        <div className="row center">
+                        <div className="column center">
                             <div>Seems nothings here. Why not start a mafia?</div>
-                            <div onClick={() => setShowCreatMafiaModal(true)}>create mafia</div>
+                            <a onClick={() => setShowCreatMafiaModal(true)}>create mafia</a>
                         </div>
                 
                     :

@@ -36,8 +36,8 @@ export const RegistrationModal = ({onSuccess, userAvatar="", userName="", taglin
                                             file: "",
                                             url: userAvatar
                                         })
-    const [name, setName] = useState(userName)
-    const [tagLine, setTagLine] = useState(tagline)
+    const [name, setName] = useState(userName === null? "" : userName)
+    const [tagLine, setTagLine] = useState(tagline === null? "" : tagLine)
 
     const [error, setError] = useState("")
     const [inputError, setInputError] = useState(false)

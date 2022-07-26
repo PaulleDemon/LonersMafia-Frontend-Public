@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 
 import EmojiPicker from "../components/emoji-component"
+import StickerPicker from "../components/sticker-component"
 
 import {ReactComponent as MEDIA} from "../icons/media.svg"
 import {ReactComponent as STICKERS} from "../icons/stickers.svg"
@@ -34,6 +35,7 @@ const AutoHeightTextarea = ({  value, mediaRef=null, onStickerClick, onMediaUplo
 
     const [text, setText] = useState(value)
     const [showEmojiPicker, setShowEmojiPicker] = useState(false)
+    const [showStickerModal, setShowStickerModal] = useState(false)
     
 
     useEffect(() => {
@@ -125,7 +127,7 @@ const AutoHeightTextarea = ({  value, mediaRef=null, onStickerClick, onMediaUplo
 
             <div className="row center">
 
-                <STICKERS fill="#00F470"/>
+                <STICKERS onClick={() => {console.log("clicked");setShowStickerModal(!setShowStickerModal)}}/>
 
                 <textarea
                     className="autoresize"
@@ -146,12 +148,19 @@ const AutoHeightTextarea = ({  value, mediaRef=null, onStickerClick, onMediaUplo
                     :
                     null
                 }   
-            
+
+                {
+                    showStickerModal ?
+                    <StickerPicker onClickOutside={() => setShowEmojiPicker(false)}/>
+                    :
+                    null
+                }
+
                 <div className="media-options right-end">
                     <EMOJI onClick={() => setShowEmojiPicker(true)}/>
                     
                     <label htmlFor="file-upload" className="row center">
-                        <MEDIA fill="#6134C1"/>
+                        <MEDIA fill="#bb18c7"/>
                         <input id="file-upload" type="file" 
                                         style={{display: "none"}}
                                         onChange={imageChange} 

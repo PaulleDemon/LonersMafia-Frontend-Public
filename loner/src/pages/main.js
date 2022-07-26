@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {Routes, Route, Navigate} from "react-router-dom";
 import { Error404 } from "../error-pages/errors";
 
@@ -12,6 +12,10 @@ function Main(){
 
 	const user_name = useMemo(() => sessionStorage.getItem("user-name"), [sessionStorage.getItem("user-name")])
 	const logged_in = useMemo(() => sessionStorage.getItem("loggedIn"), [sessionStorage.getItem("loggedIn")])
+
+	useState(() => {
+
+	}, [logged_in, user_name])
 
 	return (
 		<Routes>

@@ -10,6 +10,7 @@
     --chat-background: #F2EEEE;
     --emoji-picker-bg: #fff;
     --modal-bg-color: #fff;
+    --auto-resize-input: #fff;
 
     --card-drop-shadow: 0 0 4px #050f5fe1;
     
@@ -473,6 +474,7 @@ a{
     left: 40px;
     border: 0px;
     color: var(--default-font-color);
+    background-color: var(--auto-resize-input);
     border-radius: 5px;
     overflow: auto;
     resize: none;
@@ -1268,4 +1270,8 @@ a{
 
 .hidden{
     visibility: hidden;
+}
+
+.invisible{
+    display: none;
 }

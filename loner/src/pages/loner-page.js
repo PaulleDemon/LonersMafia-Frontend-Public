@@ -236,7 +236,8 @@ export default function LonerPage(){
 
     useEffect(() => {
         // sets the loner data.
-        if (lonerQuery.isSuccess || lonerQuery.isFetched){
+        if ((lonerQuery.isSuccess || lonerQuery.isFetched) && lonerQuery.data){
+            console.log("Problem")
             const data = lonerQuery.data
             setLonerData({
                 id: data.data.id,
@@ -244,6 +245,7 @@ export default function LonerPage(){
                 avatar: data.data.avatar,
                 tag_line: data.data.tag_line
             })
+            console.log("Problem2")
         }
 
     }, [lonerQuery.isSuccess, lonerQuery.data])
@@ -257,7 +259,7 @@ export default function LonerPage(){
             let trending_data=[]
 
             data?.pages?.forEach((x) => {
-                x.data.results.forEach( (x) =>{
+                x.data?.results.forEach( (x) =>{
                     trending_data.push(x)
                 }
                 )      
@@ -280,7 +282,7 @@ export default function LonerPage(){
             let moderating_data=[]
 
             data?.pages?.forEach((x) => {
-                x.data.results.forEach( (x) =>{
+                x.data?.results.forEach( (x) =>{
                     moderating_data.push(x)
                 }
                 )      
@@ -392,7 +394,7 @@ export default function LonerPage(){
                 }
             <ThemeSwitcher className="right-end"/>
             </div>
-
+            <Login />
             
             <div className="margin-top column center">
                 <div className="row">
@@ -465,7 +467,7 @@ export default function LonerPage(){
                                     promoted_url={"https://peckspace.com/spaces"}
                                     promoted={true}
                                     />
-                        <CreateMafiaCard message="sponsor"/>
+                        <CreateMafiaCard message="sponsor" onClick={() =>  window.open("https://github.com", '_blank').focus()}/>
 
                     </div>
 

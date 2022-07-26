@@ -23,15 +23,20 @@ export default function Login(){
 			sessionStorage.setItem("user-id", `${data.data.id}`)
 			sessionStorage.setItem("user-name", `${data.data.name}`)
 			sessionStorage.setItem("loggedIn", "true")
+			setShowRegistrationModal(false)
 		},
 		onError: (err) => {
-	
+			
 			if (err.response?.status === 401)
 				setShowRegistrationModal(true)
 			
-			else if (err.response.status === 417)
+			else if (err.response?.status === 417)
 				setTimedMessage("You have been banned from loners")
-
+			
+			else if (err.response?.status === 404){
+				sessionStorage.clear()
+			}
+		
 			else 
 				setTimedMessage("An error occured trying to log you in.")
 		},

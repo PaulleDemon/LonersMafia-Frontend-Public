@@ -17,6 +17,9 @@ const lonerDashboardBg = '--loner-dashboard-bg'
 const iconFillColor = '--icon-fill-color'
 const takePeekBtn = '--take-peel-btn-bg'
 
+const resizeInput = '--auto-resize-input'
+
+
 const docElementStyle = document.documentElement.style
 
 
@@ -28,11 +31,11 @@ const ThemeSwitcher = ({className=""}) => {
 
         console.log("Theme: ", localStorage.getItem("theme"))
 
-        // if (localStorage.getItem("theme"))
-        //     setTheme()
+        if ([0, 1].includes(parseInt(localStorage.getItem("theme"))))
+            setTheme(parseInt(localStorage.getItem("theme")))
 
-        // else
-        //     setTheme(1)
+        else
+            setTheme(1)
 
         if (theme === 0){
             for (let x of sameBgColor){
@@ -44,6 +47,8 @@ const ThemeSwitcher = ({className=""}) => {
             docElementStyle.setProperty(iconFillColor, "#ffffff")
             docElementStyle.setProperty(lonerDashboardBg, "#497182")
             docElementStyle.setProperty(cardDropShadow, "0 0 4px #9d9ea5a9")
+            
+            docElementStyle.setProperty(resizeInput, "#232924")
         }else{
             for (let x of sameBgColor){
                 const bgChange = () => docElementStyle.setProperty(x, "#ffffff")
@@ -53,6 +58,9 @@ const ThemeSwitcher = ({className=""}) => {
             docElementStyle.setProperty(iconFillColor, "#000000")
             docElementStyle.setProperty(lonerDashboardBg, "#e3fffd")
             docElementStyle.setProperty(cardDropShadow, "0 0 4px #050f5fe1")
+
+            docElementStyle.setProperty(resizeInput, "#fff")
+
         }
 
     }, [theme, localStorage.getItem("theme")])

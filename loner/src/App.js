@@ -3,6 +3,7 @@ import Main from "./pages/main"
 import { TimedMessageModal, CookieConsentModal } from "./modals/info-modal";
 import { useEffect, useState } from "react";
 import Login from "./components/login-component";
+import ThemeSwitcher from "./components/theme-switch";
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
 	return (
 		<div className="App">
 			<Main />
+			<ThemeSwitcher className="invisible"/>
 			<Login />
 			{
 				timedMessage ?
