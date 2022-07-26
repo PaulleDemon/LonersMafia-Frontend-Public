@@ -15,7 +15,7 @@ import Login from "../components/login-component"
 import ChatCard from "../components/message-card"
 import AutoHeightTextarea from "../components/auto-resize-textarea"
 
-import {  MafiaInfoModal, TimedMessageModal  } from "../modals/info-modal"
+import {  MafiaInfoModal, ShareInviteModal, TimedMessageModal  } from "../modals/info-modal"
 import { randInt } from "../utils/random-generator"
 
 import { getMessages, getMafia, uploadChatMedia } from "../apis/loner-apis"
@@ -37,7 +37,16 @@ function ChatHeader({onMaifaUpdate, props}){
 
     const [timedMesage, setTimedMessage] = useState("")
     const [showInfoModal, setShowInfoModal] = useState(false)
+    const [showInviteModal, setShowInviteModal] = useState(false)
     const [showMafiaEditModal, setShowMafiaEditModal] = useState(false)
+
+    useEffect(() => {
+
+        if (sessionStorage.getItem("show-invite") === "true"){
+            setShowInviteModal(true)
+        }
+
+    }, [])
 
     const handleShare = () => {
 
@@ -72,6 +81,18 @@ function ChatHeader({onMaifaUpdate, props}){
                 <TimedMessageModal message={timedMesage} timeout={2000} onTimeOut={() => setTimedMessage("")}/>
                 :
                 null
+            }
+      
+            {
+                showInviteModal ? 
+                    <ShareInviteModal 
+                        message={"Grow your mafia. Quick invite other loners"}
+                        url={window.location}
+                        title={`Here's your invite to join ${name} mafia on loners mafia`}
+                        text={`invite to join ${name} mafia on loners mafia, a truely anonymous platform to speak your mind out`}
+                        onClose={() => setShowInviteModal(false)}/>
+                    :
+                    null
             }
             
             {showInfoModal ?
@@ -331,9 +352,11 @@ export default function Chat(){
             sessionStorage.setItem("is_mod", data.data?.is_mod.toString())
 
             const {background_image, color_theme} = mafiaQuery.data?.data
+            
+            console.log()
 
             docElementStyle.setProperty("--chat-background", color_theme)
-            docElementStyle.setProperty("--chat-background-img", background_image)
+            docElementStyle.setProperty("--chat-background-img", `url(${background_image})`)
 
             setQueryEnabled(true)
         }

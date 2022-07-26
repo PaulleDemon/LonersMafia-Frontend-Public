@@ -462,7 +462,7 @@ export default function LonerPage(){
 
                     <div className="mafia-cards-container" >
                         <MafiaCard name={"Peckspace"} 
-                                    icon={require("../icons/sponsors-icons/peckspace-icon-white.png")}
+                                    icon={require("../icons/sponsors-icons/peckspace.png")}
                                     tag_line={"Find your space on Peckspace"}
                                     promoted_url={"https://peckspace.com/spaces"}
                                     promoted={true}

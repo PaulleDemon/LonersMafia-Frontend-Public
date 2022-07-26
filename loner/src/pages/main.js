@@ -19,6 +19,7 @@ function Main(){
 
 	}, [sessionStorage.getItem("user-name"), sessionStorage.getItem("loggedIn")])
 
+	console.log("Logged in: ", sessionStorage.getItem("loggedIn"))
 	return (
 		<Routes>
 			<Route path="/" exact element={<Navigate to="/loner" replace />} />
@@ -29,7 +30,7 @@ function Main(){
 			
 	
 			<Route path="/loner" exact 
-				element={(logged_in === "true" ? 
+				element={(sessionStorage.getItem("loggedIn") === "true" ? 
 								<Navigate  replace  to={`/loner/${user_name}`}/> : 
 								<Navigate replace to={`/mafias/`} />)}/>
 		

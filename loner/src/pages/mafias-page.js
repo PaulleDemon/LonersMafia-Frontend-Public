@@ -240,7 +240,7 @@ const MafiasPage = () => {
             
 
             <div className="mafias-header">
-                <BACK className="icon" onClick={() => history('/loner')}/>
+                <BACK className="icon" onClick={() => {sessionStorage.getItem("loggedIn") === "true" ? history(`/loner/${sessionStorage.getItem("user-name")}`): history('/loner')}}/>
                 <SortComponent values={sortOptions} defaultValue={sortOption} onOptionChange={handleSortOptionChange}/>
                 
                 <a onClick={() => setShowCreatMafiaModal(true)} style={{cursor: "pointer"}}>start mafia</a>

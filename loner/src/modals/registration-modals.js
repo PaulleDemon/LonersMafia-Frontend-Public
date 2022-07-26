@@ -31,13 +31,14 @@ import { randInt } from "../utils/random-generator"
  */
 
 export const RegistrationModal = ({onSuccess, userAvatar="", userName="", tagline="", update=false, onClose}) => {
-    
+
+
     const [avatar, setAvatar] = useState({
                                             file: "",
                                             url: userAvatar
                                         })
     const [name, setName] = useState(userName === null? "" : userName)
-    const [tagLine, setTagLine] = useState(tagline === null? "" : tagLine)
+    const [tagLine, setTagLine] = useState(tagline === null? "" : tagline)
 
     const [error, setError] = useState("")
     const [inputError, setInputError] = useState(false)

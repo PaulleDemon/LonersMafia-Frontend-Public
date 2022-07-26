@@ -435,6 +435,8 @@ export const MaifaFormModal = ({id=null, iconUrl="", bgImgUrl="",
             if (onSuccess){
                 onSuccess(data)
             }
+
+            sessionStorage.setItem("show-invite", "true")
         }
     })
 

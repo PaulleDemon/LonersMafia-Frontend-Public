@@ -1,8 +1,11 @@
 
 import { memo, useEffect, useMemo, useState } from "react"
+import useWebShare from "react-use-web-share"
+
 import Tabs from "../components/tabs"
 
 import {ReactComponent as CLOSE} from "../icons/close.svg"
+import {ReactComponent as SHARE} from "../icons/share.svg"
 import {ReactComponent as EDIT} from "../icons/edit.svg"
 
 
@@ -194,3 +197,45 @@ export const MafiaInfoModal = ({icon, name, tag_line, about,
 
 }
 
+
+export const ShareInviteModal = ({url, message, title, text, onClose}) => {
+
+    const webShare = useWebShare()
+    const [timedMesage, setTimedMessage] = useState("")
+
+    const handleShare = () => {
+
+        if (webShare.isSupported){
+            webShare.share({
+                title: title,
+                text: text,
+                url: url
+            })
+        }
+        else{
+            // navigator.clipboard.writeText(process.env.REACT_APP_API_ENDPOINT)
+            navigator.clipboard?.writeText(url)
+            setTimedMessage("Link copied to clipboard")
+        }
+
+    }
+
+    return (
+        <div className="modal center" style={{minWidth: "200px", minHeight: "100px"}}>
+
+            {
+                timedMesage !== ""?
+                <TimedMessageModal message={timedMesage} timeout={2000} onTimeOut={() => setTimedMessage("")}/>
+                :
+                null
+            }
+            <CLOSE onClick={onClose} className="left-end icon"/>
+
+            <div className="row center margin-10px">
+                {message}
+            </div>
+            <SHARE onClick={handleShare} className="icon margin-10px"/>
+        </div>
+    )
+
+} 

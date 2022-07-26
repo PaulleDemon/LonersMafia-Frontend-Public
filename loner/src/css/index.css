@@ -278,6 +278,10 @@ a{
     align-self: center;
     background-color: var(--chat-background);
     background-image: var(--chat-background-img);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: contain;
 }
 
 /* ------------------ chat card --------------------- */
@@ -767,17 +771,18 @@ a{
 
 .mafia-card .mafia-avatar-container{
     display: flex;
-    width: 250px;
+    width: 200px;
     height: 200px;
     background-color: black;
     justify-content: center;
+    width: 100%;
     /* border-radius: 5px 5px 0px 0px; */
 }
 
 .mafia-card .mafia-avatar{
     max-width: 100%;
     max-height: 100%;
-    width: 100%;
+    width: auto;
     height: auto;
     /* border-radius: 5px 5px 0px 0px; */
 }
