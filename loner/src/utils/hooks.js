@@ -199,3 +199,40 @@ export default function useWindowDimensions() {
   
     return windowDimensions
   }
+
+
+// --------------- theme switcher hook -----------
+
+
+
+const sameBgColor = ['--char-header', '--chat-text-area-color', '--emoji-picker-bg', 
+                    '--modal-bg-color', '--drop-down-bg', '--mafias-pg-header-bg', '--reaction-bg']
+
+const fontColorElement = '--default-font-color'
+const lonerDashboardBg = '--loner-dashboard-bg'
+/**
+* used to switch themes
+* 
+*/
+const useThemeSwitcher = () => {
+    
+    const [theme, setTheme] = useState('light')
+    
+    useEffect(() => {
+
+        if (theme === 'dark'){
+            for (let x of sameBgColor)
+                document.body.style.setProperty(x, "#0F3046")
+
+            document.body.style.setProperty(fontColorElement, "#ffffff")
+        }else{
+            for (let x of sameBgColor)
+                document.body.style.setProperty(x, "#0F3046")
+
+            document.body.style.setProperty(fontColorElement, "#ffffff")
+        }
+
+    }, [theme])
+    
+    return [theme, setTheme]
+}

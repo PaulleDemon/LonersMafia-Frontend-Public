@@ -70,7 +70,7 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
     
     let removedReactionId = null
 
-    console.log("Mafia: ", props)
+
     const reactMessageMutate = useMutation(reactToMessage, {
         onSuccess: (successData) => {
       
@@ -221,6 +221,11 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
 
         if (!sessionStorage.getItem("loggedIn")){
             return 
+        }
+        
+        if (userid == currentUserId){
+            setTimedMessageModal("You can't react to your own message")
+            return
         }
 
         if (currentUserId && is_reacted === false){

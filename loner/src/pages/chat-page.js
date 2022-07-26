@@ -332,29 +332,63 @@ export default function Chat(){
     useEffect(() => {
         
         if (lastJsonMessage && !messages.some(msg => lastJsonMessage.id === msg.id)){
-            // console.log("Last message: ", lastJsonMessage)
-            setMessages([...messages, lastJsonMessage])
-            
-            //NOTE
-            /**
-             * NOTE: HACK to update the cache. The cache is not perfectly updated, there will be
-             * ubnormalities in the cached data, but it works, so Ok. Updating paginated cache, 
-             * without invalidating the cache is hard. 
-             * I am not going to break my head anymore on this if you have a 
-             * better solution give a pull request
-             */ 
-            
-            queryClient.setQueryData(["chat", mafiaDetails.id], ({pages, pagesParams}) => {
-                
-                pages[0].data.results.unshift(lastJsonMessage)
-                return ({
-                    pagesParams,
-                    pages: pages
-                    })
+            console.log("Last message: ", lastJsonMessage)
 
-                }
+            if (Object.keys(lastJsonMessage)[0] !== 'delete'){
+                setMessages([...messages, lastJsonMessage])
+                
+                //NOTE
+                /**
+                 * NOTE: HACK to update the cache. The cache is not perfectly updated, there will be
+                 * ubnormalities in the cached data, but it works, so Ok. Updating paginated cache, 
+                 * without invalidating the cache is hard. 
+                 * I am not going to break my head anymore on this if you have a 
+                 * better solution give a pull request
+                 */ 
+                
+                queryClient.setQueryData(["chat", mafiaDetails.id], ({pages, pagesParams}) => {
+                    
+                    pages[0].data.results.unshift(lastJsonMessage)
+                    return ({
+                        pagesParams,
+                        pages: pages
+                        })
+
+                    }
+                
+                )
+            }
             
-            )
+            else if (Object.keys(lastJsonMessage)[0] === 'delete'){
+                console.log("delete")
+                queryClient.setQueryData(["chat", mafiaDetails.id], ({pages, pagesParams}) => {
+                    
+                    console.log("INdex1: ", pages)
+
+                    // updates all the cached rooms to display the latest message and change the unread count
+                    const newPagesArray = pages.map((data) =>{
+                                        console.log("Results: ", data)
+                                        // find and update the specific data
+                                        const index = data.data.results.findIndex((val) => {
+                                            // find the index and update the cache
+    
+                                            return val.id == lastJsonMessage.delete
+                                        })
+                                        
+                                        console.log("INdex2: ", index, data.data?.results)
+                                        if (index !== -1){
+                                            // if the id exists in this page then delete the data
+                                            data.data.results.splice([index], 1)
+                                        }
+                                        return data
+                                        }) 
+                        
+                    return {
+                        pages: newPagesArray,
+                        pageParams: pagesParams
+                    }
+                })
+            }
 
         } 
 

@@ -20,6 +20,8 @@ import { BannedUserModal, TimedMessageModal } from "../modals/info-modal"
 
 import { useScrollDirection } from "../utils/hooks"
 import ENDPOINTS from "../constants/url-endpoints"
+
+import ThemeSwitcher from "../components/theme-switch"
 // import { default as logo } from "../icons/emoji.svg"
 
 /**
@@ -388,6 +390,8 @@ export default function LonerPage(){
                 null
                 }
             </div>
+            <ThemeSwitcher />
+
             
             <div className="margin-top column center">
                 <div className="row">

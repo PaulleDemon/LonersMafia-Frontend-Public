@@ -1,10 +1,29 @@
 :root{
 
+    --tag-line-color: #6d6d6d;
+    --default-font-color: #000000;
+    --default-bg-color: #ffffff;
+
 	--chat-header: #fff;
     --chat-text-area-color: #fff;
     --chat-background: #F2EEEE;
-    --emoji-picker-background: #fff;
+    --emoji-picker-bg: #fff;
     --modal-bg-color: #fff;
+
+    --card-drop-shadow: 0 0 4px #050f5fe1;
+    
+    --drop-down-bg: #fff;
+
+    --loner-dashboard-bg: #08a14d;
+    --mafias-pg-header-bg: #fff;/*mafia page header*/
+
+    --take-peel-btn-bg: #94108e;
+
+    --chat-sender: #26b3ef; 
+    --chat-receiver: #c8c6c6; 
+
+    --reaction-bg: #fff;
+    --reaction-clicked-bg: #6c0e786e;
 }   
 
 *{
@@ -20,6 +39,8 @@ body {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	font-size: 22px;
+    color: var(--default-font-color);
+    background-color: var(--default-bg-color);
     /* min-height: calc(100vh -10px); */
 }
 
@@ -44,6 +65,18 @@ a{
 
 .icon:hover{
     background-color: #8c8b8b93;
+    cursor: pointer;
+}
+
+.theme-icon{
+    width: 45px;
+    height: 45px;
+    padding: 5px;
+    clip-path: circle(50%);
+}
+
+.theme-icon:hover{
+    background-color: #626060aa;
     cursor: pointer;
 }
 
@@ -138,7 +171,7 @@ a{
 }
 
 .tag-line{
-    color: #6d6d6d;
+    color: var(--tag-line-color);
     font-size: 18px;
     font-style: italic;
 }
@@ -235,7 +268,6 @@ a{
     gap: 20px;
     list-style: none;
     width: 100%;
-    /* background-color: #08a14d; */
     justify-self: center;
     align-self: center;
 }
@@ -283,7 +315,6 @@ a{
     width: auto;
     border-radius: 20px;
     box-shadow: 0 0 10px #4b779d;
-    /* background-color: #08a14d; */
 }
 
 .sender{
@@ -291,12 +322,12 @@ a{
 }
 
 .receiver{
-    background-color: #c8c6c6;
+    background-color: var(--chat-receiver);
     margin-left: 10px;
 }
 
 .sender{
-    background-color: #26b3ef;
+    background-color: var(--chat-sender);
     margin-right: 10px;
 }
 
@@ -315,7 +346,7 @@ a{
 
 .reaction{
     font-size: 16px;
-    background-color: #fff;
+    background-color: var(--reaction-bg);
     border-radius: 10px;
     cursor: pointer;
     padding: 3px;
@@ -331,10 +362,7 @@ a{
 
 .reaction-clicked{
     color: #fff;
-    background-color: #6c0e786e;
-    /* background-color: #4158D0; */
-    /* background-image: linear-gradient(43deg, #0f1948 0%, #C850C0 46%, #d3ca23 100%); */
-    /* border: 2px solid #065e8a; */
+    background-color: var(--reaction-clicked-bg);
 }
 
 /* ----------------- message input container --------------*/
@@ -467,7 +495,7 @@ a{
     min-width: 300px;
     width: fit-content;
     max-width: 30%;
-    background-color: var(--emoji-picker-background);
+    background-color: var(--emoji-picker-bg);
     border-radius: 5px;
     box-shadow: 0 0 5px #a19f9f;
 }
@@ -518,7 +546,7 @@ a{
     display: flex;
     flex-direction: column;
     border-radius: 2px;
-    background-color: #fff;
+    background-color: var(--drop-down-bg);
     box-shadow: 0 0 4px #050f5fe1;
     z-index: 2;
 }
@@ -587,7 +615,7 @@ a{
     max-height: 30vh;
     min-height: 20vh;
     position: relative;
-    background-color: #08a14d;
+    background-color: var(--loner-dashboard-bg);
 }
 
 .loner-home .dashboard::before{
@@ -682,7 +710,7 @@ a{
     height: 40px;
     justify-content: space-evenly;
     align-items: center;
-    background-color: #fff;
+    background-color: var(--mafias-pg-header-bg);
     box-shadow: 4px 0 4px #050f5fe1;
     z-index: 3;
     width: 100%;
@@ -712,7 +740,7 @@ a{
     flex-direction: column;
     height: 300px;
     width: 250px;
-    box-shadow: 0 0 4px #050f5fe1;
+    box-shadow: var(--card-drop-shadow);
     margin: 10px;
     cursor: pointer;
     flex-shrink: 0;
@@ -751,7 +779,7 @@ a{
 
 .mafia-card .btn{
     text-align: center;
-    background-color: #94108e;
+    background-color: var(--take-peek-btn-bg);
     padding: 5px;
 }
 
@@ -1174,6 +1202,48 @@ a{
     background-color: #0a813f;
 }
 
+/* ---------------------- toggle switch ------------------- */
+
+.react-switch-checkbox {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+  }
+  
+  .react-switch-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 100px;
+    height: 50px;
+    background: grey;
+    border-radius: 100px;
+    position: relative;
+    transition: background-color .2s;
+  }
+  
+  .react-switch-label .react-switch-button {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 45px;
+    height: 45px;
+    border-radius: 45px;
+    transition: 0.2s;
+    background: #fff;
+    box-shadow: 0 0 2px 0 rgba(10, 10, 10, 0.29);
+  }
+  
+  .react-switch-checkbox:checked + .react-switch-label .react-switch-button {
+    left: calc(100% - 2px);
+    transform: translateX(-100%);
+  }
+  
+  .react-switch-label:active .react-switch-button {
+    width: 60px;
+  }
 
 /* --------------------------------*/
 
