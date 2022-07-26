@@ -8,6 +8,8 @@
 	--chat-header: #fff;
     --chat-text-area-color: #fff;
     --chat-background: #F2EEEE;
+    --chat-background-img: url();
+    
     --emoji-picker-bg: #fff;
     --modal-bg-color: #fff;
     --auto-resize-input: #fff;
@@ -212,7 +214,6 @@ a{
     height: 100%;
     width: 100%;
     overflow: hidden;
-    background-color: var(--chat-background);
 }
 
 .info{
@@ -275,6 +276,8 @@ a{
     width: 100%;
     justify-self: center;
     align-self: center;
+    background-color: var(--chat-background);
+    background-image: var(--chat-background-img);
 }
 
 /* ------------------ chat card --------------------- */
@@ -483,7 +486,7 @@ a{
     max-height: 150px;
     padding: 8px;
     /* padding-right: 130px; */
-    box-shadow: 0 0 10px #6c6b6b;
+    box-shadow: 0 0 10px #477089;
     font-size: 18px;
 }
 
@@ -812,7 +815,11 @@ a{
     height: 100%;
     width: 100%;
     flex-direction: column;
-    border: 3px solid #000000;
+    border: 3px solid var(--icon-fill-color);
+}
+
+.create-mafia-card > .create-icon{
+    fill: var(--icon-fill-color)
 }
 
 /* --------------------- cropper ------------------ */

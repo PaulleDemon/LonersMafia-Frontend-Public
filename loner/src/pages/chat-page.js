@@ -25,6 +25,9 @@ import { MAX_LENGTH } from "../constants/lengths"
 import { MaifaFormModal } from "../modals/mafia-form-modal"
 
 
+const docElementStyle = document.documentElement.style
+
+
 function ChatHeader({onMaifaUpdate, props}){
 
     const {name, icon, about, tag_line, rules} = props
@@ -323,8 +326,14 @@ export default function Chat(){
             const data = mafiaQuery.data
             
             setMafiaDetails(data.data)
+
             sessionStorage.setItem("is_staff", data.data?.is_staff.toString())
             sessionStorage.setItem("is_mod", data.data?.is_mod.toString())
+
+            const {background_image, color_theme} = mafiaQuery.data?.data
+
+            docElementStyle.setProperty("--chat-background", color_theme)
+            docElementStyle.setProperty("--chat-background-img", background_image)
 
             setQueryEnabled(true)
         }
@@ -539,9 +548,9 @@ export default function Chat(){
                     {
                         (!navigator.onLine) ? 
 
-                        <div className="row center">
-                            you are not connected to the internet
-                        </div>
+                            <div className="row center">
+                                you are not connected to the internet
+                            </div>
                         :
                         null
                     }

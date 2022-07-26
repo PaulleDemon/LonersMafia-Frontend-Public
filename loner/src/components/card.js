@@ -57,7 +57,7 @@ export const CreateMafiaCard = ({message="start mafia", onClick}) => {
     return (
         <div className="mafia-card create-mafia-card-container" onClick={onClick}>
             <div className="create-mafia-card">
-                <CREATE />
+                <CREATE className="create-icon"/>
                 <div className="row center font-18px">
                     {message}
                 </div>

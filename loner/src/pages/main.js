@@ -15,7 +15,9 @@ function Main(){
 
 	useState(() => {
 
-	}, [logged_in, user_name])
+		console.log("Yes")
+
+	}, [sessionStorage.getItem("user-name"), sessionStorage.getItem("loggedIn")])
 
 	return (
 		<Routes>

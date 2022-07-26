@@ -22,7 +22,9 @@ const resizeInput = '--auto-resize-input'
 
 const docElementStyle = document.documentElement.style
 
-
+/**
+ * Used to toggle between dark theme and light theme
+ */
 const ThemeSwitcher = ({className=""}) => {
 
     const [theme, setTheme] = useState(1) // 0-dark 1-light
