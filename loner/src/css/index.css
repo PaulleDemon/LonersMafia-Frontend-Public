@@ -3,6 +3,7 @@
     --tag-line-color: #6d6d6d;
     --default-font-color: #000000;
     --default-bg-color: #ffffff;
+    --icon-fill-color: #000000;
 
 	--chat-header: #fff;
     --chat-text-area-color: #fff;
@@ -17,10 +18,10 @@
     --loner-dashboard-bg: #08a14d;
     --mafias-pg-header-bg: #fff;/*mafia page header*/
 
-    --take-peel-btn-bg: #94108e;
+    --take-peek-btn-bg: #94108e;
 
-    --chat-sender: #26b3ef; 
-    --chat-receiver: #c8c6c6; 
+    --chat-sender: #1796cd; 
+    --chat-receiver: #8f8d8d; 
 
     --reaction-bg: #fff;
     --reaction-clicked-bg: #6c0e786e;
@@ -61,6 +62,7 @@ a{
 	width: 40px;
     padding: 5px;
     clip-path: circle(50%);
+    fill: var(--icon-fill-color);
 }
 
 .icon:hover{
@@ -137,6 +139,7 @@ a{
     background-color: transparent;
     border-radius: 4px;
     padding: 4px;
+    color: var(--default-font-color);
     border: 3px solid #878585;
 }
 
@@ -248,6 +251,7 @@ a{
 	height: 60px;
 	align-items: center;
     justify-content: space-between;
+    box-shadow: 0 0 4px #4b779d;
 }
 
 .peckspace-promo{
@@ -674,6 +678,16 @@ a{
     background-color: #8c8b8b93;
 }
 
+.loner-home .start-mafia-btn{
+    background-color: #0a0e0f;
+    border-radius: 5px;
+    height: fit-content;
+    padding: 5px;
+    cursor: pointer;
+    color: #fff;
+    box-shadow: 0 0 4px #545456d3;
+}
+
 .section-container{
     display: flex;
     flex-direction: column;
@@ -1006,7 +1020,7 @@ a{
     width: 400px;
     text-align: center;
     margin: 20px;
-    box-shadow: 0 0 4px #2f2f2f;
+    box-shadow: 0 0 4px #6b6a6a;
 }
 
 .registration-modal .avatar{

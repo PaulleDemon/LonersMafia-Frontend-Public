@@ -7,52 +7,71 @@ import {ReactComponent as DARK} from "../icons/dark.svg"
 // --------------- theme switcher hook -----------
 
 
-const sameBgColor = ['--default-bg-color', '--char-header', '--chat-text-area-color', '--emoji-picker-bg', 
-                    '--modal-bg-color', '--drop-down-bg', '--mafias-pg-header-bg', '--reaction-bg', '--chat-background']
-
-const fontColorElement = '--default-font-color'
-const lonerDashboardBg = '--loner-dashboard-bg'
+const sameBgColor = ['--default-bg-color', '--chat-header', '--chat-text-area-color', '--emoji-picker-bg', 
+                    '--modal-bg-color', '--drop-down-bg', '--mafias-pg-header-bg', '--reaction-bg', 
+                    '--chat-background']
 
 const cardDropShadow = '--card-drop-shadow'
+const fontColorElement = '--default-font-color'
+const lonerDashboardBg = '--loner-dashboard-bg'
+const iconFillColor = '--icon-fill-color'
+const takePeekBtn = '--take-peel-btn-bg'
 
 const docElementStyle = document.documentElement.style
 
-const ThemeSwitcher = () => {
+
+const ThemeSwitcher = ({className=""}) => {
 
     const [theme, setTheme] = useState(1) // 0-dark 1-light
     
     useEffect(() => {
 
+        console.log("Theme: ", localStorage.getItem("theme"))
+
+        // if (localStorage.getItem("theme"))
+        //     setTheme()
+
+        // else
+        //     setTheme(1)
+
         if (theme === 0){
             for (let x of sameBgColor){
-                const bgChange = () => document.documentElement.style.setProperty(x, "#0F3046")
+                const bgChange = () => docElementStyle.setProperty(x, "#39423b")
                 bgChange()
             }
             
-            document.documentElement.style.setProperty(fontColorElement, "#ffffff")
-            document.documentElement.style.setProperty(lonerDashboardBg, "#ffffff")
-            document.documentElement.style.setProperty(cardDropShadow, "0 0 4px #9d9ea5a9")
+            docElementStyle.setProperty(fontColorElement, "#ffffff")
+            docElementStyle.setProperty(iconFillColor, "#ffffff")
+            docElementStyle.setProperty(lonerDashboardBg, "#497182")
+            docElementStyle.setProperty(cardDropShadow, "0 0 4px #9d9ea5a9")
         }else{
             for (let x of sameBgColor){
-                const bgChange = () => document.documentElement.style.setProperty(x, "#ffffff")
+                const bgChange = () => docElementStyle.setProperty(x, "#ffffff")
                 bgChange()
             }
-            document.documentElement.style.setProperty(fontColorElement, "#000000")
-            document.documentElement.style.setProperty(lonerDashboardBg, "#000000")
-            document.documentElement.style.setProperty(cardDropShadow, "0 0 4px #050f5fe1")
+            docElementStyle.setProperty(fontColorElement, "#000000")
+            docElementStyle.setProperty(iconFillColor, "#000000")
+            docElementStyle.setProperty(lonerDashboardBg, "#e3fffd")
+            docElementStyle.setProperty(cardDropShadow, "0 0 4px #050f5fe1")
         }
 
-    }, [theme])
+    }, [theme, localStorage.getItem("theme")])
 
+    const handleThemeChange = (val) => {
+
+        localStorage.setItem("theme", `${val}`)
+        setTheme(val)
+        // console.log(`${val}`)
+    }
 
     return (
-        <div className="margin-10px">
+        <div className={`margin-10px ${className}`}>
             {   
                 theme === 1?
-                    <DARK className="theme-icon" onClick={() => setTheme(0)}/>
+                    <DARK className="theme-icon" onClick={() => handleThemeChange(0)}/>
                     :
 
-                    <Light className="theme-icon" onClick={() => setTheme(1)}/>
+                    <Light className="theme-icon" onClick={() => handleThemeChange(1)}/>
             }
         </div>
     )

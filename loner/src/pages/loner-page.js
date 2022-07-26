@@ -377,7 +377,8 @@ export default function LonerPage(){
 
             <div className="dashboard">
 
-                <div onClick={() => setShowMafiaCreateModal(false)} className="btn">
+                <div onClick={() => setShowMafiaCreateModal(!showMafiaCreateModal)} 
+                    className="start-mafia-btn margin-10px">
                     Start Mafia
                 </div>
 
@@ -389,8 +390,8 @@ export default function LonerPage(){
                 :
                 null
                 }
+            <ThemeSwitcher className="right-end"/>
             </div>
-            <ThemeSwitcher />
 
             
             <div className="margin-top column center">
@@ -403,7 +404,7 @@ export default function LonerPage(){
                            { 
                             userid == lonerData.id ?
                                 <div className="edit-container">
-                                    <EDIT className="edit" onClick={() => setShowUserEditModal(true)}/>
+                                    <EDIT className="edit icon" onClick={() => setShowUserEditModal(true)}/>
                                 </div>
                                 :
                                 null
