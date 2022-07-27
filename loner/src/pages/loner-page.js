@@ -13,6 +13,7 @@ import { Error404 } from "../error-pages/errors"
 
 import {ReactComponent as EDIT} from "../icons/edit.svg"
 import {ReactComponent as SHARE} from "../icons/share.svg"
+import {ReactComponent as LONERSMAFIA} from "../icons/loners-mafia.svg"
 
 import { MaifaFormModal } from "../modals/mafia-form-modal"
 import { RegistrationModal } from "../modals/registration-modals"
@@ -237,7 +238,7 @@ export default function LonerPage(){
     useEffect(() => {
         // sets the loner data.
         if ((lonerQuery.isSuccess || lonerQuery.isFetched) && lonerQuery.data){
-            console.log("Problem")
+
             const data = lonerQuery.data
             setLonerData({
                 id: data.data.id,
@@ -245,7 +246,6 @@ export default function LonerPage(){
                 avatar: data.data.avatar,
                 tag_line: data.data.tag_line
             })
-            console.log("Problem2")
         }
 
     }, [lonerQuery.isSuccess, lonerQuery.data])
@@ -379,8 +379,12 @@ export default function LonerPage(){
 
             <div className="dashboard">
 
+                <div className="margin-10px">
+                    <LONERSMAFIA width="80px" height="80px"/>
+                </div>
+
                 <div onClick={() => setShowMafiaCreateModal(!showMafiaCreateModal)} 
-                    className="start-mafia-btn margin-10px">
+                    className="start-mafia-btn margin-10px right-end">
                     Start Mafia
                 </div>
 
