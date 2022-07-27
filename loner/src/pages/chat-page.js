@@ -44,6 +44,7 @@ function ChatHeader({onMaifaUpdate, props}){
 
         if (sessionStorage.getItem("show-invite") === "true"){
             setShowInviteModal(true)
+            sessionStorage.removeItem("show-invite")
         }
 
     }, [])
@@ -412,16 +413,32 @@ export default function Chat(){
                                         console.log("INdex2: ", index, data.data?.results)
                                         if (index !== -1){
                                             // if the id exists in this page then delete the data
-                                            data.data.results.splice([index], 1)
+                                            const element = data.data.results.splice(index, 1)
+                                            console.log("element: ", element)
                                         }
+                                        console.log("CHOO: ", data)
                                         return data
-                                        }) 
+                                    }) 
                         
                     return {
                         pages: newPagesArray,
                         pageParams: pagesParams
                     }
+                    
+                    
                 })
+
+
+                const index = messages.findIndex((val) => {
+                    // find the index and update the cache
+                    return val.id == lastJsonMessage.delete
+                })
+                
+                if (index !== -1){
+                    const new_array = messages
+                    new_array.splice(index, 1)
+                    setMessages(new_array)
+                }
             }
 
         } 

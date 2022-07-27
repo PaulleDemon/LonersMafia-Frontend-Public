@@ -88,7 +88,7 @@ export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, user
         <div className="dropdown-container" ref={ref}>       
         
 
-            <KEBAB_MENU fill="black" className="more-options-btn" onClick={() => setShowDropDown(true)}/> 
+            <KEBAB_MENU className="more-options-btn" onClick={() => setShowDropDown(true)}/> 
 
             {
                 confirmationModal.show ?
@@ -111,7 +111,7 @@ export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, user
                         Delete message
                     </div>
                     
-                    { (!is_staff) ?
+                    { (!is_mod_message && !is_staff) || (is_mod_message && is_staff) ?
                         <>
                             <div className="dropdown-btn" 
                                 onClick={handleClick}

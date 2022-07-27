@@ -8,7 +8,7 @@
 	--chat-header: #fff;
     --chat-text-area-color: #fff;
     --chat-background: #F2EEEE;
-    --chat-background-img: url();
+    --chat-background-img: url('');
     
     --emoji-picker-bg: #fff;
     --modal-bg-color: #fff;
@@ -570,6 +570,7 @@ a{
     display: flex;
     width: 25px;
     height: 25px;
+    fill: #fff;
 }
 
 .more-options-btn:hover{

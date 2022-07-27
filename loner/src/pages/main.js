@@ -11,11 +11,11 @@ import MafiasPage from "./mafias-page";
 function Main(){
 
 	const user_name = useMemo(() => sessionStorage.getItem("user-name"), [sessionStorage.getItem("user-name")])
-	const logged_in = useMemo(() => sessionStorage.getItem("loggedIn"), [sessionStorage.getItem("loggedIn")])
+	const [loggedIn, setLoggedIn] = useState(sessionStorage.getItem("loggedIn")==="true")
 
 	useState(() => {
 
-		console.log("Yes")
+		setLoggedIn(sessionStorage.getItem("loggedIn")==="true")
 
 	}, [sessionStorage.getItem("user-name"), sessionStorage.getItem("loggedIn")])
 
@@ -30,7 +30,7 @@ function Main(){
 			
 	
 			<Route path="/loner" exact 
-				element={(sessionStorage.getItem("loggedIn") === "true" ? 
+				element={(loggedIn ? 
 								<Navigate  replace  to={`/loner/${user_name}`}/> : 
 								<Navigate replace to={`/mafias/`} />)}/>
 		

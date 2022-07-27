@@ -13,6 +13,7 @@ import { TimedMessageModal } from "../modals/info-modal";
 import { formattNumber } from "../utils/formatted-number";
 import Login from "./login-component";
 
+
 const ReactionComponent = ({id=null, emoji, count=0, is_reacted=false, onClick}) => {
     
     return (
