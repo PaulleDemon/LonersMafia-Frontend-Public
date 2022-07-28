@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="250mm" height="250mm" version="1.1" viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg">
+ <rect x="-.24542" y=".55777" width="250.69" height="248.57" fill="#fdd099" stroke-width="0"/>
+ <g transform="translate(17.168 11.715)" stroke="#500" stroke-width=".5">
+  <g fill="#f55">
+   <rect x="93.095" y="52.974" width="20.507" height="18.306"/>
+   <rect x="82.841" y="71.279" width="20.507" height="18.306"/>
+   <rect x="72.588" y="89.585" width="20.507" height="18.306"/>
+   <rect x="62.334" y="107.89" width="20.507" height="18.306"/>
+   <rect x="52.081" y="126.2" width="20.507" height="18.306"/>
+   <rect x="41.828" y="144.5" width="20.507" height="18.306"/>
+   <rect x="52.081" y="162.81" width="20.507" height="18.306"/>
+   <rect x="72.588" y="162.81" width="20.507" height="18.306"/>
+   <rect x="93.095" y="162.81" width="20.507" height="18.306"/>
+   <rect x="113.6" y="162.81" width="20.507" height="18.306"/>
+   <rect x="134.11" y="162.81" width="20.507" height="18.306"/>
+   <rect x="103.35" y="71.279" width="20.507" height="18.306"/>
+   <rect x="113.6" y="89.585" width="20.507" height="18.306"/>
+   <rect x="123.85" y="107.89" width="20.507" height="18.306"/>
+   <rect x="134.11" y="126.2" width="20.507" height="18.306"/>
+   <rect x="144.36" y="144.5" width="20.507" height="18.306"/>
+  </g>
+  <g fill="#ff8080">
+   <rect x="62.334" y="71.279" width="20.507" height="18.306"/>
+   <rect x="41.828" y="52.974" width="20.507" height="18.306"/>
+   <rect x="31.574" y="34.668" width="20.507" height="18.306"/>
+   <rect x="41.828" y="16.362" width="20.507" height="18.306"/>
+   <rect x="52.081" y="34.668" width="20.507" height="18.306"/>
+   <rect x="62.334" y="52.974" width="20.507" height="18.306"/>
+  </g>
+  <g transform="matrix(-1 0 0 1 309.49 13.867)" fill="#ff8080">
+   <rect x="165.13" y="57.412" width="20.507" height="18.306"/>
+   <rect x="144.62" y="39.106" width="20.507" height="18.306"/>
+   <rect x="134.37" y="20.8" width="20.507" height="18.306"/>
+   <rect x="144.62" y="2.4946" width="20.507" height="18.306"/>
+   <rect x="154.88" y="20.8" width="20.507" height="18.306"/>
+   <rect x="165.13" y="39.106" width="20.507" height="18.306"/>
+  </g>
+ </g>
+</svg>

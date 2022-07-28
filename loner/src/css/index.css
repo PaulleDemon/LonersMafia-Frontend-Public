@@ -731,7 +731,7 @@ a{
     top: 0;
     left: 0;
     display: flex;
-    height: 40px;
+    height: 60px;
     justify-content: space-evenly;
     align-items: center;
     background-color: var(--mafias-pg-header-bg);
@@ -1194,6 +1194,7 @@ a{
     background-color: #079cbd;
     border-radius: 5px;
     box-shadow: 0 0 5px #434343;
+    text-align: center;
 }
 
 .confirmation-modal{

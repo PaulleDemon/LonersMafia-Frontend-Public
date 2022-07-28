@@ -6,7 +6,7 @@ import { getErrorCodeDescription } from "../error-pages/errors"
 import { createUser, updateUser } from "../apis/loner-apis"
 import { LoadingWheel } from "../components/loading"
 
-import randomAvatarGenerator from "../utils/avatar-gnerator"
+import randomAvatarGenerator from "../utils/avatar-generator"
 
 import {ReactComponent as RELOAD} from "../icons/reload.svg"
 import {ReactComponent as NEXT} from "../icons/next.svg"
