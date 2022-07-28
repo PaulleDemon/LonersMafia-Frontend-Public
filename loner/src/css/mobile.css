@@ -1,10 +1,18 @@
 @media screen and (max-width: 600px) {
 
+    .mafia-info-modal{
+        left: 50%;
+    }
+
     .registration-modal{
         top: unset;
         bottom: 10%;
         transform: unset;
         transform: translateX(-50%);
+    }
+
+    .mafia-reg-modal{
+        bottom: 2px;
     }
 
     .info{
@@ -31,6 +39,12 @@
         flex-direction: column;
         /* justify-content: center; */
         justify-items: center;
+    }
+
+    .message-container{
+        position: fixed;
+        bottom: 0px;
+        display: flex;
     }
 
 }

@@ -30,7 +30,7 @@ const docElementStyle = document.documentElement.style
 
 function ChatHeader({onMaifaUpdate, props}){
 
-    const {name, icon, about, tag_line, rules} = props
+    const {name="", icon="", about="", tag_line="", rules=[]} = props
     
     const history = useNavigate()
     const webShare = useWebShare()

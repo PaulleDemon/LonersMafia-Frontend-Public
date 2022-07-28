@@ -553,7 +553,7 @@ export const MaifaFormModal = ({id=null, iconUrl="", bgImgUrl="",
     return (
 
         <div className="modal-background">
-            <div className="modal registration-modal" style={{height: "710px"}}>
+            <div className="modal registration-modal mafia-reg-modal">
 
                 <div className="close-container">
                     <CLOSE onClick={onClose} className="icon"/>
