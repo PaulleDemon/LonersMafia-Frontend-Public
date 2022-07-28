@@ -331,8 +331,10 @@ export default function Chat(){
     
     useEffect(() => {
 
-        if (!localStorage.getItem("sent-first-message"))
+        if (!localStorage.getItem("sent-first-message")){
             setText(randomTexts[randInt(0, randomTexts.length-1)])
+            console.log("Hell Ya")
+        }
 
     }, [])
     
@@ -646,7 +648,7 @@ export default function Chat(){
                     
                     messagable ? 
                     <div className="message-container">
-                    
+                        
                         <AutoHeightTextarea 
                             value={text}
                             maxLength={MAX_LENGTH.chat_length} 

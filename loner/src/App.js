@@ -6,8 +6,12 @@ import Login from "./components/login-component";
 import ThemeSwitcher from "./components/theme-switch";
 
 
+import {ReactComponent as BOT_ERROR} from "./icons/illustrations/bot-error.svg"
+
+
 function App() {
 
+	const [isBot, setIsBot] = useState(false)
 	const [timedMessage, setTimedMessage] = useState("")
 	const [showCookieModal, setShowCookieModal] = useState(false)
 
@@ -18,11 +22,24 @@ function App() {
 
 	}, [])
 
+	useEffect(() => {
+
+		setIsBot(navigator.webdriver)
+
+	}, [navigator.webdriver])
+
 	const setCookie = () => {
 		localStorage.setItem("cookie-accept", "true")
 		setShowCookieModal(false)
     }
 
+	if (isBot){
+		return (
+			<div className="row center">
+				<BOT_ERROR />
+			</div>
+		)
+	}
 
 	return (
 		<div className="App">

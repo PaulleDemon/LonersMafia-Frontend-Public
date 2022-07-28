@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import EmojiPicker from "../components/emoji-component"
 import StickerPicker from "../components/sticker-component"
@@ -33,14 +33,15 @@ const AutoHeightTextarea = ({  value, mediaRef=null, onStickerClick, onMediaUplo
     
     const {width} = useWindowDimensions()
 
-    const [text, setText] = useState(value)
+    // const [text, setText] = useState(value)
     const [showEmojiPicker, setShowEmojiPicker] = useState(false)
     const [showStickerModal, setShowStickerModal] = useState(false)
     
 
-    useEffect(() => {
-        setText(value)
-    }, [value])
+    // useEffect(() => {
+    //     console.log("Changed: ", value, text)
+    //     setText(value)
+    // }, [value])
 
     useEffect(() => {
 
@@ -48,7 +49,7 @@ const AutoHeightTextarea = ({  value, mediaRef=null, onStickerClick, onMediaUplo
         const scrollHeight = textareaRef.current.scrollHeight
         textareaRef.current.style.height = scrollHeight + "px"
 
-    }, [value, text])
+    }, [value])
 
     const triggerInputChange = (node, value = '') => {
         // Manually triggers change event
@@ -63,12 +64,12 @@ const AutoHeightTextarea = ({  value, mediaRef=null, onStickerClick, onMediaUplo
     
         }
     
-    };
+    }
 
     const onEmojiClick = (e, unicode) => {
-        setText(text+`${unicode}`)
+        // setText(text+`${unicode}`)
         const input = document.getElementById('__auto_resize_text__')
-        triggerInputChange(input, text+`${unicode}`)
+        triggerInputChange(input, value+`${unicode}`) // The input change has to be triggered manually as, on change doesn't detect prorammatic change to textarea
     }
 
     const imageChange = async (e) => {
@@ -117,11 +118,11 @@ const AutoHeightTextarea = ({  value, mediaRef=null, onStickerClick, onMediaUplo
     }
 
     const onChange = (e) => {
-
+        
         if (props.onChange)
             props.onChange(e)
     }
-
+ 
     return (
         <div className="autoresize-container">
 
@@ -133,7 +134,7 @@ const AutoHeightTextarea = ({  value, mediaRef=null, onStickerClick, onMediaUplo
                     className="autoresize"
                     ref={textareaRef}
                     {...props}
-                    value={text}
+                    value={value}
                     id="__auto_resize_text__"
                     // onInput={(e) => {props.onChange(e); console.log("chanegd: ", e.target.value)}}
                     onChange={onChange}
