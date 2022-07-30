@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useQuery } from "react-query"
 
-import { login } from "../apis/loner-apis"
+import { loginUser } from "../apis/loner-apis"
 import { RegistrationModal } from "../modals/registration-modals"
 import { TimedMessageModal } from "../modals/info-modal"
 
@@ -13,32 +13,17 @@ export default function Login(){
 	const [loginEnabled, setLoginEnabled] = useState(false)
 	const [showRegistrationModal, setShowRegistrationModal] = useState(false)
 
-    const loginQuery = useQuery("login", login, {
+    const loginQuery = useQuery("login", loginUser, {
 		enabled: loginEnabled,
 		staleTime: Infinity,
 		cacheTime: 60 * 60 * 1000, // 1 hour
 		onSuccess: (data) => {
 			// console.log("data: ", data.data.id)
 			
-			sessionStorage.setItem("user-id", `${data.data.id}`)
-			sessionStorage.setItem("user-name", `${data.data.name}`)
-			sessionStorage.setItem("loggedIn", "true")
-			setShowRegistrationModal(false)
 		},
 		onError: (err) => {
 			
-			if (err.response?.status === 401)
-				setShowRegistrationModal(true)
 			
-			else if (err.response?.status === 417)
-				setTimedMessage("You have been banned from loners")
-			
-			else if (err.response?.status === 404){
-				sessionStorage.clear()
-			}
-		
-			else 
-				setTimedMessage("An error occured trying to log you in.")
 		},
 		retry: (failureCount, err) => {
 
@@ -50,20 +35,46 @@ export default function Login(){
 		
 	})
 
+	const onUserLoginRegSuccess = (data) => {
+
+		sessionStorage.setItem("user-id", `${data.data.id}`)
+		sessionStorage.setItem("user-name", `${data.data.name}`)
+		sessionStorage.setItem("loggedIn", "true")
+		setShowRegistrationModal(false)
+	}
+
+	const onUserLogRefFailure = (err) => {
+
+		if (err.response?.status === 401)
+			setShowRegistrationModal(true)
+			
+		else if (err.response?.status === 417)
+			setTimedMessage("You have been banned from loners")
+		
+		else if (err.response?.status === 404){
+			sessionStorage.clear()
+		}
+	
+		else 
+			setTimedMessage("An error occured trying to log you in.")
+
+	}
+
     useEffect(() => {
 
 		console.log("Logged in? ", sessionStorage.getItem("loggedIn"))
 
         if (sessionStorage.getItem("loggedIn") !== "true"){
             setLoginEnabled(true)
+			setShowRegistrationModal(true)
         }
 
     }, [])
 
-    const handleRegistrationSuccess = () => {
-		loginQuery.refetch()
-		setShowRegistrationModal(false)
-	}
+    // const handleRegistrationSuccess = () => {
+	// 	loginQuery.refetch()
+	// 	setShowRegistrationModal(false)
+	// }
 
     return(
         
@@ -81,7 +92,8 @@ export default function Login(){
             {
             
                 showRegistrationModal ?
-                    <RegistrationModal onSuccess={handleRegistrationSuccess} />
+                    <RegistrationModal onSuccess={onUserLoginRegSuccess} 
+									   onError={onUserLogRefFailure}/>
                 :
                 null
             }

@@ -568,7 +568,7 @@ export default function Chat(){
         { !show404Page ?  
         
             <div className="chat-page">
-                <Login />
+                {/* <Login /> */}
                 <ChatHeader onMaifaUpdate={() => {mafiaQuery.remove(); mafiaQuery.refetch()}} 
                                 props={mafiaDetails}/>
 

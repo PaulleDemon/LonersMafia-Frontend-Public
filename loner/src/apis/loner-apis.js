@@ -60,7 +60,7 @@ export const createUser = async (form_data) => {
 } 
 
 
-export const getUser = async(user) => {
+export const getUser = async (user) => {
 
     const config = getConfig()
 
@@ -90,10 +90,12 @@ export const banUser = async (id) => {
 
 /* ----------------------------------- login ----------------------------------- */
 
-export const login = async () => {
+export const loginUser = async (data) => {
 
     const config = getConfig()
-    return await api.get(`/user/login/`, config)
+    
+    const body = JSON.parse(data)
+    return await api.post(`/user/login/`, body, config)
 }
 
 /* ----------------------------------- mafia endpoints --------------------------  */

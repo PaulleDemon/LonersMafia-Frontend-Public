@@ -4,6 +4,7 @@ export const MAX_LENGTH = {
 
     name: 25,
     tag_line: 75,
+    password: 35,
 
     chat_length: 2000,
 

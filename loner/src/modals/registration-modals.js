@@ -3,7 +3,7 @@ import {useMutation}from "react-query"
 
 import { getErrorCodeDescription } from "../error-pages/errors"
 
-import { createUser, updateUser } from "../apis/loner-apis"
+import { createUser, updateUser, loginUser } from "../apis/loner-apis"
 import { LoadingWheel } from "../components/loading"
 
 import randomAvatarGenerator from "../utils/avatar-generator"
@@ -30,33 +30,51 @@ import { randInt } from "../utils/random-generator"
  * 
  */
 
-export const RegistrationModal = ({onSuccess, userAvatar="", userName="", tagline="", update=false, onClose}) => {
+export const RegistrationModal = ({onSuccess, onError, userAvatar="", userName="", tagline="", 
+                                    update=false, onClose}) => {
 
 
     const [avatar, setAvatar] = useState({
                                             file: "",
                                             url: userAvatar
                                         })
-    const [name, setName] = useState(userName === null? "" : userName)
+
+    const [login, setLogin] = useState(false)
+    // const [name, setName] = useState(userName === null? "" : userName)
+    const [regForm, setRegForm] = useState({
+                                            name: userName === null? "" : userName,
+                                            password: "",
+                                        })
     const [tagLine, setTagLine] = useState(tagline === null? "" : tagline)
 
     const [error, setError] = useState("")
     const [inputError, setInputError] = useState(false)
     
-    const registerMutation = useMutation(!update ? createUser: updateUser, {
-        // onError: (err) => {
-        //     console.log("error: ", err, ":")
-            
-        //     // if (err.response?.data && typeof err.response.data === "object"){
-        //     //     console.log("error set")
-        //     //     setError(`${Object.values(err.response.data).join(" ")}`)
-        //     //     // return 
-        //     // }
-        //     error = getErrorCodeDescription(err.code, err.response?.data)
-        //     setError(error.errorDescription)
-        //     console.log("error set2")
-        // }
-    })
+    const api = useMemo(() => {
+
+        if (update)
+            return updateUser
+
+        else if(login){
+            return loginUser
+        }
+
+        else
+            return createUser
+
+    }, [update, login])
+
+    useEffect(() => {
+        // reset the form when ever login/signup is clicked
+        setRegForm({
+            ...regForm,
+            name: "",
+            password: ""
+        })
+
+    }, [login])
+
+    const registerMutation = useMutation(api)
 
     useEffect(() => {
 
@@ -68,7 +86,7 @@ export const RegistrationModal = ({onSuccess, userAvatar="", userName="", taglin
     const randomAvatar =  async () => {
         // fetches random avatar
 
-        let random_avatar = await randomAvatarGenerator(name)
+        let random_avatar = await randomAvatarGenerator(regForm.name)
                                 .then(res => res)
                                 .catch(err => null)
 
@@ -85,37 +103,49 @@ export const RegistrationModal = ({onSuccess, userAvatar="", userName="", taglin
 
     const handleSubmit = () => {
         
-        if (!name.trim()){
+        if (!regForm.name.trim()){
             setError("Quick give yourself a name")
             setInputError(true)
             return 
         } 
 
-        if (name.trim().length < MIN_LENGTH.name){
+        if (regForm.name.trim().length < MIN_LENGTH.name){
             setError("name too short")
             setInputError(true)
             return 
         }
         
-        if (!/^[a-zA-Z][a-zA-Z0-9_-]+$/.test(name)){
+        if (!/^[a-zA-Z][a-zA-Z0-9_-]+$/.test(regForm.name)){
             setError("Must begin with alphabet and must contain only alpha numeric values")
             setInputError(true)
             return 
         }
         
+        if (regForm.password.trim().length < 8){
+            setError("passwords must be atleast 8 characters long")
+            return 
+        }
+        
+        // if (regForm.password.contains(regForm.name)){
+        //     setError("password contains username.")
+        //     return 
+        // }
+
         if (!navigator.onLine)
             setError("You are not connected")
 
         let form_data = new FormData()
         
-        if (!update)
-            form_data.append("name", name)
-        
+        if (!update){
+            form_data.append("name", regForm.name)
+            form_data.append("password", regForm.password)
+        }
+
         if (update && userAvatar === avatar.url && tagLine === tagline)
             return
 
         if (userAvatar !== avatar.url)
-            form_data.append("avatar", avatar.file, `loner-${name || randInt(0, 10000)}.${FILE_TYPE_MAPPING[avatar.file.type]}`)
+            form_data.append("avatar", avatar.file, `loner-${regForm.name || randInt(0, 10000)}.${FILE_TYPE_MAPPING[avatar.file.type]}`)
 
         if (tagLine !== tagline){
             form_data.append("tag_line", tagLine.trim())
@@ -135,6 +165,9 @@ export const RegistrationModal = ({onSuccess, userAvatar="", userName="", taglin
 
                 error = getErrorCodeDescription(err.code, err.response?.data)
                 setError(error.errorDescription)
+
+                if (onError)
+                    onError(err)
             },
             onSuccess: (data) => {                
                 if (onSuccess)
@@ -149,16 +182,30 @@ export const RegistrationModal = ({onSuccess, userAvatar="", userName="", taglin
 
         setError("")
         setInputError(false)
-        setName(value)
 
-        if (name.length < 2){
+        setRegForm({
+            ...regForm,
+            [e.target.name]: e.target.value,
+        })
+
+        if (regForm.name.length < 2 && e.target.name === "name"){
             return 
         }
 
-        if (!/^[a-zA-Z][a-zA-Z0-9_-]+$/.test(value)){
+        if (!/^[a-zA-Z][a-zA-Z0-9_-]+$/.test(value) && e.target.name === "name"){
             setError("Must begin with alphabet and must contain only alpha numeric values")
             setInputError(true)
         }
+    }
+
+    let title = "Quick enter a name and join the LonersMafia."
+
+    if (update){
+        title = "Update loner profile"
+    }
+
+    else if (login){
+        title = "Quick prove you belong here."
     }
 
     return (
@@ -173,32 +220,56 @@ export const RegistrationModal = ({onSuccess, userAvatar="", userName="", taglin
                 null
             } 
 
-            {!update ? 
-                <div className="row center title-22px">
-                    Quick enter a name and join the loners.
-                </div>
-
+     
+            <div className="row center title-22px">
+                {title}
+            </div>
+            
+            {
+                (!update && !login) ?
+                    <div className="margin-10px row center font-18px" 
+                            onClick={() => setLogin(true)}
+                            style={{cursor: "pointer", color: "#1b6aea"}}
+                            >
+                        Already a loner? Quick login.
+                    </div>
                 :
-                <div className="row center title-22px">
-                    Update
-                </div>
+                null
             }
 
-            <div className="column center">
-                <p>Avatar</p>
-                <img src={avatar.url} alt=" " className="avatar margin-10px"/>
+            {
+                (!update && login )?
+                    <div className="margin-10px row center font-18px" 
+                            onClick={() => setLogin(false)}
+                            style={{cursor: "pointer", color: "#1b6aea"}}
+                            >
+                        Haven't joined Lonersmafia yet? Quick register
+                    </div>
+                    :
+                null
+            }
 
-                <button onClick={randomAvatar} disabled={registerMutation.isLoading} className="btn row center">
-                    <RELOAD fill="#fff"/>
-                </button>
+            {
+                !login ?
+                <div className="column center">
+                    <p>Avatar</p>
+                    <img src={avatar.url} alt=" " className="avatar margin-10px"/>
 
-            </div>
+                    <button onClick={randomAvatar} disabled={registerMutation.isLoading} className="btn row center">
+                        <RELOAD fill="#fff"/>
+                    </button>
+
+                 </div>
+                :
+                null
+            }
 
             <p className={`row center font-14px ${error ? "error" : "hidden"}`}>{error}</p>
-            <div className={`${update ? "column" : "row"} center `}>
+            <div className={`column center `}>
                 
                     <input type="text" className={`input margin-10px ${inputError ? "input-error": ""}`} 
-                            value={name} 
+                            value={regForm.name} 
+                            name="name"
                             placeholder="nickname (eg: memer34)"
                             maxLength={MAX_LENGTH.name}
                             onChange={handleInputChange}
@@ -220,17 +291,31 @@ export const RegistrationModal = ({onSuccess, userAvatar="", userName="", taglin
                         null
                     }
 
+                    {
+                        !update ? 
+                            <input type="password" className={`input margin-10px ${inputError ? "input-error": ""}`}
+                                value={regForm.password} 
+                                name="password"
+                                placeholder="password"
+                                maxLength={MAX_LENGTH.password}
+                                onChange={handleInputChange}
+                                disabled={registerMutation.isLoading}
+                                />
+                        :
+                        null
+                    }
+
             {
             (registerMutation.status === "loading" && registerMutation.status !== "error" && navigator.onLine) ?
                 <LoadingWheel />      
                 :
-                <button className="btn row center" onClick={handleSubmit}><NEXT fill="#fff"/></button>
+                <button className="btn row center" onClick={handleSubmit}><NEXT fill="#fff" width="25px" height="25px"/></button>
             }
        
             </div>
 
             { 
-                !update ?
+                (!update && !login) ?
                 <div className="row center font-14px">
                     by clicking on next button you agree to terms and conditions.
                 </div>

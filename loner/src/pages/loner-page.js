@@ -87,7 +87,7 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable, so
             }
 
 
-            {       
+            {/* {       
                 showRegisterModal ?
                 
                     <Login />
@@ -95,7 +95,7 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable, so
                 :
 
                 null
-            }
+            } */}
 
             <div className="mafia-cards-container" ref={scrollRef} onScroll={handleScroll}>
                 {
@@ -398,7 +398,7 @@ export default function LonerPage(){
                 }
             <ThemeSwitcher className="right-end"/>
             </div>
-            <Login />
+            {/* <Login /> */}
             
             <div className="margin-top column center">
                 <div className="row">
@@ -418,12 +418,12 @@ export default function LonerPage(){
                         </> 
                     :
                         <div className="btn" onClick={() => setShowRegisterModal(true)}>
-                            {
+                            {/* {
                                 showRegisterModal ?
                                     <Login />
                                 :
                                 null
-                            }
+                            } */}
                         </div>    
                     }
                 </div>

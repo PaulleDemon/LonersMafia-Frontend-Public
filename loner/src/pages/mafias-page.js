@@ -252,7 +252,7 @@ const MafiasPage = () => {
                 <ThemeSwitcher />
             </div>
 
-            <Login />
+            {/* <Login /> */}
 
             {
                 createMafiaModal ?
