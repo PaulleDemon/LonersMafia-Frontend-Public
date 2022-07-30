@@ -220,7 +220,7 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
 
     const onReactToMessage = (emoji, is_reacted, reaction_id) => {
 
-        if (!sessionStorage.getItem("loggedIn")){
+        if (!localStorage.getItem("user-id")){
             return 
         }
         
@@ -247,8 +247,6 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
     return ( 
         // the == is used instead of === because one is a string and other is an integer
         <div className={`chat-card ${currentUserId == userid? "right-end" : "left-end"}`}> 
-
-            <Login />
 
 
             {

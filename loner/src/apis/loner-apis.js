@@ -92,10 +92,9 @@ export const banUser = async (id) => {
 
 export const loginUser = async (data) => {
 
-    const config = getConfig()
+    const config = getFormConfig()
     
-    const body = JSON.parse(data)
-    return await api.post(`/user/login/`, body, config)
+    return await api.post(`/user/login/`, data, config)
 }
 
 /* ----------------------------------- mafia endpoints --------------------------  */

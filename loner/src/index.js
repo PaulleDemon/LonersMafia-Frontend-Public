@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'production'){
     window.console.warn = () => {} // in production we don't want to see console output.
 }
 
-const dontTryErrors = [400, 404, 403]
+const dontTryErrors = [400, 401, 404, 403, 417]
 
 const queryClientConfig = {
 
@@ -43,9 +43,15 @@ const queryClientConfig = {
 
         mutations: {
             retry: (failureCount, error) => {
+                
+                if (error.response?.status === 401){
+                    // clear local storage if the session expires or is unauthorized
+                    localStorage.removeItem("user-id")
+                    localStorage.removeItem("user-name")
+                }
 
 				if (dontTryErrors.includes(error.response?.status) || error.response?.status >= 500) //dont retry if the page returns 404 or 400
-				//dont retry if the page returns 404 or 400
+				//dont retry if the page returns 404 or 400 or 403 or 401
                     return false 
 
                 if (failureCount >= 3)

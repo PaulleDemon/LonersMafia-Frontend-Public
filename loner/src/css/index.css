@@ -317,6 +317,10 @@ a{
 	background-color: #000000;
     box-shadow: 0 0 10px #4b779d;
     margin-top: auto;
+    background: url("../icons/default-avatar.svg");/*default icon*/
+    background-size:     cover;            
+    background-repeat:   no-repeat;
+    background-position: center center;  
 }
 
 .chat-card .chat-media{
@@ -667,6 +671,9 @@ a{
     max-width: 100%;
     width: auto;
     height: auto;
+    background: url("../icons/default-avatar.svg"); /*default avatar*/
+    background-size: cover;                      /* <------ */
+    background-repeat: no-repeat; 
 }
 
 .loner-home .edit-container{

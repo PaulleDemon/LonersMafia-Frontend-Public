@@ -10,16 +10,16 @@ import MafiasPage from "./mafias-page";
 
 function Main(){
 
-	const user_name = useMemo(() => sessionStorage.getItem("user-name"), [sessionStorage.getItem("user-name")])
-	const [loggedIn, setLoggedIn] = useState(sessionStorage.getItem("loggedIn")==="true")
+	const user_name = useMemo(() => localStorage.getItem("user-name"), [localStorage.getItem("user-name")])
+	const [loggedIn, setLoggedIn] = useState(localStorage.getItem("user-id") !== null)
 
 	useState(() => {
 
-		setLoggedIn(sessionStorage.getItem("loggedIn")==="true")
+		setLoggedIn(localStorage.getItem("user-id") !== null)
 
-	}, [sessionStorage.getItem("user-name"), sessionStorage.getItem("loggedIn")])
+	}, [localStorage.getItem("user-name"), localStorage.getItem("user-id")])
 
-	console.log("Logged in: ", sessionStorage.getItem("loggedIn"))
+	console.log("Logged in: ", localStorage.getItem("user-id"))
 	return (
 		<Routes>
 			<Route path="/" exact element={<Navigate to="/loner" replace />} />

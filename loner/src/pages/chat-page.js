@@ -11,7 +11,6 @@ import {ReactComponent as SHARE} from "../icons/share.svg"
 import {ReactComponent as CLOSE} from "../icons/close.svg"
 import {ReactComponent as INFO} from "../icons/info.svg"
 
-import Login from "../components/login-component"
 import ChatCard from "../components/message-card"
 import AutoHeightTextarea from "../components/auto-resize-textarea"
 
@@ -489,7 +488,7 @@ export default function Chat(){
             return 
         }
 
-        if (sessionStorage.getItem("loggedIn") !== "true"){
+        if (!localStorage.getItem("user-id")){ // if the user hasn't logged in return
             return
         }
 
@@ -568,7 +567,7 @@ export default function Chat(){
         { !show404Page ?  
         
             <div className="chat-page">
-                {/* <Login /> */}
+
                 <ChatHeader onMaifaUpdate={() => {mafiaQuery.remove(); mafiaQuery.refetch()}} 
                                 props={mafiaDetails}/>
 

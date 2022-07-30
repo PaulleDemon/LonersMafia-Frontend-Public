@@ -117,7 +117,7 @@ const MafiasPage = () => {
         },
     [])
 
-    const sortListQuery = useInfiniteQuery(["mafias", sortOption, sessionStorage.getItem("user-id")], listMafias, {
+    const sortListQuery = useInfiniteQuery(["mafias", sortOption, localStorage.getItem("user-id")], listMafias, {
         // enabled: enabled,
         getNextPageParam: (lastPage, ) => {
             // console.log("PAGE: ", lastPage)
@@ -241,7 +241,7 @@ const MafiasPage = () => {
 
             <div className="mafias-header">
                 <div className="row center">
-                    <BACK className="icon margin-10px" onClick={() => {sessionStorage.getItem("loggedIn") === "true" ? history(`/loner/${sessionStorage.getItem("user-name")}`): history('/loner')}}/>
+                    <BACK className="icon margin-10px" onClick={() => {localStorage.getItem("user-id") === "true" ? history(`/loner/${localStorage.getItem("user-name")}`): history('/loner')}}/>
                     <SortComponent values={sortOptions} defaultValue={sortOption} onOptionChange={handleSortOptionChange}/>
                 </div>
                 <a onClick={() => setShowCreatMafiaModal(true)} style={{cursor: "pointer"}}>start mafia</a>

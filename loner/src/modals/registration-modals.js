@@ -33,7 +33,7 @@ import { randInt } from "../utils/random-generator"
 export const RegistrationModal = ({onSuccess, onError, userAvatar="", userName="", tagline="", 
                                     update=false, onClose}) => {
 
-
+    console.log("FIle:", userName, tagline)
     const [avatar, setAvatar] = useState({
                                             file: "",
                                             url: userAvatar
@@ -65,12 +65,13 @@ export const RegistrationModal = ({onSuccess, onError, userAvatar="", userName="
     }, [update, login])
 
     useEffect(() => {
-        // reset the form when ever login/signup is clicked
-        setRegForm({
-            ...regForm,
-            name: "",
-            password: ""
-        })
+
+        if (!update) // reset the form when ever login/signup is clicked
+            setRegForm({
+                ...regForm,
+                name: "",
+                password: ""
+            })
 
     }, [login])
 
@@ -103,33 +104,35 @@ export const RegistrationModal = ({onSuccess, onError, userAvatar="", userName="
 
     const handleSubmit = () => {
         
-        if (!regForm.name.trim()){
-            setError("Quick give yourself a name")
-            setInputError(true)
-            return 
-        } 
+        if (!update){
+            if (!regForm.name.trim()){
+                setError("Quick give yourself a name")
+                setInputError(true)
+                return 
+            } 
 
-        if (regForm.name.trim().length < MIN_LENGTH.name){
-            setError("name too short")
-            setInputError(true)
-            return 
+            if (regForm.name.trim().length < MIN_LENGTH.name){
+                setError("name too short")
+                setInputError(true)
+                return 
+            }
+            
+            if (!/^[a-zA-Z][a-zA-Z0-9_-]+$/.test(regForm.name)){
+                setError("Must begin with alphabet and must contain only alpha numeric values")
+                setInputError(true)
+                return 
+            }
+            
+            if (regForm.password.trim().length < 8){
+                setError("password must be atleast 8 characters long")
+                return 
+            }
+            
+            // if (regForm.password.contains(regForm.name)){
+            //     setError("password contains username.")
+            //     return 
+            // }
         }
-        
-        if (!/^[a-zA-Z][a-zA-Z0-9_-]+$/.test(regForm.name)){
-            setError("Must begin with alphabet and must contain only alpha numeric values")
-            setInputError(true)
-            return 
-        }
-        
-        if (regForm.password.trim().length < 8){
-            setError("passwords must be atleast 8 characters long")
-            return 
-        }
-        
-        // if (regForm.password.contains(regForm.name)){
-        //     setError("password contains username.")
-        //     return 
-        // }
 
         if (!navigator.onLine)
             setError("You are not connected")
@@ -157,6 +160,7 @@ export const RegistrationModal = ({onSuccess, onError, userAvatar="", userName="
             form = {formData: form_data, id: sessionStorage.getItem("user-id")}
 
         registerMutation.mutate(form, {
+
             onError: (err) => {
                 if (err.response?.data && typeof err.response.data === "object"){
                         setError(`${Object.values(err.response.data).join(" ")}`)

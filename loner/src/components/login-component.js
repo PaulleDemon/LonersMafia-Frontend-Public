@@ -9,37 +9,20 @@ import { TimedMessageModal } from "../modals/info-modal"
 export default function Login(){
 
 	const [timedMessage, setTimedMessage] = useState("")
-
-	const [loginEnabled, setLoginEnabled] = useState(false)
 	const [showRegistrationModal, setShowRegistrationModal] = useState(false)
 
-    const loginQuery = useQuery("login", loginUser, {
-		enabled: loginEnabled,
-		staleTime: Infinity,
-		cacheTime: 60 * 60 * 1000, // 1 hour
-		onSuccess: (data) => {
-			// console.log("data: ", data.data.id)
-			
-		},
-		onError: (err) => {
-			
-			
-		},
-		retry: (failureCount, err) => {
+    useEffect(() => {
 
-			if (err.response?.status === 401 || err.response?.status === 417)
-				return false
-			
-			return 3
-		}
-		
-	})
+        if (!sessionStorage.getItem("user-id")){
+			setShowRegistrationModal(true)
+        }
+
+    }, [])
+
 
 	const onUserLoginRegSuccess = (data) => {
-
-		sessionStorage.setItem("user-id", `${data.data.id}`)
-		sessionStorage.setItem("user-name", `${data.data.name}`)
-		sessionStorage.setItem("loggedIn", "true")
+		localStorage.setItem("user-id", `${data.data.id}`)
+		localStorage.setItem("user-name", `${data.data.name}`)
 		setShowRegistrationModal(false)
 	}
 
@@ -52,24 +35,14 @@ export default function Login(){
 			setTimedMessage("You have been banned from loners")
 		
 		else if (err.response?.status === 404){
-			sessionStorage.clear()
+			localStorage.removeItem("user-id")
+			localStorage.removeItem("user-name")
 		}
 	
 		else 
 			setTimedMessage("An error occured trying to log you in.")
 
 	}
-
-    useEffect(() => {
-
-		console.log("Logged in? ", sessionStorage.getItem("loggedIn"))
-
-        if (sessionStorage.getItem("loggedIn") !== "true"){
-            setLoginEnabled(true)
-			setShowRegistrationModal(true)
-        }
-
-    }, [])
 
     // const handleRegistrationSuccess = () => {
 	// 	loginQuery.refetch()
