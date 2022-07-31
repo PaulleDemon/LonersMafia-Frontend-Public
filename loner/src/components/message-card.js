@@ -77,7 +77,7 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
       
             queryClient.setQueriesData(["chat", mafia], (data) => {
                 
-                console.log("Chat: ", data)
+                // console.log("Chat: ", data)
                 // updates all the cached rooms to display the latest message and change the unread count
                 const newPagesArray = data.pages.map((data) =>{
                                     // find and update the specific data

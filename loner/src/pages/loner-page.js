@@ -166,7 +166,7 @@ export default function LonerPage(){
     const [showUserEditModal, setShowUserEditModal] = useState(false)
     const [showMafiaCreateModal, setShowMafiaCreateModal] = useState(false)
 
-    const userid = useMemo(() => sessionStorage.getItem("user-id"), [sessionStorage.getItem("user-id")])
+    const userid = useMemo(() => localStorage.getItem("user-id"), [localStorage.getItem("user-id")])
     
     useEffect(() => {
         // if the loner id is available start fetching trending, modertaing mafias etc.

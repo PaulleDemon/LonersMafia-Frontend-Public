@@ -13,7 +13,7 @@ export default function Login(){
 
     useEffect(() => {
 
-        if (!sessionStorage.getItem("user-id")){
+        if (!localStorage.getItem("user-id")){
 			setShowRegistrationModal(true)
         }
 

@@ -462,7 +462,7 @@ export default function Chat(){
 
     }, [window.navigator.onLine])
 
-    const currentUserId = useMemo(() => sessionStorage.getItem("user-id"), [sessionStorage.getItem("user-id")])
+    const currentUserId = useMemo(() => localStorage.getItem("user-id"), [localStorage.getItem("user-id")])
     
     const user_is_mod = useMemo(() => {
         return JSON.parse(sessionStorage.getItem("is_mod"))

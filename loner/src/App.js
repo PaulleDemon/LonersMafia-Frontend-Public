@@ -24,6 +24,7 @@ function App() {
 
 	useEffect(() => {
 
+		console.log("Webdriver: ", navigator.webdriver)
 		setIsBot(navigator.webdriver)
 
 	}, [navigator.webdriver])

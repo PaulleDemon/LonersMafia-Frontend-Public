@@ -66,13 +66,15 @@ export const RegistrationModal = ({onSuccess, onError, userAvatar="", userName="
 
     useEffect(() => {
 
-        if (!update) // reset the form when ever login/signup is clicked
+        if (!update) {// reset the form when ever login/signup is clicked
             setRegForm({
                 ...regForm,
                 name: "",
                 password: ""
             })
-
+        
+            setError("")
+        }
     }, [login])
 
     const registerMutation = useMutation(api)
