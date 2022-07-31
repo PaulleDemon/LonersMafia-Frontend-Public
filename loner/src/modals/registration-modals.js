@@ -159,7 +159,7 @@ export const RegistrationModal = ({onSuccess, onError, userAvatar="", userName="
         let form = form_data
 
         if (update)
-            form = {formData: form_data, id: sessionStorage.getItem("user-id")}
+            form = {formData: form_data, id: localStorage.getItem("user-id")}
 
         registerMutation.mutate(form, {
 

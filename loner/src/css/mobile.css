@@ -39,12 +39,6 @@
         justify-items: center;
     }
 
-    .message-container{
-        position: fixed;
-        bottom: 0px;
-        display: flex;
-    }
-
     .chat-body{
         width: 100%;
     }

@@ -187,7 +187,7 @@ const randomTexts = [
  * Makes websocket connection and handles incoming and outgoing messages
  */
 export default function Chat(){
-
+    // TODO: reconnect websocket after login
     const {mafia} = useParams() 
 
     const mediaRef = useRef()
@@ -195,9 +195,9 @@ export default function Chat(){
 
     const [text, setText] = useState("")
     const [media, setMedia] = useState({
-        fileObject: null,
-        fileUrl: null,
-        fileType: ''
+        fileObject: null,  // media object
+        fileUrl: null, //media url
+        fileType: '' // media type, image/video
     })
 
     const [socketUrl, setSocketUrl] = useState(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/mafia/${mafia}/`)
@@ -224,7 +224,7 @@ export default function Chat(){
     const scrollRef = useRef() // refernce to chat body
     const lastMessageRef = useRef() //reference to the last message div
 
-    const {sendJsonMessage, lastJsonMessage, readyState,} = useWebSocket(socketUrl, {
+    const {sendJsonMessage, lastJsonMessage, readyState} = useWebSocket(socketUrl, {
                                                                 onOpen: () => console.log('opend connection'),
                                                                 onClose: (closeEvent) => {
                                                                     // console.log("Close Event: ", closeEvent)
@@ -528,12 +528,17 @@ export default function Chat(){
 
         else{
 
+            console.log("Sending...")
+
             if (!text.trim())
                 return
+
+            
 
             sendJsonMessage({
                 "message": text.trim()
             })
+            console.log("Sending...2")
 
             setText("")
         }

@@ -4,6 +4,7 @@ import { useQuery } from "react-query"
 import { loginUser } from "../apis/loner-apis"
 import { RegistrationModal } from "../modals/registration-modals"
 import { TimedMessageModal } from "../modals/info-modal"
+import Cookies from "js-cookie"
 
 
 export default function Login(){
@@ -20,10 +21,24 @@ export default function Login(){
     }, [])
 
 
+	useEffect(() => {
+
+		if (!Cookies.get("csrftoken")){
+			localStorage.removeItem("user-id")
+			localStorage.removeItem("user-name")
+			setShowRegistrationModal(true)
+			setTimedMessage("Csrf cookie missing. Please try hard refreshing")
+		}
+
+	}, [Cookies.get("csrftoken")])
+
 	const onUserLoginRegSuccess = (data) => {
+
 		localStorage.setItem("user-id", `${data.data.id}`)
 		localStorage.setItem("user-name", `${data.data.name}`)
 		setShowRegistrationModal(false)
+
+		// window.location.reload()
 	}
 
 	const onUserLogRefFailure = (err) => {

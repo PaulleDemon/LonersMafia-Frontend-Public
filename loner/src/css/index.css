@@ -392,6 +392,7 @@ a{
     align-items: center;
     position: fixed;
     bottom: 0px;
+    background-color: rebeccapurple;
 }
 
 .send-btn{
