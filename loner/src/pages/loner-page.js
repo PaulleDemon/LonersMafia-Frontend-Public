@@ -483,8 +483,8 @@ export default function LonerPage(){
             </div>
             
             <div className="row center">
-                <a href="http://" target="_blank" rel="noreferrer" className="font-18px margin-10px">View source on Github</a>
-                <a href="http://" target="_blank" rel="noreferrer" className="font-18px margin-10px">Report a bug</a>
+                <a href="https://github.com/PaulleDemon/LonersMafia-support#source-code" target="_blank" rel="noreferrer" className="font-18px margin-10px">View source on Github</a>
+                <a href="https://github.com/PaulleDemon/LonersMafia-support#reporting-bugs" target="_blank" rel="noreferrer" className="font-18px margin-10px">Report a bug</a>
             </div>
 
         </div>

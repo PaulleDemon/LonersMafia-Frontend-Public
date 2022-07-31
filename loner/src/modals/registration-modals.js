@@ -323,7 +323,8 @@ export const RegistrationModal = ({onSuccess, onError, userAvatar="", userName="
             { 
                 (!update && !login) ?
                 <div className="row center font-14px">
-                    by clicking on next button you agree to terms and conditions.
+                    by clicking on next button you agree to &nbsp; 
+                    <a href="https://github.com/PaulleDemon/LonersMafia-support/blob/main/terms%26conditions.md" target="_blank">terms and conditions</a> .
                 </div>
                 :
 
