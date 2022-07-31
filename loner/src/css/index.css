@@ -55,27 +55,6 @@ body {
     width: 100%;
 }
 
-/* width */
-::-webkit-scrollbar {
-    width: 10px;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: #d2cfcf;
-  }
-  
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #888;
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-
-
 a{
 	color: #08a14d;
 	text-decoration: none;
@@ -1249,6 +1228,8 @@ a{
 .error-page-img{
     height: auto;
     width: auto;
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .error-page .btn{
@@ -1317,4 +1298,28 @@ a{
 
 .invisible{
     display: none;
+}
+
+@media screen and (min-width: 600px){
+
+    /* width */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #d2cfcf;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
 }

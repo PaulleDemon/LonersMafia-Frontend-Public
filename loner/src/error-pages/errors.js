@@ -112,7 +112,7 @@ export function Error({error, retry=false, onRetry}){
     )
 }
 
-const ERROR_404_IMG = ERROR_SVGS.concat([<ERROR_404 />])
+const ERROR_404_IMG = ERROR_SVGS.concat([<ERROR_404 className="error-page-img"/>])
 
 const ERROR_404_DESC = [
                         "I doesn't exist just like you", 
