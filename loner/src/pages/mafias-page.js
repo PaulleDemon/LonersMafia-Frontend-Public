@@ -241,7 +241,6 @@ const MafiasPage = () => {
 
             <div className="mafias-header">
                 <div className="row center">
-                    {localStorage.getItem("user-name")}
                     <BACK className="icon margin-10px" onClick={() => {localStorage.getItem("user-id") !== null ? history(`/loner/${localStorage.getItem("user-name")}`): history('/loner')}}/>
                     <SortComponent values={sortOptions} defaultValue={sortOption} onOptionChange={handleSortOptionChange}/>
                 </div>

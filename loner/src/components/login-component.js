@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react"
-import { useQuery } from "react-query"
 
-import { loginUser } from "../apis/loner-apis"
 import { RegistrationModal } from "../modals/registration-modals"
 import { TimedMessageModal } from "../modals/info-modal"
 import Cookies from "js-cookie"
@@ -18,7 +16,7 @@ export default function Login(){
 			setShowRegistrationModal(true)
         }
 
-    }, [])
+    }, [localStorage.getItem("user-id")])
 
 
 	useEffect(() => {
@@ -38,6 +36,7 @@ export default function Login(){
 		localStorage.setItem("user-name", `${data.data.name}`)
 		setShowRegistrationModal(false)
 
+		sessionStorage.setItem("websocket-reconnect", "true")
 		// window.location.reload()
 	}
 

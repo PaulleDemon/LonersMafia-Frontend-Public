@@ -224,7 +224,7 @@ export default function Chat(){
     const scrollRef = useRef() // refernce to chat body
     const lastMessageRef = useRef() //reference to the last message div
 
-    const {sendJsonMessage, lastJsonMessage, readyState} = useWebSocket(socketUrl, {
+    const {sendJsonMessage, lastJsonMessage, readyState, getWebSocket} = useWebSocket(socketUrl, {
                                                                 onOpen: () => console.log('opend connection'),
                                                                 onClose: (closeEvent) => {
                                                                     // console.log("Close Event: ", closeEvent)
@@ -241,8 +241,8 @@ export default function Chat(){
                                                                         setMessageble(false)
 
                                                                     }
-
-                                                                    else
+                                                                    
+                                                                    else if (closeEvent.code !== 1000)
                                                                         setTimedMessage("Connection to server lost. Attempting to reconnect.")
                                                                 
                                                                 },
@@ -340,10 +340,20 @@ export default function Chat(){
 
         if (!localStorage.getItem("sent-first-message")){
             setText(randomTexts[randInt(0, randomTexts.length-1)])
-            console.log("Hell Ya")
         }
 
     }, [])
+
+    useEffect(() => {
+
+        if (sessionStorage.getItem("websocket-reconnect") === "true"){
+
+            getWebSocket()?.close(1000)
+            console.log("Closed")
+            sessionStorage.removeItem("websocket-reconnect")
+        }
+
+    }, [sessionStorage.getItem("websocket-reconnect")])
     
     useEffect(() => {
 

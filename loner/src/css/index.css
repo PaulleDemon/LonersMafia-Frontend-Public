@@ -392,7 +392,6 @@ a{
     align-items: center;
     position: fixed;
     bottom: 0px;
-    background-color: rebeccapurple;
 }
 
 .send-btn{
@@ -1289,8 +1288,8 @@ a{
 /* --------------------------------*/
 
 .linkify-link-color{
-    color: #000000;
-    border-bottom: 1px solid #000000;
+    color:  var(--default-font-color);
+    border-bottom: 1px solid var(--default-font-color);
 }
 
 .hidden{
