@@ -6,7 +6,10 @@ import { ConfirmationModal } from "../modals/info-modal"
 
 /**
  * This is for moderators and staff
- * is_staff: bool - staff have special permission and power
+ * is_staff: bool - if the message is sent by a staff
+ * already_banned: bool - if the user is already banned from the mafia
+ * is_mod_message: bool - mods cannot delete other mods messages
+ * user_is_staff: bool - if the requested user is a staff
  * onDeleteMessage: function - function to call when delete message is clicked
  * onDeleteMessageAndBanUser: function - function to call when delete message and ban user is clicked
  * onDeleteAllBanUser: function - function to call when delete all message and ban user is clicked
@@ -14,7 +17,7 @@ import { ConfirmationModal } from "../modals/info-modal"
  * onBanFromLoner: function - function to call ban from loner is clicked
  */
 export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, user_is_staff=false,
-                                onDeleteMessage, onDeleteMessageAndBanUser, 
+                                already_banned=false, onDeleteMessage, onDeleteMessageAndBanUser, 
                                 onAssignMod, onBanFromLoner
                                 }) => {
                  
@@ -111,7 +114,7 @@ export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, user
                         Delete message
                     </div>
                     
-                    { (!is_mod_message && !is_staff) || (is_mod_message && is_staff) ?
+                    { (!already_banned && ((!is_mod_message && !is_staff) || (is_mod_message && is_staff) || user_is_staff)) ?
                         <>
                             <div className="dropdown-btn" 
                                 onClick={handleClick}

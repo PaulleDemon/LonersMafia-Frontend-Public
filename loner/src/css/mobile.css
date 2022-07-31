@@ -47,4 +47,8 @@
         display: flex;
     }
 
+    .chat-body{
+        width: 100%;
+    }
+
 }

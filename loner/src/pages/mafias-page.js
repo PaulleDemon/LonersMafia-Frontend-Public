@@ -241,7 +241,8 @@ const MafiasPage = () => {
 
             <div className="mafias-header">
                 <div className="row center">
-                    <BACK className="icon margin-10px" onClick={() => {localStorage.getItem("user-id") === "true" ? history(`/loner/${localStorage.getItem("user-name")}`): history('/loner')}}/>
+                    {localStorage.getItem("user-name")}
+                    <BACK className="icon margin-10px" onClick={() => {localStorage.getItem("user-id") !== null ? history(`/loner/${localStorage.getItem("user-name")}`): history('/loner')}}/>
                     <SortComponent values={sortOptions} defaultValue={sortOption} onOptionChange={handleSortOptionChange}/>
                 </div>
                 <a onClick={() => setShowCreatMafiaModal(true)} style={{cursor: "pointer"}}>start mafia</a>

@@ -42,7 +42,7 @@ export const CookieConsentModal = ({onCookieAccept}) => {
         <div className="modal cookie-modal center margin-10px">
             
             <div className="row center">
-                Your lonely browser needs some Cookies, and I am giving it some.
+                Your Maifa browser needs some Cookies, and I am giving it some.
             </div>
 
             <div className="row center margin-10px">

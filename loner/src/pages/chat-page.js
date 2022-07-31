@@ -27,6 +27,12 @@ import { MaifaFormModal } from "../modals/mafia-form-modal"
 const docElementStyle = document.documentElement.style
 
 
+/**
+ * Displays chat header
+ * @param onMafiaUpdate: function - function to be executed when the mafia info is updated
+ * @param props - contains name, icon, about, tag_line and rules: Array
+ * 
+ */
 function ChatHeader({onMaifaUpdate, props}){
 
     const {name="", icon="", about="", tag_line="", rules=[]} = props
@@ -177,7 +183,9 @@ const randomTexts = [
     "Invade the Universe"
 ]
 
-
+/**
+ * Makes websocket connection and handles incoming and outgoing messages
+ */
 export default function Chat(){
 
     const {mafia} = useParams() 
@@ -298,7 +306,7 @@ export default function Chat(){
     useEffect(() => {
 
         const chatPages = []
-    
+
         console.log("Chat qyery: ", chatQuery.status, chatQuery.data)
         if (chatQuery.status === "success"){
             chatQuery.data.pages.forEach((x) => {
@@ -396,10 +404,11 @@ export default function Chat(){
             }
             
             else if (Object.keys(lastJsonMessage)[0] === 'delete'){
-                console.log("delete")
+                
+                // FIXME: if too many messages are removed then 404 error is thrown because the page becomes empty.
+                
                 queryClient.setQueryData(["chat", mafiaDetails.id], ({pages, pagesParams}) => {
-                    
-                    console.log("INdex1: ", pages)
+            
 
                     // updates all the cached rooms to display the latest message and change the unread count
                     const newPagesArray = pages.map((data) =>{
@@ -550,6 +559,11 @@ export default function Chat(){
             setScrollToEnd(true)
         }
 
+        // console.log("Target: ", e.target.scrollTop, chatQuery.status)
+        if (e.target.scrollTop < 40 && (chatQuery.status === "loading" || chatQuery.isFetching)){ // prevent completely from scrolling top top when loading
+            e.target.scrollTop = 40
+        }
+
         // If the scroll-bar is at the top then fetch old messages from the database
         // note: we may also have to check if scroll bar is scrolling to the top
         if (scrollRef.current && (100 >= scrollRef.current.scrollTop 
@@ -560,7 +574,35 @@ export default function Chat(){
         }        
     }
 
-   
+    const onBanSuccess = (userid) => {
+        
+        queryClient.setQueryData(["chat", mafiaDetails.id], (data) => {
+            console.log("deleted data1: ", data)
+            
+            // updates all the cache and sets banned to true
+            const newPagesArray = data.pages.map((data) =>{
+                                // find and update the specific data
+                                // console.log("deleted data: ", data.data.results)
+                                data.data.results.map((result, index) => {
+                                    console.log("Banned: ",  result.user.id, currentUserId)
+                                    if (result?.user?.id == userid){ // update all cache where userid= user and mafia id= mafiaid
+                                        data.data.results[index].is_banned = true
+                                        console.log("Banned2: ", data.data.results[index])
+                                    }
+                                    return result
+                                })
+                                    
+
+                                return data
+                                }) 
+                
+            return {
+                pages: newPagesArray,
+                pageParams: data.pageParams
+            }
+        })
+
+    }
 
     return (
         <>
@@ -604,6 +646,7 @@ export default function Chat(){
                                             currentUserId={currentUserId}
                                             user_is_mod={user_is_mod}
                                             user_is_staff={user_is_staff}
+                                            onBanSuccess={onBanSuccess}
                                             props={msg}/>
                                     </li>)  
                         })

@@ -11,7 +11,6 @@ import { assignMod, banUser, deleteAndBan, deleteMessage, deleteReaction, reactT
 import { TimedMessageModal } from "../modals/info-modal";
 
 import { formattNumber } from "../utils/formatted-number";
-import Login from "./login-component";
 
 
 const ReactionComponent = ({id=null, emoji, count=0, is_reacted=false, onClick}) => {
@@ -50,24 +49,33 @@ const ReactionComponent = ({id=null, emoji, count=0, is_reacted=false, onClick})
  * user_is_mod: bool - the current requested user has mod previlages
  */
 
-const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=false, props}) => {
+const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=false, onBanSuccess, props}) => {
 
     
-    const {id, message, user, media_url, mafia,
+    const {id, message, user, media_url, mafia, is_banned,
         datetime, is_mod=false, is_staff=false, reactions} = props
     
     const {id: userid, name, avatar_url} = user
-    
+
     const queryClient = useQueryClient() 
 
     const [timedMessageModal, setTimedMessageModal] = useState("")
     const [showImageEnlarged, setShowImageEnlarged] = useState(false)
-
     
-    const banMutate = useMutation(banUser)
-    const assignModMutate = useMutation(assignMod)
-    const banFromMafiaMutate = useMutation(deleteAndBan)
-    const deleteMessageMutate = useMutation(deleteMessage)
+    const banMutate = useMutation(banUser) // bans the user from entire loner
+    const assignModMutate = useMutation(assignMod) // assigns moderators role
+    const deleteMessageMutate = useMutation(deleteMessage) // deletes the message
+    
+    const banFromMafiaMutate = useMutation(deleteAndBan, { // deletes the message and bans from the mafia depending on mods action
+        
+        onSuccess: () => {
+            
+            if(onBanSuccess)
+                onBanSuccess(userid)
+       
+        },
+        onError: () => setTimedMessageModal("An error occurred")
+    })
     
     let removedReactionId = null
 
@@ -78,7 +86,7 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
             queryClient.setQueriesData(["chat", mafia], (data) => {
                 
                 // console.log("Chat: ", data)
-                // updates all the cached rooms to display the latest message and change the unread count
+                // updates cache
                 const newPagesArray = data.pages.map((data) =>{
                                     // find and update the specific data
                                     const index = data.data.results.findIndex((val) => {
@@ -116,7 +124,7 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
             
             queryClient.setQueriesData(["chat", mafia], (data) => {
                 
-                // updates all the cached rooms to display the latest message and change the unread count
+                // updates all the cache reaction
                 const newPagesArray = data.pages.map((data) =>{
                                     // find and update the specific data
                                     const index = data.data.results.findIndex((val) => {
@@ -204,8 +212,6 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
                     mafia: mafia
                 },
             deleteAll: deleteAll
-        }, {
-            onError: () => setTimedMessageModal("An error occurred")
         })
 
     }
@@ -359,6 +365,7 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
                         onDeleteAllAndBanUser={onDeleteAndBan}
                         onAssignMod={onAssignMod}
                         onBanFromLoner={onBanFromLoner}
+                        already_banned={is_banned} // tells if the user is already banned
                         />
                 </div>
                 :
