@@ -474,7 +474,7 @@ export default function LonerPage(){
                                     promoted_url={"https://peckspace.com/spaces"}
                                     promoted={true}
                                     />
-                        <CreateMafiaCard message="sponsor" onClick={() =>  window.open("https://github.com", '_blank').focus()}/>
+                        <CreateMafiaCard message="sponsor" onClick={() =>  window.open("https://forms.gle/CFdvDar8D6t6S7bh6", '_blank').focus()}/>
 
                     </div>
 
