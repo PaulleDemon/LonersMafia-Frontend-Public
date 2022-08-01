@@ -6,15 +6,15 @@ import { ConfirmationModal } from "../modals/info-modal"
 
 /**
  * This is for moderators and staff
- * is_staff: bool - if the message is sent by a staff
- * already_banned: bool - if the user is already banned from the mafia
- * is_mod_message: bool - mods cannot delete other mods messages
- * user_is_staff: bool - if the requested user is a staff
- * onDeleteMessage: function - function to call when delete message is clicked
- * onDeleteMessageAndBanUser: function - function to call when delete message and ban user is clicked
- * onDeleteAllBanUser: function - function to call when delete all message and ban user is clicked
- * onAssignMod: function - function to call assign mod is clicked
- * onBanFromLoner: function - function to call ban from loner is clicked
+ * @param is_staff: bool - if the message is sent by a staff
+ * @param already_banned: bool - if the user is already banned from the mafia
+ * @param is_mod_message: bool - mods cannot delete other mods messages
+ * @param user_is_staff: bool - if the requested user is a staff
+ * @param onDeleteMessage: function - function to call when delete message is clicked
+ * @param onDeleteMessageAndBanUser: function - function to call when delete message and ban user is clicked
+ * @param onDeleteAllBanUser: function - function to call when delete all message and ban user is clicked
+ * @param onAssignMod: function - function to call assign mod is clicked
+ * @param onBanFromLoner: function - function to call ban from loner is clicked
  */
 export const MoreChatOptions = memo(({is_staff=false, is_mod_message=false, user_is_staff=false,
                                 already_banned=false, onDeleteMessage, onDeleteMessageAndBanUser, 

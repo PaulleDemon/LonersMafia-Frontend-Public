@@ -5,6 +5,9 @@ import { useVisible } from '../utils/hooks'
 import emojiJson from './emoji-list.json'
 
 
+/**
+ * Modal that helps to pick emoji. Loads emoji from emoji-list.json
+ */
 const EmojiPicker = React.memo(({onClickOutside, onEmojiClick}) => {
 
     const [searchValue, setSearchValue] = useState("")

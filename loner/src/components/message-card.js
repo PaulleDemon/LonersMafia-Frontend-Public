@@ -12,7 +12,14 @@ import { TimedMessageModal } from "../modals/info-modal";
 
 import { formattNumber } from "../utils/formatted-number";
 
-
+/**
+ * 
+ * @param id: int - id of the reaction 
+ * @param emoji: str - unicode value 
+ * @param count: int - number of people who have reacted using this emoji 
+ * @param is_reacted: bool - if the user has reacted using this emoji
+ * @parma onClick: function - function to execute whent the emoji is clicked
+ */
 const ReactionComponent = ({id=null, emoji, count=0, is_reacted=false, onClick}) => {
     
     return (
@@ -38,15 +45,17 @@ const ReactionComponent = ({id=null, emoji, count=0, is_reacted=false, onClick})
 
 
 /**
- * message: str - message to be displayed
- * datetime: str - datetime when the message was sent
- * media: url | null - media if available
- * is_mod: bool - allows previlages
- * is_staff: bool - allows previlages
- * is_sender: bool - is the user the sender of the message
- * user: object - user who sent the message
- * user_is_staff: bool - the current requested user has staff previlages
- * user_is_mod: bool - the current requested user has mod previlages
+ * displays the message or media depending if user is the sender
+ * 
+ * @param message: str - message to be displayed
+ * @param datetime: str - datetime when the message was sent
+ * @param media: url | null - media if available
+ * @param is_mod: bool - allows previlages
+ * @param is_staff: bool - allows previlages
+ * @param is_sender: bool - is the user the sender of the message
+ * @param user: object - user who sent the message
+ * @param user_is_staff: bool - the current requested user has staff previlages
+ * @param user_is_mod: bool - the current requested user has mod previlages
  */
 
 const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=false, onBanSuccess, props}) => {

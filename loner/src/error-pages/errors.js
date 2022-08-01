@@ -125,6 +125,9 @@ const ERROR_404_DESC = [
                         "Stop looking at a 404 page, Go back and chat Now!"
                     ]
 
+/**
+ * displays 404 error page
+ */
 export const Error404 = memo(() => {
 
     return (

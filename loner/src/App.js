@@ -1,9 +1,9 @@
 import Main from "./pages/main"
 
-import { TimedMessageModal, CookieConsentModal } from "./modals/info-modal";
-import { useEffect, useState } from "react";
-import Login from "./components/login-component";
-import ThemeSwitcher from "./components/theme-switch";
+import { TimedMessageModal, CookieConsentModal } from "./modals/info-modal"
+import { useEffect, useState } from "react"
+import Login from "./components/login-component"
+import ThemeSwitcher from "./components/theme-switch"
 
 
 import {ReactComponent as BOT_ERROR} from "./icons/illustrations/bot-error.svg"
@@ -24,7 +24,7 @@ function App() {
 
 	useEffect(() => {
 
-		console.log("Webdriver: ", navigator.webdriver)
+		// prevents takeover by webdrivers, Yes will not prevent smart people from using automation tools
 		setIsBot(navigator.webdriver)
 
 	}, [navigator.webdriver])
@@ -66,4 +66,4 @@ function App() {
 	);
 }
 
-export default App;
+export default App

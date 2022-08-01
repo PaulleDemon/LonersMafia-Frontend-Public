@@ -105,12 +105,12 @@ export default async function getImageUrl(
  * CropImage will crop to the image file given aspect, if round is set to True then it will display
  * it will round the crop display border.
  * 
- * imgFile: File - provide a image file not a url.
- * startCrop: bool - when set to true gives you the cropped image file
- * croppedImage: function - calls the function when the crop is complete it passes the image file as parameter
- * round: bool - rounds the crop display
- * aspect: number - provide a number to change the aspect ratio eg: 1 / 3
- * className: string(optional) - add a class 
+ * @param imgFile: File - provide a image file not a url.
+ * @param startCrop: bool - when set to true gives you the cropped image file
+ * @param croppedImage: function - calls the function when the crop is complete it passes the image file as parameter
+ * @param round: bool - rounds the crop display
+ * @param aspect: number - provide a number to change the aspect ratio eg: 1 / 3
+ * @param className: string(optional) - add a class 
  */
 
 export const CropImage = ({imgFile=File, startCrop=false, croppedImage,  aspect=1, round=false, className=""}) => {

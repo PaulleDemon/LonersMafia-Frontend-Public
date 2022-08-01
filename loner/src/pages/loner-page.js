@@ -26,10 +26,13 @@ import ThemeSwitcher from "../components/theme-switch"
 // import { default as logo } from "../icons/emoji.svg"
 
 /**
- * title: str - title of the section
- * data: Array - loads the data into the section
- * isLoading: bool - if set to true will show a loading wheel
- * onLoadable: function - function thats called when the scrollbar reaches to the end.
+ * Provides horizontal section to display mafia cards
+ * 
+ * @param title: str - title of the section
+ * @param data: Array - loads the data into the section
+ * @param sortType: string (moderating|trending|recent) - when see more is clicked passes this as argument 
+ * @param isLoading: bool - if set to true will show a loading wheel
+ * @param onLoadable: function - function thats called when the scrollbar reaches to the end.
  */
 const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable, sortType=""}) => {
 
@@ -138,7 +141,9 @@ const HorizontalSection = memo(({title, data=[], isLoading=false, onLoadable, so
 })
 
 
-
+/**
+ * page that displays the user's profile along with some of his/her recently visited mafias
+ */
 export default function LonerPage(){
     
     const {loner} = useParams()

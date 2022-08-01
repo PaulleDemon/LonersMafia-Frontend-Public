@@ -10,9 +10,9 @@ import {ReactComponent as EDIT} from "../icons/edit.svg"
 
 
 /**
- * message: str - message to be displayed
- * onTimedOut: function - function to execute when the timer stops
- * timeout: number - seconds to countdown
+ * @param message: str - message to be displayed
+ * @param onTimedOut: function - function to execute when the timer stops
+ * @param timeout: number - seconds to countdown
  */
 
  export const TimedMessageModal = memo(({message, onTimeOut, timeout=2000}) => {
@@ -62,7 +62,13 @@ export const CookieConsentModal = ({onCookieAccept}) => {
 
 }
 
-
+/**
+ * 
+ * @param message: str - the message to be displayed
+ * @param onYes: function - the function to be executed when yes is clicked
+ * @param onNo: function - the function to be executed when no is clicked
+ * 
+ */
 export const ConfirmationModal = ({message, onYes, onNo}) => {
     
     return (
@@ -110,7 +116,9 @@ export const BannedUserModal = () => {
 }
 
 
-
+/**
+ * A component in MafiaInfoModal 
+ */
 const MafiaInfo = ({icon, tag_line, about}) => {
 
     return (
@@ -129,6 +137,9 @@ const MafiaInfo = ({icon, tag_line, about}) => {
     )
 }
 
+/**
+ * A rule component in MafiaInfoModal 
+ */
 const MafiaRules = ({rules=[]}) => {
 
     return (
@@ -151,7 +162,9 @@ const MafiaRules = ({rules=[]}) => {
 
 }
 
-
+/**
+ * Used to display the info about the maifa
+ */
 export const MafiaInfoModal = ({icon, name, tag_line, about, 
                                 rules, mods, editable, onClose, onEdit}) =>{
    
@@ -197,7 +210,9 @@ export const MafiaInfoModal = ({icon, name, tag_line, about,
 
 }
 
-
+/**
+ * Modal used to share invite
+ */
 export const ShareInviteModal = ({url, message, title, text, onClose}) => {
 
     const webShare = useWebShare()

@@ -1,13 +1,15 @@
-import { useMemo, useState } from "react";
-import {Routes, Route, Navigate} from "react-router-dom";
-import { Error404 } from "../error-pages/errors";
+import { useMemo, useState } from "react"
+import {Routes, Route, Navigate} from "react-router-dom"
+import { Error404 } from "../error-pages/errors"
 
 
 import Chat from "./chat-page"
-import LonerPage from "./loner-page";
-import MafiasPage from "./mafias-page";
+import LonerPage from "./loner-page"
+import MafiasPage from "./mafias-page"
 
-
+/**
+ * Contains all the routes  
+ */
 function Main(){
 
 	const user_name = useMemo(() => localStorage.getItem("user-name"), [localStorage.getItem("user-name")])
@@ -19,7 +21,6 @@ function Main(){
 
 	}, [localStorage.getItem("user-name"), localStorage.getItem("user-id")])
 
-	console.log("Logged in: ", localStorage.getItem("user-id"))
 	return (
 		<Routes>
 			<Route path="/" exact element={<Navigate to="/loner" replace />} />

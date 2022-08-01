@@ -5,6 +5,9 @@ import { TimedMessageModal } from "../modals/info-modal"
 import Cookies from "js-cookie"
 
 
+/**
+ * Handles create user and login form
+ */
 export default function Login(){
 
 	const [timedMessage, setTimedMessage] = useState("")

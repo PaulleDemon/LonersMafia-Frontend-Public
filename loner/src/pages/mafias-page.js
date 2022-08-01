@@ -19,8 +19,10 @@ import ENDPOINTS from "../constants/url-endpoints"
 
 
 /**
+ * provides a sort dropdown 
  * 
  * @param values: Object - the sort values
+ * @param defaultValue - The default sort option
  * @param onOptionChange: function - the function to be called when the option changes 
  * 
  */

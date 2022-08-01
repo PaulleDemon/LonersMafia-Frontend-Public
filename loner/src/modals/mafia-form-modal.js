@@ -380,7 +380,25 @@ const RulesThemeModal = ({bgImgUrl="", bgImgFile, bgColor="", maifa_rules,
     )
 }
 
-
+/**
+ * Used to create/update mafias
+ * 
+ * If you want to update the mafia please set update to true and provide all the default values
+ * 
+ * @param id: int - id of the mafia if already created and requires update
+ * @param iconUrl: str|url - url of the mafia if already created and requires update
+ * @param bgImgUrl: str|url - id of the mafia if already created and requires update
+ * @param name: str - name of the mafia if already created and requires update
+ * @param about: str - about the mafia if already created and requires update
+ * @param tag_line: str - tag_line of the mafia if already created and requires update
+ * @param bgColor: str|hex - hex color code of the mafia if already created and requires update
+ * @param rules: Array - set of rules of the mafia if already created and requires update
+ * @param onSuccess: function - function to execute when the mutation is successful
+ * @param onClose: function - function to execute when the modal is closed
+ * 
+ * @param update: bool - tells if the mafia has to be updated or created
+ * 
+ */
 export const MaifaFormModal = ({id=null, iconUrl="", bgImgUrl="", 
                                 name="", about="", tag_line="", bgColor="", rules,
                                 onSuccess, onClose, update=false}) => {

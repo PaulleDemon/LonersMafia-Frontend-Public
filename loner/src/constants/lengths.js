@@ -1,4 +1,6 @@
-
+/**
+ * contains maximum and minimum allowed lengths
+ */
 
 export const MAX_LENGTH = {
 

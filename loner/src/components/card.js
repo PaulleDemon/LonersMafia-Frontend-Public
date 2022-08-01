@@ -7,11 +7,13 @@ import ENDPOINTS from "../constants/url-endpoints"
 
 
 /**
- * name: str - name of the mafia
- * tag_line: str -tag line of the mafia
- * icon: str- url to the icon of the mafia
- * promoted_url: str - sponsors url
- * promoted: bool - if its promoted indicate its promoted
+ * Displays name and icon of the maifa
+ * 
+ * @param name: str - name of the mafia
+ * @param tag_line: str -tag line of the mafia
+ * @param icon: str- url to the icon of the mafia
+ * @param promoted_url: str - sponsors url
+ * @param promoted: bool - if its promoted indicate its promoted
  */
 
 export const MafiaCard = memo(({name="", tag_line="", icon="", 
@@ -57,8 +59,8 @@ export const MafiaCard = memo(({name="", tag_line="", icon="",
 
 /**
  * 
- * message: str - the message that should be displayed on the plus icon card
- * onClick: function -  the function that should be executed when the card is clicked
+ * @param message: str - the message that should be displayed on the plus icon card
+ * @param onClick: function -  the function that should be executed when the card is clicked
  */
 export const CreateMafiaCard = ({message="start mafia", onClick}) => {
 
