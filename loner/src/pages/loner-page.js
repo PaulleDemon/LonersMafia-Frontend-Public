@@ -174,6 +174,14 @@ export default function LonerPage(){
     const userid = useMemo(() => localStorage.getItem("user-id"), [localStorage.getItem("user-id")])
     
     useEffect(() => {
+        // update the title
+        document.title = `LonersMafia | loner - ${lonerData.name}`
+        return () => {
+            document.title = `LonersMafia`
+        }
+    }, [lonerData.name])
+
+    useEffect(() => {
         // if the loner id is available start fetching trending, modertaing mafias etc.
         if (lonerData.id !== null)
             setEnabled(true)

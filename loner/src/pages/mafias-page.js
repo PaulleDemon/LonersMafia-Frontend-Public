@@ -143,6 +143,13 @@ const MafiasPage = () => {
         }
     })
 
+    useEffect(() => {
+        // update the title
+        document.title = `LonersMafia | sort - ${sortOption}`
+        return () => {
+            document.title = `LonersMafia`
+        }
+    }, [sortOption])
 
     useEffect(() => {
         // will update sort options based on the query parameters of the url

@@ -22,6 +22,7 @@ import { Error404 } from "../error-pages/errors"
 import { LoadingWheel } from "../components/loading"
 import { MAX_LENGTH } from "../constants/lengths"
 import { MaifaFormModal } from "../modals/mafia-form-modal"
+// import { useTitle } from "../utils/hooks"
 
 
 const docElementStyle = document.documentElement.style
@@ -190,6 +191,10 @@ export default function Chat(){
     // TODO: reconnect websocket after login
     const {mafia} = useParams() 
 
+    console.log("Maifa: ", mafia)
+
+    // useTitle(mafia, [mafia])
+
     const mediaRef = useRef()
     const queryClient = useQueryClient()
 
@@ -302,6 +307,14 @@ export default function Chat(){
             setTimedMessage("An error occurred. Try again later.")
         }
     })
+
+    useEffect(() => {
+        // update the title
+        document.title = `LonersMafia | maifa - ${mafia}`
+        return () => {
+            document.title = `LonersMafia`
+        }
+    }, [mafia])
 
     useEffect(() => {
 

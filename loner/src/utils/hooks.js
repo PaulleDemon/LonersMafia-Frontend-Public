@@ -1,6 +1,24 @@
 import { useState, useMemo, useEffect } from "react"
 
 
+
+/**
+ * A useless Hook used to set title, sometimes feels like overkill, but Ok
+ */
+
+export function useTitle({title="", dependencyArray}){
+
+    useEffect(() => {
+
+        document.title = `LonersMafia | ${title}`
+        return () => {
+            document.title = `LonersMafia`
+        }
+    }, [title].concat([dependencyArray]))
+
+}
+
+
 /**
  * Hook that tells if the element is visible, pass in a ref
  */
