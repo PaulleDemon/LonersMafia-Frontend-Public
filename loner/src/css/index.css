@@ -757,7 +757,7 @@ a{
 .mafia-content{
     display: grid;
     width: 100%;
-    gap: 5px;
+    grid-gap: 5px; /*gap causes compiliation error in production*/
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     list-style: none;
     /* justify-items: center; */
