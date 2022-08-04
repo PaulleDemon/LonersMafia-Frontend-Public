@@ -23,6 +23,8 @@ import { useScrollDirection } from "../utils/hooks"
 import ENDPOINTS from "../constants/url-endpoints"
 
 import ThemeSwitcher from "../components/theme-switch"
+
+import PECKSPACE_LOGO from "../icons/sponsors-icons/peckspace.png"
 // import { default as logo } from "../icons/emoji.svg"
 
 /**
@@ -482,7 +484,7 @@ export default function LonerPage(){
 
                     <div className="mafia-cards-container" >
                         <MafiaCard name={"Peckspace"} 
-                                    icon={require("../icons/sponsors-icons/peckspace.png")}
+                                    icon={PECKSPACE_LOGO}
                                     tag_line={"Find your space on Peckspace"}
                                     promoted_url={"https://peckspace.com/spaces"}
                                     promoted={true}

@@ -28,7 +28,7 @@ export default function Login(){
 			localStorage.removeItem("user-id")
 			localStorage.removeItem("user-name")
 			setShowRegistrationModal(true)
-			setTimedMessage("Csrf cookie missing. Please try hard refreshing")
+			// setTimedMessage("Csrf cookie missing. Please try hard refreshing")
 		}
 
 	}, [Cookies.get("csrftoken")])

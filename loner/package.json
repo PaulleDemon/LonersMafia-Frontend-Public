@@ -24,6 +24,8 @@
     "start": "env-cmd -e development react-scripts start",
     "start:mobdev": "env-cmd -e mobiledev react-scripts start",
     "build": "GENERATE_SOURCEMAP=false env-cmd -e production react-scripts build",
+    "build:dev": "env-cmd -e development react-scripts build",
+
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
