@@ -304,7 +304,7 @@ a{
     border-radius: 5px;
     white-space: pre-line;
     overflow-wrap: break-word;
-    word-break: break-all;
+    word-break:keep-all;
     word-wrap: break-word;
     height: max-content;
     box-shadow: 0 0 10px #4b779d;

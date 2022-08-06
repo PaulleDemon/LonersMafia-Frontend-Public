@@ -267,6 +267,7 @@ export default function Chat(){
                                                             })
     
     const mafiaQuery = useQuery(["mafia", mafia], () => getMafia(mafia), {
+        enabled: !mafia ? false : true,
         refetchOnMount: true,
         refetchOnWindowFocus: true,
         staleTime: 60 * 60 * 1000, // 60 minutes
@@ -276,7 +277,13 @@ export default function Chat(){
             setMafiaDetails(data.data)
             
         },
-        retry: 3
+
+        onError: (err) => {
+            if (err.response?.status === 404){
+                setShow404Page(true)
+            }
+        }
+        // retry: 3
     })
  
     const chatQuery = useInfiniteQuery(["chat", mafiaDetails.id], getMessages, {
@@ -292,8 +299,10 @@ export default function Chat(){
         staleTime: Infinity,
         onError: (err) => {
             
-            if (err.response?.status === 404)
+            if (err.response?.status === 404){
+                setQueryEnabled(false)
                 setShow404Page(true)
+            }
         },
 
     })
@@ -311,6 +320,12 @@ export default function Chat(){
     useEffect(() => {
         // update the title
         document.title = `LonersMafia | maifa - ${mafia}`
+
+        if (mafia){
+            setMessages([])
+            mafiaQuery.refetch()
+            chatQuery.refetch()
+        }
         return () => {
             document.title = `LonersMafia`
         }
@@ -343,10 +358,9 @@ export default function Chat(){
             )
 
             setMessages(chat_pages)
-            console.log("Messages: ", chat_pages)
+            // console.log("Messages: ", chat_pages)
             
         }
-
     }, [chatQuery.status, chatQuery.data, chatQuery.isFetched])
     
     useEffect(() => {
@@ -370,7 +384,8 @@ export default function Chat(){
     
     useEffect(() => {
 
-        setSocketUrl(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/mafia/${mafia}/`) //eg: ws://localhost:8000/ws/mafia/mafia/
+        if (mafia)
+            setSocketUrl(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/mafia/${mafia}/`) //eg: ws://localhost:8000/ws/mafia/mafia/
 
     }, [mafia])
 
@@ -394,7 +409,7 @@ export default function Chat(){
             setQueryEnabled(true)
         }
 
-    }, [mafiaQuery.isSuccess])
+    }, [mafiaQuery.isSuccess, mafiaQuery.isRefetching, mafiaQuery.data?.data])
 
     useEffect(() => {
         
@@ -632,6 +647,7 @@ export default function Chat(){
 
     }
 
+    console.log("404: ", show404Page)
     return (
         <>
         { !show404Page ?  

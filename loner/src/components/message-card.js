@@ -336,7 +336,7 @@ const ChatCard = memo(({currentUserId=null, user_is_mod=false, user_is_staff=fal
                     </div>
                     <div className="margin-10px" />
                     <div className="right-end username-time">
-                        <Link to={`/loner/${name}/`}>l\{name}</Link>
+                        <Link to={`/loner/${name}/`}>l/{name}</Link>
                     </div>
 
                 </div>

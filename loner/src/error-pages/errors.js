@@ -116,7 +116,7 @@ const ERROR_404_IMG = ERROR_SVGS.concat([<ERROR_404 className="error-page-img"/>
 
 const ERROR_404_DESC = [
                         "I doesn't exist just like you", 
-                        "I don't exist just like your boner",
+                        "I don't exist just like you",
                         "I may not be hatched yet.",
                         "I love you 💘 :). But I don't exist. Now go back to home page",
                         "May be its time for you to go outside and meet real People",
