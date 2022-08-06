@@ -265,7 +265,6 @@ export default function Chat(){
                                                                     // console.log("Error: ", error)
                                                                 }
                                                             })
-    
     const mafiaQuery = useQuery(["mafia", mafia], () => getMafia(mafia), {
         enabled: !mafia ? false : true,
         refetchOnMount: true,
@@ -301,7 +300,7 @@ export default function Chat(){
             
             if (err.response?.status === 404){
                 setQueryEnabled(false)
-                setShow404Page(true)
+                // setShow404Page(true)
             }
         },
 
@@ -337,8 +336,8 @@ export default function Chat(){
 
         console.log("Chat qyery: ", chatQuery.status, chatQuery.data)
         if (chatQuery.status === "success"){
-            chatQuery.data.pages.forEach((x) => {
-                x.data.results.forEach( (x) =>{
+            chatQuery.data.pages?.forEach((x) => {
+                x.data.results?.forEach( (x) =>{
                     chatPages.push(x)
                 }
                 )      
@@ -384,9 +383,10 @@ export default function Chat(){
     
     useEffect(() => {
 
-        if (mafia)
+        if (mafia){
             setSocketUrl(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/mafia/${mafia}/`) //eg: ws://localhost:8000/ws/mafia/mafia/
-
+            setQueryEnabled(true)
+        }
     }, [mafia])
 
     useEffect(() => {
@@ -406,7 +406,8 @@ export default function Chat(){
             docElementStyle.setProperty("--chat-background", color_theme)
             docElementStyle.setProperty("--chat-background-img", `url(${background_image})`)
 
-            setQueryEnabled(true)
+            if (mafia)
+                setQueryEnabled(true)
         }
 
     }, [mafiaQuery.isSuccess, mafiaQuery.isRefetching, mafiaQuery.data?.data])
