@@ -285,7 +285,7 @@ const MafiasPage = () => {
                         listQueries.map((data) => {
                             return (
                                 <li key={data.id} style={{width: "max-content"}}>
-                                    <MafiaCard name={data.name} icon={data.icon} tag_name={data.tag_name}/>
+                                    <MafiaCard name={data.name} tag_line={data.tag_line} icon={data.icon} tag_name={data.tag_name}/>
                                 </li>
                             )
                         })
