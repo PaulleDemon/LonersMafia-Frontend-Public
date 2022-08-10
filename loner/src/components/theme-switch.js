@@ -7,10 +7,11 @@ import {ReactComponent as DARK} from "../icons/dark.svg"
 // --------------- theme switcher hook -----------
 
 
-const sameBgColor = ['--default-bg-color', '--chat-header', '--chat-text-area-color', '--emoji-picker-bg', 
+const sameBgColor = ['--chat-header', '--chat-text-area-color', '--emoji-picker-bg', 
                     '--modal-bg-color', '--drop-down-bg', '--mafias-pg-header-bg', '--reaction-bg', 
                     '--chat-background']
 
+const defaultBgColor = '--default-bg-color'
 const cardDropShadow = '--card-drop-shadow'
 const fontColorElement = '--default-font-color'
 const lonerDashboardBg = '--loner-dashboard-bg'
@@ -56,10 +57,11 @@ const ThemeSwitcher = ({className=""}) => {
                 const bgChange = () => docElementStyle.setProperty(x, "#ffffff")
                 bgChange()
             }
+            docElementStyle.setProperty(defaultBgColor, "#e0e0e0")
             docElementStyle.setProperty(fontColorElement, "#000000")
             docElementStyle.setProperty(iconFillColor, "#000000")
             docElementStyle.setProperty(lonerDashboardBg, "#e3fffd")
-            docElementStyle.setProperty(cardDropShadow, "0 0 4px #050f5fe1")
+            docElementStyle.setProperty(cardDropShadow, "0 0 5px #050f5fe1")
 
             docElementStyle.setProperty(resizeInput, "#fff")
 

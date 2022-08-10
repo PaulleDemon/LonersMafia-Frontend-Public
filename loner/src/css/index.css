@@ -21,7 +21,8 @@
     --loner-dashboard-bg: #08a14d;
     --mafias-pg-header-bg: #fff;/*mafia page header*/
 
-    --take-peek-btn-bg: #94108e;
+    --take-peek-btn-bg: #081644;
+    --take-peek-btn-hover-bg: #153ab1;
 
     --chat-sender: #1796cd; 
     --chat-receiver: #8f8d8d; 
@@ -399,8 +400,7 @@ a{
     border: 0px;
     border-radius: 50%;
     margin: 5px;
-    min-width: 50px;
-    max-width: 150px;
+    width: 50px;
     height: 50px;
     box-shadow: 0 0 10px #6c6b6b;
 }
@@ -775,6 +775,7 @@ a{
     margin: 10px;
     cursor: pointer;
     flex-shrink: 0;
+    border-radius: 10px;
 }
 
 .mafia-card .mafia-avatar-container{
@@ -784,7 +785,7 @@ a{
     background-color: black;
     justify-content: center;
     width: 100%;
-    /* border-radius: 5px 5px 0px 0px; */
+    border-radius: 10px 10px 0px 0px;
 }
 
 .mafia-card .mafia-avatar{
@@ -813,6 +814,11 @@ a{
     text-align: center;
     background-color: var(--take-peek-btn-bg);
     padding: 5px;
+    border-radius: 25px;
+}
+
+.mafia-card .btn:hover{
+    background-color: var(--take-peek-btn-hover-bg);
 }
 
 /* --------------------- create-mafia-card --------- */

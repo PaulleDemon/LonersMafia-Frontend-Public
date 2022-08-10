@@ -158,9 +158,9 @@ function ChatHeader({onMaifaUpdate, props}){
             <INFO className="margin-10px icon" onClick={() =>setShowInfoModal(!showInfoModal)}/>
 
 
-            <div className="peckspace-promo margin-10px">
+            {/* <div className="peckspace-promo margin-10px">
                 visit <a href="https://peckspace.com/spaces" className="link">Peckspace</a>  Now!
-            </div>
+            </div> */}
 
         </div>
     )
