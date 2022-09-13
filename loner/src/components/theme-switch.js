@@ -46,6 +46,7 @@ const ThemeSwitcher = ({className=""}) => {
                 bgChange()
             }
             
+            docElementStyle.setProperty(defaultBgColor, "#39423b")
             docElementStyle.setProperty(fontColorElement, "#ffffff")
             docElementStyle.setProperty(iconFillColor, "#ffffff")
             docElementStyle.setProperty(lonerDashboardBg, "#497182")
@@ -57,7 +58,7 @@ const ThemeSwitcher = ({className=""}) => {
                 const bgChange = () => docElementStyle.setProperty(x, "#ffffff")
                 bgChange()
             }
-            docElementStyle.setProperty(defaultBgColor, "#e0e0e0")
+            docElementStyle.setProperty(defaultBgColor, "fff")
             docElementStyle.setProperty(fontColorElement, "#000000")
             docElementStyle.setProperty(iconFillColor, "#000000")
             docElementStyle.setProperty(lonerDashboardBg, "#e3fffd")

@@ -285,8 +285,8 @@ export default function Chat(){
         // retry: 3
     })
  
-    const chatQuery = useInfiniteQuery(["chat", mafiaDetails.id], getMessages, {
-        enabled: queryEnabled,
+    const chatQuery = useInfiniteQuery(["chat", mafiaDetails.id], ({pageParam}) => getMessages({mafia: mafiaDetails.id, pageParam}), {
+        enabled: false,
         getNextPageParam: (lastPage, ) => {
          
             if (lastPage.data.current < lastPage.data.pages){
@@ -299,7 +299,7 @@ export default function Chat(){
         onError: (err) => {
             
             if (err.response?.status === 404){
-                setQueryEnabled(false)
+                // setQueryEnabled(false)
                 // setShow404Page(true)
             }
         },
@@ -320,10 +320,11 @@ export default function Chat(){
         // update the title
         document.title = `LonersMafia | maifa - ${mafia}`
 
-        if (mafia){
+        if (mafia !== null){
             setMessages([])
             mafiaQuery.refetch()
             chatQuery.refetch()
+            console.log("refetching")
         }
         return () => {
             document.title = `LonersMafia`
@@ -334,7 +335,7 @@ export default function Chat(){
 
         const chatPages = []
 
-        console.log("Chat qyery: ", chatQuery.status, chatQuery.data)
+        // console.log("Chat qyery: ", chatQuery.status, chatQuery.data)
         if (chatQuery.status === "success"){
             chatQuery.data.pages?.forEach((x) => {
                 x.data.results?.forEach( (x) =>{
@@ -383,9 +384,11 @@ export default function Chat(){
     
     useEffect(() => {
 
-        if (mafia){
+        if (mafia !== null){
             setSocketUrl(`${process.env.REACT_APP_WEBSOCKET_ENDPOINT}/mafia/${mafia}/`) //eg: ws://localhost:8000/ws/mafia/mafia/
-            setQueryEnabled(true)
+            // setQueryEnabled(true)
+            console.log("2: ")
+            chatQuery.refetch()
         }
     }, [mafia])
 
@@ -401,13 +404,14 @@ export default function Chat(){
 
             const {background_image, color_theme} = mafiaQuery.data?.data
             
-            console.log()
-
             docElementStyle.setProperty("--chat-background", color_theme)
             docElementStyle.setProperty("--chat-background-img", `url(${background_image})`)
 
-            if (mafia)
-                setQueryEnabled(true)
+            if (mafia !== null){
+                // setQueryEnabled(true)
+                console.log("3")
+                chatQuery.refetch()
+            }
         }
 
     }, [mafiaQuery.isSuccess, mafiaQuery.isRefetching, mafiaQuery.data?.data])
@@ -415,7 +419,6 @@ export default function Chat(){
     useEffect(() => {
         
         if (lastJsonMessage && !messages.some(msg => lastJsonMessage.id === msg.id)){
-            console.log("Last message: ", lastJsonMessage)
 
             if (Object.keys(lastJsonMessage)[0] !== 'delete'){
                 setMessages([...messages, lastJsonMessage])
@@ -451,7 +454,6 @@ export default function Chat(){
 
                     // updates all the cached rooms to display the latest message and change the unread count
                     const newPagesArray = pages.map((data) =>{
-                                        console.log("Results: ", data)
                                         // find and update the specific data
                                         const index = data.data.results.findIndex((val) => {
                                             // find the index and update the cache
@@ -459,13 +461,12 @@ export default function Chat(){
                                             return val.id == lastJsonMessage.delete
                                         })
                                         
-                                        console.log("INdex2: ", index, data.data?.results)
                                         if (index !== -1){
                                             // if the id exists in this page then delete the data
                                             const element = data.data.results.splice(index, 1)
-                                            console.log("element: ", element)
+                                        
                                         }
-                                        console.log("CHOO: ", data)
+
                                         return data
                                     }) 
                         
@@ -613,7 +614,7 @@ export default function Chat(){
         if (scrollRef.current && (100 >= scrollRef.current.scrollTop 
             || scrollRef.current.clientHeight === scrollRef.current.scrollHeight) 
             && (chatQuery.hasNextPage === undefined || chatQuery.hasNextPage === true)) {
-           
+                console.log("fetching the next")
                 chatQuery.fetchNextPage({cancelRefetch: false})
         }        
     }
@@ -621,17 +622,16 @@ export default function Chat(){
     const onBanSuccess = (userid) => {
         
         queryClient.setQueryData(["chat", mafiaDetails.id], (data) => {
-            console.log("deleted data1: ", data)
             
             // updates all the cache and sets banned to true
             const newPagesArray = data.pages.map((data) =>{
                                 // find and update the specific data
                                 // console.log("deleted data: ", data.data.results)
                                 data.data.results.map((result, index) => {
-                                    console.log("Banned: ",  result.user.id, currentUserId)
+                                    // console.log("Banned: ",  result.user.id, currentUserId)
                                     if (result?.user?.id == userid){ // update all cache where userid= user and mafia id= mafiaid
                                         data.data.results[index].is_banned = true
-                                        console.log("Banned2: ", data.data.results[index])
+                                        // console.log("Banned2: ", data.data.results[index])
                                     }
                                     return result
                                 })
@@ -648,7 +648,7 @@ export default function Chat(){
 
     }
 
-    console.log("404: ", show404Page)
+    // console.log("404: ", show404Page)
     return (
         <>
         { !show404Page ?  

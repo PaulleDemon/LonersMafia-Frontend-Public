@@ -166,11 +166,10 @@ export const listMafias = async ({queryKey, pageParam=1}) => {
 
 /* ----------------------------------- messages endpoints ------------------------- */
 
-export const getMessages = async ({queryKey, pageParam=1}) => {
-
-    const [_, mafia] = queryKey
+export const getMessages = async ({mafia, pageParam=1}) => {
 
     const config = getConfig()
+    
     return await api.get(`/mafia/${mafia}/messages/?page=${pageParam}`, config)
 }
 
