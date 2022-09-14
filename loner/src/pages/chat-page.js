@@ -293,7 +293,6 @@ export default function Chat(){
                 return lastPage.data.current + 1}
             
         },
-        refetchOnMount: true,
         refetchOnWindowFocus: false,
         staleTime: Infinity,
         onError: (err) => {
