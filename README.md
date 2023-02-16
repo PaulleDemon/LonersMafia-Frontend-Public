@@ -12,8 +12,6 @@ If you find any bug create an issue in the issues tab, come join the discussion 
 
 Please read [Reporting bugs](https://github.com/PaulleDemon/LonersMafia-support/blob/main/BugReporting.md) before creating new issue.
 
-Read the inspiration behind loners mafia: [story behind lonersmafia](https://github.com/PaulleDemon/PaulleDemon/blob/main/stories.md#lonersmafia---lonersmafiacom)
-
 
 ### File directory overview:
 ```
