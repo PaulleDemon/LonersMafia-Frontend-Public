@@ -159,7 +159,7 @@ function ChatHeader({onMaifaUpdate, props}){
 
 
             {/* <div className="peckspace-promo margin-10px">
-                visit <a href="https://peckspace.com/spaces" className="link">Peckspace</a>  Now!
+                visit <a href="https://adostrings.com/spaces" className="link">AdoStrings</a>  Now!
             </div> */}
 
         </div>

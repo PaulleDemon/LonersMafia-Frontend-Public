@@ -476,25 +476,6 @@ export default function LonerPage(){
                                    sortType={"moderating"}
                                    />
 
-
-                <div className="section">
-                    <div className="title-22px">
-                        Sponsored
-                    </div>
-
-                    <div className="mafia-cards-container" >
-                        <MafiaCard name={"Peckspace"} 
-                                    icon={PECKSPACE_LOGO}
-                                    tag_line={"Find your space on Peckspace"}
-                                    promoted_url={"https://peckspace.com/spaces"}
-                                    promoted={true}
-                                    />
-                        <CreateMafiaCard message="sponsor" onClick={() =>  window.open("https://forms.gle/CFdvDar8D6t6S7bh6", '_blank').focus()}/>
-
-                    </div>
-
-                </div>
-
             </div>
             
             <div className="row center">
